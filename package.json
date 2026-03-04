@@ -2,6 +2,11 @@
   "name": "gridiron-gm",
   "version": "1.0.0",
   "description": "Gridiron GM is a realistic football general manager simulation game based off the National Football League (NFL).",
+  "homepage": "https://vaultsparkstudios.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VaultSparkStudios/Gridiron-GM.git"
+  },
   "private": true,
   "type": "module",
   "scripts": {
