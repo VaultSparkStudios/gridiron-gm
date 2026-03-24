@@ -316,7 +316,7 @@ export default function GridironGM(){
   const[trTm,setTrTm]=useState(null);const[trOff,setTrOff]=useState({g:[],r:[],gPk:[],rPk:[]});
   const[draftPicks,setDraftPicks]=useState([]);const[draftIdx,setDraftIdx]=useState(0);const[draftLog,setDraftLog]=useState([]);
   const[draftTimer,setDraftTimer]=useState(120);const[draftActive,setDraftActive]=useState(false);const[draftPaused,setDraftPaused]=useState(false);
-  const[rPosF,setRPosF]=useState("ALL");const[faPosF,setFaPosF]=useState("ALL");
+  const[rPosF,setRPosF]=useState("ALL");const[faPosF,setFaPosF]=useState("ALL");const[scPosF,setScPosF]=useState("ALL");const[drPosF,setDrPosF]=useState("ALL");
   const[faSc,setFaSc]=useState("ovr");const[faSd,setFaSd]=useState(-1);
   // Live sim
   const[liveSim,setLiveSim]=useState(null);const[liveLog,setLiveLog]=useState([]);
@@ -584,8 +584,9 @@ export default function GridironGM(){
         <Btn onClick={()=>{setFaScouts(pr=>[...pr,myScout]);setMyScout(null);sm("Fired.");}} bg="#7f1d1d" c="#fca5a5">Fire</Btn></div>:<span style={{color:C.rd,fontSize:10}}>No scout hired</span>}
       </div>
       {!myScout&&faScouts.length>0&&<div style={{marginBottom:8}}><div style={{fontSize:8,color:C.mt,marginBottom:3}}>AVAILABLE SCOUTS</div>{faScouts.map(s=><div key={s.id} style={{display:"flex",alignItems:"center",gap:4,padding:"3px 6px",fontSize:10,borderBottom:`1px solid ${C.bd}11`}}><Face s={s.face} sz={18}/><span style={{fontWeight:600,flex:1}}>{s.name}</span><span style={{color:C.mt,fontSize:8}}>EVL:{s.evaluation} ACC:{s.accuracy} SPD:{s.speed}</span><span style={{color:"#a78bfa",fontSize:8}}>{s.trait}</span><Btn onClick={()=>{setMyScout(s);setFaScouts(pr=>pr.filter(x=>x.id!==s.id));sm(`Hired ${s.name}`);}} disabled={!!myScout} bg={myScout?C.mt:`${C.gn}22`} c={myScout?C.mt:C.gn} style={{padding:"2px 6px",fontSize:8}}>Hire</Btn></div>)}</div>}
-      <div style={{display:"flex",gap:3,marginBottom:6}}>{draftYears.map(y=><button key={y} onClick={()=>setScView(y)} style={{background:(scView||yr)===y?"#1e293b":"transparent",color:(scView||yr)===y?"#fff":C.mt,border:`1px solid ${C.bd}`,padding:"3px 8px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>{y}{y===yr?" ★":""}</button>)}</div>
-      {(dc[scView||yr]||[]).slice(0,30).map((p,i)=><div key={p.id} style={{display:"flex",alignItems:"center",gap:4,padding:"3px 5px",borderBottom:`1px solid ${C.bd}11`,fontSize:10}}>
+      <div style={{display:"flex",gap:3,marginBottom:4}}>{draftYears.map(y=><button key={y} onClick={()=>setScView(y)} style={{background:(scView||yr)===y?"#1e293b":"transparent",color:(scView||yr)===y?"#fff":C.mt,border:`1px solid ${C.bd}`,padding:"3px 8px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>{y}{y===yr?" ★":""}</button>)}</div>
+      <div style={{display:"flex",gap:2,marginBottom:5,flexWrap:"wrap"}}>{["ALL",...POS].map(p=><button key={p} onClick={()=>setScPosF(p)} style={{background:scPosF===p?C.bl+"33":"transparent",color:scPosF===p?"#fff":C.mt,border:`1px solid ${scPosF===p?C.bl:C.bd}`,padding:"2px 5px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>{p}</button>)}</div>
+      {(dc[scView||yr]||[]).filter(p=>scPosF==="ALL"||p.pos===scPosF).slice(0,30).map((p,i)=><div key={p.id} style={{display:"flex",alignItems:"center",gap:4,padding:"3px 5px",borderBottom:`1px solid ${C.bd}11`,fontSize:10}}>
         <span style={{color:C.mt,fontWeight:700,minWidth:16}}>{i+1}</span><Face s={p.face} sz={20}/><PN p={p} setSel={setSel} style={{flex:1}}/><Bdg pos={p.pos}/>
         <span style={{color:"#94a3b8",fontSize:8}}>{p.age} • {p.bio?.college}</span>
         <span style={{color:p.scoutLvl>=2?oC(p.trueOvr):p.scoutLvl>=1?"#94a3b8":"#475569",fontWeight:700,fontSize:9}}>{p.scoutLvl>=2?p.trueOvr:p.scoutLvl>=1?`~${p.scoutedOvr}`:"??"}</span>
@@ -624,7 +625,8 @@ export default function GridironGM(){
             <div style={{fontSize:8,color:"#fff8"}}>{draftPaused?"PAUSED":"ON THE CLOCK"}</div></div>
         </div>
         {curPick.owner===ui&&<div style={{fontSize:9,color:C.gn,fontWeight:700,marginBottom:5}}>🎯 Your pick!</div>}
-        {(dc[yr]||[]).slice(0,20).map((p,i)=><div key={p.id} style={{display:"flex",alignItems:"center",gap:4,padding:"3px 5px",borderBottom:`1px solid ${C.bd}11`,fontSize:10}}>
+        <div style={{display:"flex",gap:2,marginBottom:4,flexWrap:"wrap"}}>{["ALL",...POS].map(p=><button key={p} onClick={()=>setDrPosF(p)} style={{background:drPosF===p?C.bl+"33":"transparent",color:drPosF===p?"#fff":C.mt,border:`1px solid ${drPosF===p?C.bl:C.bd}`,padding:"2px 5px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>{p}</button>)}</div>
+        {(dc[yr]||[]).filter(p=>drPosF==="ALL"||p.pos===drPosF).slice(0,20).map((p,i)=><div key={p.id} style={{display:"flex",alignItems:"center",gap:4,padding:"3px 5px",borderBottom:`1px solid ${C.bd}11`,fontSize:10}}>
           <span style={{color:C.mt,fontWeight:700,minWidth:16}}>{i+1}</span><Face s={p.face} sz={20}/><PN p={p} setSel={setSel} style={{flex:1}}/><Bdg pos={p.pos}/>
           <span style={{color:"#94a3b8",fontSize:8}}>{p.age} • {p.bio?.college}</span>
           <span style={{color:p.scoutLvl>=2?oC(p.trueOvr):"#94a3b8",fontWeight:700,fontSize:9}}>{p.scoutLvl>=2?p.trueOvr:p.scoutLvl>=1?`~${p.scoutedOvr}`:"??"}</span>
@@ -633,7 +635,8 @@ export default function GridironGM(){
       </div>:<div>
         <div style={{display:"flex",gap:3,marginBottom:6}}>{draftYears.map(y=><button key={y} onClick={()=>setScView(y)} style={{background:(scView||yr)===y?"#1e293b":"transparent",color:(scView||yr)===y?"#fff":C.mt,border:`1px solid ${C.bd}`,padding:"3px 8px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>{y}{y===yr?" ★":""}</button>)}</div>
         {sp==="combine"&&<div style={{background:"#7c3aed22",border:"1px solid #7c3aed44",borderRadius:5,padding:"4px 8px",fontSize:9,color:"#c4b5fd",marginBottom:6}}>✅ Combine & Pro Days complete!</div>}
-        {(dc[scView||yr]||[]).slice(0,30).map((p,i)=><div key={p.id} style={{display:"flex",alignItems:"center",gap:4,padding:"3px 5px",borderBottom:`1px solid ${C.bd}11`,fontSize:10}}>
+        <div style={{display:"flex",gap:2,marginBottom:5,flexWrap:"wrap"}}>{["ALL",...POS].map(p=><button key={p} onClick={()=>setDrPosF(p)} style={{background:drPosF===p?C.bl+"33":"transparent",color:drPosF===p?"#fff":C.mt,border:`1px solid ${drPosF===p?C.bl:C.bd}`,padding:"2px 5px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>{p}</button>)}</div>
+        {(dc[scView||yr]||[]).filter(p=>drPosF==="ALL"||p.pos===drPosF).slice(0,30).map((p,i)=><div key={p.id} style={{display:"flex",alignItems:"center",gap:4,padding:"3px 5px",borderBottom:`1px solid ${C.bd}11`,fontSize:10}}>
           <span style={{color:C.mt,fontWeight:700,minWidth:16}}>{i+1}</span><Face s={p.face} sz={20}/><PN p={p} setSel={setSel} style={{flex:1}}/><Bdg pos={p.pos}/>
           <span style={{color:"#94a3b8",fontSize:8}}>{p.age} • {htS(p.ht_)} {p.wt} • {p.bio?.college}</span>
           <span style={{fontSize:8,color:p.scoutLvl>=2?oC(p.trueOvr):p.scoutLvl>=1?"#94a3b8":"#475569",fontWeight:700}}>{p.scoutLvl>=2?p.trueOvr:p.scoutLvl>=1?`~${p.scoutedOvr}`:"??"}</span>

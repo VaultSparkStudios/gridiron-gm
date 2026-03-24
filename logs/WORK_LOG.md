@@ -28,3 +28,15 @@ Append entries. Do not edit historical entries.
 - Updated .github/workflows/: replaced deploy.yml with ci.yml + deploy-pages.yml per studio standard
 - Created CODEX_HANDOFF_2026-03-24.md
 - State: Build passes, repo is now fully Studio OS compliant
+
+---
+
+## 2026-03-24 (continued) — v3.6+ dual-repo work
+
+- Session: OL sub-positions + Studio OS for both repos
+- App.jsx: Replaced OL with 5 positions (LT/LG/C/RG/RT) across POS, PP, CA, PA, STRS, WKNS, genRoster, teamStr, getTeamNeed, genDC, newSeason rm, pC colors, genLivePlay sack formula
+- gridiron-gm-play FieldScene: 5-man OL dots (this.lt/lg/c/rg/rt), this.oLine array, formation at LOS, 5-man pocket, individual beat timers, independent run blocking
+- gridiron-gm-play defaultRoster: Named OL starters (Trent Williams, Q. Nelson, etc.)
+- gridiron-gm-play Studio OS: Created full structure — AGENTS.md, context/, logs/, docs/, prompts/
+- gridiron-gm context: Updated CURRENT_STATE, TASK_BOARD, DECISIONS, LATEST_HANDOFF to v3.6+ state
+- State: Both repos build, 5-man OL working, Studio OS compliant in both repos

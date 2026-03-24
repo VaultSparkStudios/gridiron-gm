@@ -7,6 +7,14 @@
 - Public URL: `https://vaultsparkstudios.com/gridiron-gm/`
 - Type: browser-based football GM simulation game (single-file React, no backend)
 - Studio: VaultSpark Studios
+- **Companion repo:** `gridiron-gm-play` — Phaser 3 gameplay engine; these two repos form one combined product
+
+## Dual-repo contract
+
+This GM app exports franchise data to `gridiron-gm-play` and imports results back via localStorage:
+- `gm_roster_export` — this app writes; Play reads on boot
+- `gm_game_result` — Play writes; this app reads in `importPlayResult()`
+- **Never change bridge key names without updating both repos in the same session**
 
 ## Read order
 
@@ -48,7 +56,7 @@ If the user says only `closeout`, follow `prompts/closeout.md`.
 
 ## Key files
 
-- `src/App.jsx` — live source (v3.2, ~650 lines)
+- `src/App.jsx` — live source (v3.6+, ~900 lines)
 - `gridiron-gm-v3.1-stable.jsx` — stable v3.1 backup (do not delete)
 - `HANDOFF.md` — full game architecture reference
 - `context/LATEST_HANDOFF.md` — active session handoff

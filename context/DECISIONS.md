@@ -44,6 +44,27 @@ Append new entries. Do not erase historical reasoning unless it is wrong.
 
 ---
 
+### 2026-03-24 — Track 2: gridiron-gm-play dual-repo architecture
+
+- Status: Complete
+- Context: User requested real-time gameplay tied to franchise state
+- Decision: Separate Phaser 3 repo (`gridiron-gm-play`) connected to GM app via localStorage bridge
+- Why: Keeps GM app as a pure single-file React app (no Phaser dep); Phaser app can evolve independently; localStorage is zero-infrastructure IPC between browser tabs
+- Bridge: `gm_roster_export` (GM→Play) and `gm_game_result` (Play→GM); `gameId` = `"{wk}-{h}-{a}"` to match schedule
+- Follow-up: Both repos must be updated in the same session if bridge contract changes
+
+---
+
+### 2026-03-24 — OL sub-positions: LT/LG/C/RG/RT
+
+- Status: Complete
+- Context: User requested NFL-accurate OL positions tying back to front office
+- Decision: Replace generic `OL` in POS with 5 named positions; full PP/CA/PA/STRS/WKNS data per position; LT emphasizes passBlock, LG/RG runBlock, C awareness; genRoster {LT:2,LG:2,C:1,RG:2,RT:2}; Phaser gets 5 individual OL dots; beat timer scales with individual ovr
+- Why: LT vs DE is one of the most important matchups in football; drafting a quality LT should feel different from drafting a RG; Phaser pocket hold time now reflects your roster choices
+- Follow-up: sack chance in genLivePlay also reduced by avg OL ovr; both repos updated in same session
+
+---
+
 ### 2026-03-24 — vite.config.js base path fix
 
 - Status: Complete
