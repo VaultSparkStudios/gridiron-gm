@@ -171,7 +171,8 @@ const SC_TRAITS=["Eye for QBs","Defensive Specialist","Small School Finder","Mea
 function genScout(){return{id:uid(),name:`${pick(FN)} ${pick(LN)}`,evaluation:R(40,95),accuracy:R(40,95),speed:R(40,95),trait:pick(SC_TRAITS),salary:+(Rf(.5,3)).toFixed(1),face:genFace()};}
 
 // ═══════════ LIVE PLAY GEN ═══════════
-function genLivePlay(offTeam,defTeam,yard,down,toGo){
+// uCall: undefined=auto | "run_inside"|"run_outside"|"run_screen"|"scramble"|"pass_quick"|"pass_medium"|"pass_deep"|"pass_rpo"
+function genLivePlay(offTeam,defTeam,yard,down,toGo,uCall){
   const qb=offTeam.roster.filter(p=>p.pos==="QB"&&!p.injured).sort((a,b)=>b.ovr-a.ovr)[0];
   const rbs=offTeam.roster.filter(p=>p.pos==="RB"&&!p.injured).sort((a,b)=>b.ovr-a.ovr);
   const wrs=offTeam.roster.filter(p=>p.pos==="WR"&&!p.injured).sort((a,b)=>b.ovr-a.ovr);
@@ -187,25 +188,37 @@ function genLivePlay(offTeam,defTeam,yard,down,toGo){
   if(Math.random()<.05){const pens=["False start, offense. 5-yard penalty.","Holding, offense. 10-yard penalty.","Pass interference, defense. Auto first down.","Offsides, defense. 5-yard penalty."];const pen=pick(pens);const offP=pen.includes("offense");return{text:`🚩 ${pen}`,yards:offP?-5:5,type:"penalty",player:null,newDown:offP?down:1,td:false,turnover:false};}
   // 4th down
   if(down===4){if(yard>=58&&k){const made=Math.random()<cl(.65+(k.ovr-50)*.005,.3,.95);return{text:made?`${k.name} kicks... GOOD! 3 points!`:`${k.name}'s kick is NO GOOD.`,yards:0,type:made?"fg":"fg_miss",player:k,newDown:1,td:false,turnover:!made,score:made?3:0};}return{text:"Team punts away.",yards:0,type:"punt",player:null,newDown:1,td:false,turnover:true};}
-  const isRun=Math.random()<.42;
-  if(isRun){const runner=rb;const oM=(runner.ovr-55)/100;const sB=(runner.spd-60)/150;
-    const yds=Math.round(cl(G(3.8+oM*3+sB*4,3),-4,runner.spd>85?R(15,65):18));
-    const isTD=yard+yds>=100;const fum=Math.random()<.02;
-    const dir=pick(["up the middle","off left tackle","around right end"]);
-    let text=fum?`${runner.name} FUMBLES! Ball is loose!`:isTD?`🏈 TOUCHDOWN! ${runner.name} scores from ${100-yard} yards out!`:`${runner.name} runs ${dir} for ${Math.abs(yds)} ${yds>=0?"yards":"yard loss"}.`;
+  // Determine play type from user call
+  const isScramble=uCall==="scramble";
+  const isScreen=uCall==="run_screen";
+  const isRun=isScramble||isScreen||(uCall?uCall.startsWith("run_"):Math.random()<.42);
+  const passV=uCall&&uCall.startsWith("pass_")?uCall.slice(5):null;
+  if(isRun){
+    const runner=isScramble?qb:rb;const oM=(runner.ovr-55)/100;const sB=(runner.spd-60)/150;
+    let yds,dir;
+    if(isScramble){const mob=(qb.posAttrs?.mobility||qb.ovr)/100;yds=Math.round(cl(G(3+mob*8,4),-3,qb.spd>75?R(10,35):12));dir="scrambles";}
+    else if(isScreen){yds=Math.round(cl(G(5+oM*4,4),-2,rb.spd>82?R(15,45):22));dir="screen";}
+    else if(uCall==="run_outside"){yds=Math.round(cl(G(3.5+oM*2+sB*6,3.5),-4,runner.spd>85?R(15,65):20));dir=pick(["around right end","around left end","on a sweep"]);}
+    else{yds=Math.round(cl(G(3.8+oM*3+sB*4,3),-4,runner.spd>85?R(15,65):18));dir=pick(["up the middle","off left tackle","off right tackle"]);}
+    const isTD=yard+yds>=100;const fum=Math.random()<(isScramble?.03:.02);
+    let text=fum?`${runner.name} FUMBLES! Ball is loose!`:isTD?(isScramble?`🏈 TOUCHDOWN! ${runner.name} scrambles in for the score!`:isScreen?`🏈 TOUCHDOWN! ${runner.name} takes the screen ${100-yard} yards!`:`🏈 TOUCHDOWN! ${runner.name} scores from ${100-yard} yards out!`):(isScramble?`${runner.name} scrambles for ${Math.abs(yds)} ${yds>=0?"yards":"yard loss"}.`:isScreen?`${runner.name} catches the screen for ${Math.abs(yds)} ${yds>=0?"yards":"yard loss"}.`:`${runner.name} runs ${dir} for ${Math.abs(yds)} ${yds>=0?"yards":"yard loss"}.`);
     return{text,yards:fum?0:yds,type:isTD?"td":fum?"fumble":"run",player:runner,newDown:yds>=toGo?1:down+1,td:isTD,turnover:fum,score:isTD?7:0};}
-  // Pass
-  const sackCh=cl(.08-(qb.ovr-55)*.002+dl.ovr*.0015,.02,.2);
+  // Pass — risk modifiers from call type
+  let sackCh=cl(.08-(qb.ovr-55)*.002+dl.ovr*.0015,.02,.2);
+  let intCh=cl(.04-(qb.ovr-55)*.001+db.ovr*.001,.01,.12);
+  if(passV==="quick"){sackCh*=.5;intCh*=.4;}
+  if(passV==="deep"){sackCh*=.7;intCh*=1.8;}
   if(Math.random()<sackCh){const loss=R(3,12);return{text:`${dl.name} SACKS ${qb.name} for a loss of ${loss}!`,yards:-loss,type:"sack",player:dl,defPlay:true,newDown:down+1,td:false,turnover:false};}
-  const intCh=cl(.04-(qb.ovr-55)*.001+db.ovr*.001,.01,.12);
   if(Math.random()<intCh)return{text:`INTERCEPTED! ${db.name} picks off ${qb.name}!`,yards:0,type:"int",player:db,defPlay:true,newDown:1,td:false,turnover:true};
-  const tgt=Math.random()<.55?wr:(te||wr);
-  const compCh=cl(.58+(qb.ovr-50)*.004+(tgt.ovr-50)*.002,.35,.82);
+  const tgt=passV==="rpo"?(Math.random()<.45?rb:wr):Math.random()<.55?wr:(te||wr);
+  let compCh=cl(.58+(qb.ovr-50)*.004+(tgt.ovr-50)*.002,.35,.82);
+  if(passV==="quick")compCh=cl(compCh*1.18,.5,.9);
+  if(passV==="deep")compCh=cl(compCh*.72,.25,.7);
   if(Math.random()>compCh)return{text:`${qb.name}'s pass to ${tgt.name} falls incomplete.`,yards:0,type:"inc",player:qb,newDown:down+1,td:false,turnover:false};
-  const spdB=(tgt.spd-60)/80;const deep=Math.random()<.18+spdB*.1;
-  const yds=deep?Math.round(cl(G(28+spdB*12,10),12,tgt.spd>85?R(40,75):55)):Math.round(cl(G(8+(tgt.ovr-55)*.08,4),1,22));
-  const isTD=yard+yds>=100;
-  const depthStr=deep?"DEEP":"short";
+  const spdB=(tgt.spd-60)/80;
+  const deep=passV==="deep"||(passV!=="quick"&&passV!=="medium"&&passV!=="rpo"&&Math.random()<.18+spdB*.1);
+  const yds=deep?Math.round(cl(G(28+spdB*12,10),12,tgt.spd>85?R(40,75):55)):Math.round(cl(G(passV==="quick"?5:8+(tgt.ovr-55)*.08,passV==="quick"?2:4),1,22));
+  const isTD=yard+yds>=100;const depthStr=deep?"DEEP":"short";
   let text=isTD?`🏈 TOUCHDOWN! ${qb.name} hits ${tgt.name} ${depthStr} for the score!`:`${qb.name} connects with ${tgt.name} ${depthStr} for ${yds} yards.`;
   return{text,yards:yds,type:isTD?"td":"pass",player:tgt,passer:qb,newDown:yds>=toGo?1:down+1,td:isTD,turnover:false,score:isTD?7:0};
 }
@@ -292,6 +305,7 @@ export default function GridironGM(){
   const[livePaused,setLivePaused]=useState(false);const[livePOG,setLivePOG]=useState(null);
   const[liveStats,setLiveStats]=useState({h:{},a:{}});const[lastLivePlay,setLastLivePlay]=useState(null);
   const[boxView,setBoxView]=useState(null);
+  const[liveCallMode,setLiveCallMode]=useState(false);const[liveAwaitingCall,setLiveAwaitingCall]=useState(false);
   const timerRef=useRef(null);const liveRef=useRef(null);const logEndRef=useRef(null);
   const sm=useCallback(m=>{setMsg(m);setTimeout(()=>setMsg(""),3500);},[]);
   const ut=useMemo(()=>teams[ui],[teams,ui]);
@@ -312,10 +326,10 @@ export default function GridironGM(){
 
   // Live sim ticker
   useEffect(()=>{
-    if(!liveSim||liveDone||livePaused)return;
+    if(!liveSim||liveDone||livePaused||liveAwaitingCall)return;
     liveRef.current=setInterval(()=>advanceLivePlay(),1100);
     return()=>clearInterval(liveRef.current);
-  },[liveSim,liveDone,livePaused,livePlay]);
+  },[liveSim,liveDone,livePaused,liveAwaitingCall,livePlay]);
   useEffect(()=>{if(logEndRef.current)logEndRef.current.scrollIntoView({behavior:"smooth"});},[liveLog]);
   // Commit live sim result to game state when game ends
   useEffect(()=>{
@@ -338,11 +352,14 @@ export default function GridironGM(){
     if(liveSim.h===ui||liveSim.a===ui)setLog(pr=>[...pr,`Wk${liveSim.wk}: ${us>them?"W":"L"} ${us}-${them} vs ${oppAb} (LIVE)`]);
   },[liveDone]);
 
-  function advanceLivePlay(){
+  function advanceLivePlay(uCall){
     if(!liveSim||liveDone)return;
     const hTeam=teams[liveSim.h],aTeam=teams[liveSim.a];
     const offTeam=livePoss==="h"?hTeam:aTeam,defTeam=livePoss==="h"?aTeam:hTeam;
-    const play=genLivePlay(offTeam,defTeam,liveYard,liveDown,liveToGo);
+    const isUserPoss=liveCallMode&&livePoss===(liveSim.h===ui?"h":"a");
+    if(isUserPoss&&uCall===undefined){setLiveAwaitingCall(true);return;}
+    if(isUserPoss)setLiveAwaitingCall(false);
+    const play=genLivePlay(offTeam,defTeam,liveYard,liveDown,liveToGo,uCall);
     setLastLivePlay(play);
     const nLog=[...liveLog,{qtr:liveQtr,text:play.text,type:play.type,poss:livePoss}];
     const ns={...liveScore};let ny=liveYard+play.yards;let nd=play.newDown;let ntg=nd===1?10:liveToGo;let np=livePoss;let nq=liveQtr;
@@ -383,7 +400,7 @@ export default function GridironGM(){
     setLiveLog(nLog);setLiveStats(nst);setLiveScore(ns);setLiveYard(ny);setLivePoss(np);setLiveDown(nd);setLiveToGo(ntg);setLiveQtr(nq);setLivePlay(nPlay);
   }
   function qb_id(t){const qb=t.roster.filter(p=>p.pos==="QB"&&!p.injured).sort((a,b)=>b.ovr-a.ovr)[0];return qb?.id;}
-  function startLiveSim(game){setLiveSim(game);setLiveLog([]);setLiveStats({h:{},a:{}});setLiveScore({h:0,a:0});setLiveQtr(1);setLiveYard(25);setLivePoss("h");setLiveDown(1);setLiveToGo(10);setLivePlay(0);setLiveDone(false);setLivePaused(false);setLivePOG(null);setLastLivePlay(null);setTab("livesim");}
+  function startLiveSim(game){setLiveSim(game);setLiveLog([]);setLiveStats({h:{},a:{}});setLiveScore({h:0,a:0});setLiveQtr(1);setLiveYard(25);setLivePoss("h");setLiveDown(1);setLiveToGo(10);setLivePlay(0);setLiveDone(false);setLivePaused(false);setLivePOG(null);setLastLivePlay(null);setLiveAwaitingCall(false);setTab("livesim");}
 
   function aiPick(){const picks=draftPicks;const idx=draftIdx;if(idx>=picks.length)return;const cur=picks[idx];const cls=dc[yr]||[];if(!cls.length)return;const bp=aiBestPick(teams[cur.owner].roster,cls);if(bp)makePick(bp);}
   function makePick(p){const picks=draftPicks;const idx=draftIdx;if(idx>=picks.length)return;const cur=picks[idx];const nt=[...teams];const np={...p,salary:Math.round((p.trueOvr/99)*Rf(1,5)*100)/100,contract:4,draftYr:yr,draftPk:cur.overall,ovr:p.trueOvr,pot:p.truePot,scoutLvl:2,ss:emptySS(p.pos),gl:[]};nt[cur.owner].roster.push(np);setTeams(nt);const ndc={...dc};ndc[yr]=ndc[yr].filter(d=>d.id!==p.id);setDc(ndc);const entry=`Rd${cur.rd} #${cur.overall} ${TEAMS[cur.owner].ab}: ${np.name} (${np.pos}, ${np.trueOvr})`;setDraftLog(prev=>[...prev,{...cur,player:np,text:entry}]);setLog(prev=>[...prev,entry]);setDraftIdx(idx+1);setDraftTimer(120);if(idx+1>=picks.length){setDraftActive(false);sm("Draft complete!");setSp("freeagency");setTab("freeagency");}}
@@ -587,13 +604,46 @@ export default function GridironGM(){
         </div>
         <div style={{display:"flex",alignItems:"center",gap:4}}>
           <span style={{fontSize:9,padding:"2px 6px",borderRadius:8,background:liveDone?`${C.gd}22`:`${C.gn}22`,color:liveDone?C.gd:C.gn,fontWeight:700}}>Q{liveQtr}{liveDone?" FINAL":""}</span>
-          {!liveDone&&<Btn onClick={()=>setLivePaused(p=>!p)} bg={livePaused?"#22c55e":"#f97316"} style={{padding:"3px 8px"}}>{livePaused?"▶":"⏸"}</Btn>}
+          {!liveDone&&<Btn onClick={()=>setLiveCallMode(m=>!m)} bg={liveCallMode?`${C.gn}33`:C.bd} c={liveCallMode?C.gn:C.mt} style={{padding:"3px 8px",border:`1px solid ${liveCallMode?C.gn:C.bd}`,fontSize:8}}>🎮{liveCallMode?" ON":" OFF"}</Btn>}
+          {!liveDone&&!liveAwaitingCall&&<Btn onClick={()=>setLivePaused(p=>!p)} bg={livePaused?"#22c55e":"#f97316"} style={{padding:"3px 8px"}}>{livePaused?"▶":"⏸"}</Btn>}
           <Btn onClick={()=>{setLiveSim(null);setTab("schedule");}} bg={C.bd} style={{padding:"3px 8px"}}>✕</Btn>
         </div>
       </div>
       {!liveDone&&<div style={{fontSize:9,color:C.mt,marginBottom:4}}>
-        {livePoss==="h"?teams[liveSim.h]?.ab:teams[liveSim.a]?.ab} ball • {liveDown}{liveDown===1?"st":liveDown===2?"nd":liveDown===3?"rd":"th"} & {liveToGo} • Ball at {liveYard} yd line
+        {livePoss==="h"?teams[liveSim.h]?.ab:teams[liveSim.a]?.ab} ball • {liveDown}{liveDown===1?"st":liveDown===2?"nd":liveDown===3?"rd":"th"} & {liveToGo} • Ball at {liveYard} yd line{liveCallMode&&<span style={{marginLeft:6,color:liveAwaitingCall?C.gn:C.mt}}>{liveAwaitingCall?"🎮 Your call":"⏱ Auto"}</span>}
       </div>}
+      {/* PlayCall Panel */}
+      {liveCallMode&&liveAwaitingCall&&!liveDone&&(()=>{
+        const offT=livePoss==="h"?teams[liveSim.h]:teams[liveSim.a];
+        const defT=livePoss==="h"?teams[liveSim.a]:teams[liveSim.h];
+        const pcQB=offT.roster.filter(p=>p.pos==="QB"&&!p.injured).sort((a,b)=>b.ovr-a.ovr)[0];
+        const pcRB=offT.roster.filter(p=>p.pos==="RB"&&!p.injured).sort((a,b)=>b.ovr-a.ovr)[0];
+        const pcDL=defT.roster.filter(p=>p.pos==="DL"&&!p.injured).sort((a,b)=>b.ovr-a.ovr)[0];
+        const pcDB=defT.roster.filter(p=>["CB","S"].includes(p.pos)&&!p.injured).sort((a,b)=>b.ovr-a.ovr)[0];
+        const CALLS=[
+          {id:"run_inside",l:"Inside Run",s:"run",tip:`${pcRB?.name||"RB"} (${pcRB?.ovr||"??"}) vs DL (${pcDL?.ovr||"??"})`},
+          {id:"run_outside",l:"Outside Run",s:"run",tip:`Speed: ${pcRB?.spd||"??"} SPD`},
+          {id:"run_screen",l:"Screen Pass",s:"run",tip:`High YAC potential`},
+          {id:"scramble",l:"QB Scramble",s:"run",tip:`${pcQB?.name||"QB"} — ${pcQB?.spd||"??"} SPD`},
+          {id:"pass_quick",l:"Quick Pass",s:"pass",tip:`Safe — INT risk ▼`},
+          {id:"pass_medium",l:"Medium Route",s:"pass",tip:`Balanced — ${pcQB?.name||"QB"} (${pcQB?.ovr||"??"})`},
+          {id:"pass_deep",l:"Deep Shot",s:"pass",tip:`High reward — INT risk ▲`},
+          {id:"pass_rpo",l:"RPO",s:"pass",tip:`Read-pass option`},
+        ];
+        const dnStr=["","1st","2nd","3rd","4th"][liveDown]||"";
+        return<div style={{background:`${C.bl}18`,border:`1px solid ${C.bl}55`,borderRadius:8,padding:8,marginBottom:8}}>
+          <div style={{fontSize:8,color:C.gn,fontWeight:800,marginBottom:5,letterSpacing:1}}>🎮 YOUR CALL — {dnStr} & {liveToGo} • Yd {liveYard}</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>
+            {["run","pass"].map(side=><div key={side}>
+              <div style={{fontSize:7,color:C.mt,fontWeight:700,marginBottom:2,textTransform:"uppercase"}}>{side==="run"?"🦶 Run":"🏈 Pass"}</div>
+              {CALLS.filter(c=>c.s===side).map(c=><button key={c.id} onClick={()=>advanceLivePlay(c.id)} style={{width:"100%",background:side==="run"?`${C.gd}14`:`${C.bl}14`,border:`1px solid ${side==="run"?C.gd:C.bl}33`,borderRadius:3,padding:"4px 6px",marginBottom:2,cursor:"pointer",textAlign:"left",color:"#fff",display:"block"}}>
+                <div style={{fontSize:9,fontWeight:700}}>{c.l}</div>
+                <div style={{fontSize:7,color:C.mt}}>{c.tip}</div>
+              </button>)}
+            </div>)}
+          </div>
+        </div>;
+      })()}
       {/* Field */}
       <div style={{marginBottom:8}}><FieldViz ballYard={liveYard} offClr={TEAMS[livePoss==="h"?liveSim.h:liveSim.a].clr} defClr={TEAMS[livePoss==="h"?liveSim.a:liveSim.h].clr} lastPlay={lastLivePlay} possession={livePoss}/></div>
       {/* POG */}
