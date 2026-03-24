@@ -1,31 +1,46 @@
 # Portfolio Card
 
-## Identity
+## Snapshot
 
-- Title: Gridiron GM
+- Name: Gridiron GM
 - Slug: `gridiron-gm`
-- Status: Live
-- Type: Game — browser-based sports management sim
+- Medium: Game (browser-based)
+- Status: Active
+- Stage: Live
+- Priority: High
+- Owner: VaultSpark Studios
+- Health: Green
+- Last updated: 2026-03-24
 
-## Pitch
+## Quick overview
 
-Build your dynasty. Draft prospects, sign free agents, make trades, and sim your way to a championship in this NFL-style franchise manager that runs entirely in your browser.
+- One-line summary: NFL franchise simulator that runs entirely in the browser — draft, trade, sim, and build a dynasty with no install or login
+- Current focus: Studio OS migration complete; open to next gameplay feature batch
+- Next milestone: Position filter on draft/scouting board, live sim stat write-back
+- Launch window: Launched
 
-## Meta tags
+## Top blockers
 
-- Football GM
-- Browser Game
-- Sports Simulation
+- None
 
-## CTA
+## Links
 
-- Label: Play Now
-- URL: `https://vaultsparkstudios.com/gridiron-gm/`
+- Repo: `https://github.com/VaultSparkStudios/gridiron-gm`
+- Runtime: `https://vaultsparkstudios.com/gridiron-gm/`
+- Key docs:
+  - `context/PROJECT_BRIEF.md`
+  - `context/LATEST_HANDOFF.md`
+  - `HANDOFF.md` (full game architecture reference)
 
-## Card art class
+## Studio site card
 
-`card-gridiron-gm`
+- Section: `Vault-Forged`
+- CTA: Play Now → `/gridiron-gm/`
+- Meta tags: Football GM, Browser Game, Sports Simulation
+- Card art class: `card-gridiron-gm`
 
-## Studio site section
+## Cross-studio value
 
-`Vault-Forged`
+- Franchise or strategic value: Flagship sports game; proves the studio can ship polished single-file browser games
+- Downstream content value: Potential for a sports franchise universe; player/team data could seed future titles
+- Shared systems or dependencies: Single-file React pattern is a reusable studio template for lightweight browser games
