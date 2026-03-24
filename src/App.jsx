@@ -464,24 +464,9 @@ export default function GridironGM(){
   const throwTo=t=>{resolveQte(t.open?1.2+Math.random()*0.2:0.45+Math.random()*0.15);};
   const hitQteBar=()=>{const v=liveQteBar;const bonus=v>=42&&v<=58?1.4:v>=28&&v<=72?1.1:0.65;resolveQte(bonus);};
   // ═══ P5: GM ↔ PLAY BRIDGE ═══
-  const exportToPlay=()=>{
-    const ut=teams[ui];const opp=teams[(ui+1)%teams.length];
-    const fmt=t=>({name:`${t.city} ${t.name}`,ab:t.ab,clr:t.clr,ac:t.ac,
-      ocScheme:t.coach?.oc?.scheme||null,dcScheme:t.coach?.dc?.scheme||null,
-      players:t.roster.filter(p=>!p.injured).map(p=>({id:p.id,name:p.name,pos:p.pos,ovr:p.ovr,spd:p.spd||70,str:p.str||70}))});
-    try{localStorage.setItem('gm_roster_export',JSON.stringify({team:fmt(ut),opponent:fmt(opp)}));sm("Exported to Play ✓");}catch{sm("Export failed");}
-  };
-  const importPlayResult=()=>{
-    try{
-      const raw=localStorage.getItem('gm_game_result');if(!raw){sm("No game result found.");return;}
-      const res=JSON.parse(raw);const nt=[...teams];
-      (res.playerDeltas||[]).forEach(d=>{const p=nt[ui].roster.find(r=>r.id===d.id);if(!p)return;if(d.passYds)p.ss.passYds=(p.ss.passYds||0)+d.passYds;if(d.rushYds)p.ss.rushYds=(p.ss.rushYds||0)+d.rushYds;if(d.td)p.ss.passTD=(p.ss.passTD||0)+d.td;});
-      if(res.score?.team>res.score?.opp)nt[ui].w++;else nt[ui].l++;
-      nt[ui].pf+=(res.score?.team||0);nt[ui].pa+=(res.score?.opp||0);
-      setTeams(nt);localStorage.removeItem('gm_game_result');
-      sm(`Imported: ${res.score?.team||0}-${res.score?.opp||0} W vs ${res.oppName||"Opponent"}`);
-    }catch{sm("Import failed");}
-  };
+  const exportGameToPlay=(game)=>{const oppId=game.h===ui?game.a:game.h;const opp=teams[oppId];const ut=teams[ui];const fmt=t=>({name:`${t.city} ${t.name}`,ab:t.ab,clr:t.clr,ac:t.ac,ocScheme:t.coach?.oc?.scheme||null,dcScheme:t.coach?.dc?.scheme||null,record:`${t.w}-${t.l}`,players:t.roster.filter(p=>!p.injured).map(p=>({id:p.id,name:p.name,pos:p.pos,ovr:p.ovr,spd:p.spd||70,str:p.str||70,salary:p.salary||0}))});const data={team:fmt(ut),opponent:fmt(opp),week:game.wk,season:yr,gameId:`${game.wk}-${game.h}-${game.a}`};try{localStorage.setItem('gm_roster_export',JSON.stringify(data));window.open('https://vaultsparkstudios.com/gridiron-gm-play/','_blank');sm(`Week ${game.wk} vs ${opp.ab} exported → Play`);}catch{sm("Export failed");}};
+  const exportToPlay=()=>{const ut=teams[ui];const opp=teams[(ui+1)%teams.length];const fmt=t=>({name:`${t.city} ${t.name}`,ab:t.ab,clr:t.clr,ac:t.ac,ocScheme:t.coach?.oc?.scheme||null,dcScheme:t.coach?.dc?.scheme||null,record:`${t.w}-${t.l}`,players:t.roster.filter(p=>!p.injured).map(p=>({id:p.id,name:p.name,pos:p.pos,ovr:p.ovr,spd:p.spd||70,str:p.str||70}))});try{localStorage.setItem('gm_roster_export',JSON.stringify({team:fmt(ut),opponent:fmt(opp)}));sm("Exported to Play ✓");}catch{sm("Export failed");}};
+  const importPlayResult=()=>{try{const raw=localStorage.getItem('gm_game_result');if(!raw){sm("No game result found.");return;}const res=JSON.parse(raw);const nt=[...teams];(res.playerDeltas||[]).forEach(d=>{const p=nt[ui].roster.find(r=>r.id===d.id);if(!p)return;if(d.passYds){p.ss.passYds=(p.ss.passYds||0)+d.passYds;p.ss.att=(p.ss.att||0)+(d.att||Math.ceil(d.passYds/8));p.ss.comp=(p.ss.comp||0)+(d.comp||Math.ceil(d.passYds/12));p.ss.passTD=(p.ss.passTD||0)+(d.passTD||0);}if(d.rushYds){p.ss.rushYds=(p.ss.rushYds||0)+d.rushYds;p.ss.rushAtt=(p.ss.rushAtt||0)+(d.rushAtt||Math.ceil(d.rushYds/4));p.ss.rushTD=(p.ss.rushTD||0)+(d.rushTD||0);}if(d.recYds){p.ss.recYds=(p.ss.recYds||0)+d.recYds;p.ss.rec=(p.ss.rec||0)+(d.rec||Math.ceil(d.recYds/9));p.ss.recTD=(p.ss.recTD||0)+(d.recTD||0);}p.ss.gp=(p.ss.gp||0)+1;});if((res.score?.team||0)>(res.score?.opp||0))nt[ui].w++;else if((res.score?.opp||0)>(res.score?.team||0))nt[ui].l++;else nt[ui].t++;nt[ui].pf+=(res.score?.team||0);nt[ui].pa+=(res.score?.opp||0);setTeams(nt);localStorage.removeItem('gm_game_result');sm(`Imported: ${res.score?.team||0}-${res.score?.opp||0} vs ${res.oppName||"Opponent"} (Wk${res.week||"?"})`);}catch(e){sm("Import failed");}};
   const extendP=pid=>{const nt=[...teams];const p=nt[ui].roster.find(r=>r.id===pid);if(!p||p.contract>1){sm("Can only extend players in their final year!");return;}const newSal=+(p.salary*1.1).toFixed(1);if(capSpace(nt[ui])+p.salary<newSal){sm("Not enough cap for extension!");return;}p.salary=newSal;p.contract=3;setTeams(nt);setSel({...p});sm(`Extended ${p.name} — $${newSal}M x 3yr`);};
   const tgS=col=>{if(sc===col)setSd(d=>-d);else{setSc(col);setSd(-1);}};
   const tgFS=col=>{if(faSc===col)setFaSd(d=>-d);else{setFaSc(col);setFaSd(-1);}};
@@ -570,7 +555,7 @@ export default function GridironGM(){
               <span style={{color:C.mt,fontSize:9}}>{g.played?`${g.hs} - ${g.as}`:"vs"}</span>
               <span style={{fontWeight:g.played&&g.as>g.hs?800:400,minWidth:36}}>{teams[g.a]?.ab}</span>
               {g.played&&(g.boxH||g.boxA)&&<button onClick={()=>setBoxView(g)} style={{background:`${C.bl}22`,color:C.bl,border:`1px solid ${C.bl}44`,padding:"1px 5px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>📊 Box</button>}
-              {!g.played&&isU&&sp==="regular"&&wk<week&&<button onClick={()=>startLiveSim(g)} style={{background:`${C.gn}22`,color:C.gn,border:`1px solid ${C.gn}44`,padding:"1px 5px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>⚡ Live Sim</button>}
+              {!g.played&&isU&&sp==="regular"&&wk<week&&<><button onClick={()=>startLiveSim(g)} style={{background:`${C.gn}22`,color:C.gn,border:`1px solid ${C.gn}44`,padding:"1px 5px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>⚡ Live Sim</button><button onClick={()=>exportGameToPlay(g)} style={{background:"#7c3aed22",color:"#a78bfa",border:"1px solid #7c3aed44",padding:"1px 5px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>🎮 Play</button></>}
             </div>);})}
         </div>);})}
     </div>}
