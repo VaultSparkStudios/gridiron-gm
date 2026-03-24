@@ -1,0 +1,37 @@
+# Open Questions
+
+---
+
+### Should live sim stats write back to player .ss season stats?
+
+- Why it matters: Currently `liveStats` tracks per-game stats in the live sim but they are NOT written to player `.ss` season stats. Only the live box score and POG use them. This means live-simmed games show different totals in the stats tab vs. sim-simmed games.
+- Decision owner: User
+- What would answer it: A decision on whether to implement the write-back and whether it should replace or add to the existing simGame stat path
+- Latest status: Open — noted in HANDOFF.md §8 known issue #3
+
+---
+
+### Should the draft prospect board get a position filter?
+
+- Why it matters: Roster and FA tables both have position filters but the scouting/draft board does not. Consistency suggests it should.
+- Decision owner: User
+- What would answer it: User confirming it's a wanted feature; then implement same `posFilter` pattern as PlayerTable
+- Latest status: Open — listed in TASK_BOARD.md backlog
+
+---
+
+### What is the backend rollout plan for gridiron-gm?
+
+- Why it matters: Gridiron GM is currently 100% client-side (no backend). Future features like persistent cloud saves or leaderboards would require a backend. The studio standard defines `play-gridiron-gm.vaultsparkstudios.com` as the future gameplay origin.
+- Decision owner: User
+- What would answer it: A decision on whether to ever add a backend, and if so, what the triggering milestone is
+- Latest status: Open — no backend planned yet; repo scaffolds the domain names but does not connect to them
+
+---
+
+### Should HANDOFF.md be replaced by context/LATEST_HANDOFF.md?
+
+- Why it matters: `HANDOFF.md` at repo root is the legacy game-dev handoff. `context/LATEST_HANDOFF.md` is the new Studio OS handoff. They serve related but different purposes.
+- Decision owner: User
+- What would answer it: Decision on whether to migrate HANDOFF.md content into context/ or keep both
+- Latest status: Current plan: keep HANDOFF.md as the game architecture reference, use context/LATEST_HANDOFF.md as the active session handoff

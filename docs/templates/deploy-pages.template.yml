@@ -1,0 +1,68 @@
+name: Deploy Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/deploy-pages.yml"
+      - "package.json"
+      - "public/**"
+      - "scripts/build-pages.mjs"
+      - "src/**"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      VITE_APP_BASE_PATH: /__GAME_SLUG__/
+      VITE_CANONICAL_URL: https://vaultsparkstudios.com/__GAME_SLUG__/
+      VITE_OG_IMAGE_URL: https://vaultsparkstudios.com/__GAME_SLUG__/images/cover.png
+      VITE_DOMAIN: vaultsparkstudios.com
+      VITE_GAME_SERVICE_ORIGIN: ${{ vars.GAME_SERVICE_ORIGIN }}
+      API_DOMAIN: ${{ vars.API_DOMAIN }}
+      VSFGM_RUNTIME_DEFAULT: client
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/configure-pages@v5
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Build Pages bundle
+        run: npm run build:pages
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: static
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+# Replace:
+# - __GAME_SLUG__ with the lowercase public slug, e.g. vaultfront

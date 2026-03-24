@@ -12,6 +12,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:pages": "vite build && node scripts/postbuild-pages.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

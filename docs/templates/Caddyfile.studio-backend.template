@@ -1,0 +1,11 @@
+{
+	email __TLS_EMAIL__
+}
+
+play-__GAME_SLUG__.vaultsparkstudios.com {
+	reverse_proxy __GAME_SLUG__-play:8080
+}
+
+api-__GAME_SLUG__.vaultsparkstudios.com {
+	reverse_proxy __GAME_SLUG__-api:8081
+}
