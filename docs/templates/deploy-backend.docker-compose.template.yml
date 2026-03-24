@@ -1,0 +1,72 @@
+version: "3.9"
+
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./ops/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - __GAME_SLUG__-play
+      - __GAME_SLUG__-api
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: studio_admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+
+  __GAME_SLUG__-play:
+    image: ghcr.io/vaultsparkstudios/__GAME_SLUG__-play:latest
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      DOMAIN: vaultsparkstudios.com
+      GAME_SLUG: __GAME_SLUG__
+      GAME_PUBLIC_ORIGIN: https://vaultsparkstudios.com/__GAME_SLUG__/
+      GAME_SERVICE_ORIGIN: https://play-__GAME_SLUG__.vaultsparkstudios.com
+      API_ORIGIN: https://api-__GAME_SLUG__.vaultsparkstudios.com
+      DATABASE_URL: postgresql://studio_admin:${POSTGRES_PASSWORD}@postgres:5432/__GAME_SLUG___db
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+
+  __GAME_SLUG__-api:
+    image: ghcr.io/vaultsparkstudios/__GAME_SLUG__-api:latest
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 8081
+      DOMAIN: vaultsparkstudios.com
+      GAME_SLUG: __GAME_SLUG__
+      APP_ORIGIN: https://vaultsparkstudios.com/__GAME_SLUG__/
+      GAME_SERVICE_ORIGIN: https://play-__GAME_SLUG__.vaultsparkstudios.com
+      API_ORIGIN: https://api-__GAME_SLUG__.vaultsparkstudios.com
+      DATABASE_URL: postgresql://studio_admin:${POSTGRES_PASSWORD}@postgres:5432/__GAME_SLUG___db
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  caddy_data:
+  caddy_config:
+  postgres_data:
+  redis_data:
