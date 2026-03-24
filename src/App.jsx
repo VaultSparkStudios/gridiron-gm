@@ -463,6 +463,25 @@ export default function GridironGM(){
   const resolveQte=(bonus)=>{setLivePhase(null);setLiveRecTargets([]);advanceLivePlay(livePendingCall,bonus);setLivePendingCall(null);};
   const throwTo=t=>{resolveQte(t.open?1.2+Math.random()*0.2:0.45+Math.random()*0.15);};
   const hitQteBar=()=>{const v=liveQteBar;const bonus=v>=42&&v<=58?1.4:v>=28&&v<=72?1.1:0.65;resolveQte(bonus);};
+  // ═══ P5: GM ↔ PLAY BRIDGE ═══
+  const exportToPlay=()=>{
+    const ut=teams[ui];const opp=teams[(ui+1)%teams.length];
+    const fmt=t=>({name:`${t.city} ${t.name}`,ab:t.ab,clr:t.clr,ac:t.ac,
+      ocScheme:t.coach?.oc?.scheme||null,dcScheme:t.coach?.dc?.scheme||null,
+      players:t.roster.filter(p=>!p.injured).map(p=>({id:p.id,name:p.name,pos:p.pos,ovr:p.ovr,spd:p.spd||70,str:p.str||70}))});
+    try{localStorage.setItem('gm_roster_export',JSON.stringify({team:fmt(ut),opponent:fmt(opp)}));sm("Exported to Play ✓");}catch{sm("Export failed");}
+  };
+  const importPlayResult=()=>{
+    try{
+      const raw=localStorage.getItem('gm_game_result');if(!raw){sm("No game result found.");return;}
+      const res=JSON.parse(raw);const nt=[...teams];
+      (res.playerDeltas||[]).forEach(d=>{const p=nt[ui].roster.find(r=>r.id===d.id);if(!p)return;if(d.passYds)p.ss.passYds=(p.ss.passYds||0)+d.passYds;if(d.rushYds)p.ss.rushYds=(p.ss.rushYds||0)+d.rushYds;if(d.td)p.ss.passTD=(p.ss.passTD||0)+d.td;});
+      if(res.score?.team>res.score?.opp)nt[ui].w++;else nt[ui].l++;
+      nt[ui].pf+=(res.score?.team||0);nt[ui].pa+=(res.score?.opp||0);
+      setTeams(nt);localStorage.removeItem('gm_game_result');
+      sm(`Imported: ${res.score?.team||0}-${res.score?.opp||0} W vs ${res.oppName||"Opponent"}`);
+    }catch{sm("Import failed");}
+  };
   const extendP=pid=>{const nt=[...teams];const p=nt[ui].roster.find(r=>r.id===pid);if(!p||p.contract>1){sm("Can only extend players in their final year!");return;}const newSal=+(p.salary*1.1).toFixed(1);if(capSpace(nt[ui])+p.salary<newSal){sm("Not enough cap for extension!");return;}p.salary=newSal;p.contract=3;setTeams(nt);setSel({...p});sm(`Extended ${p.name} — $${newSal}M x 3yr`);};
   const tgS=col=>{if(sc===col)setSd(d=>-d);else{setSc(col);setSd(-1);}};
   const tgFS=col=>{if(faSc===col)setFaSd(d=>-d);else{setFaSc(col);setFaSd(-1);}};
@@ -531,6 +550,8 @@ export default function GridironGM(){
         <div><span style={{fontSize:8,color:C.mt}}>USED </span><span style={{fontSize:10,fontWeight:700,color:C.gd}}>${capHit(ut).toFixed(1)}M</span></div>
         {(ut.deadCap||0)>0&&<div><span style={{fontSize:8,color:C.mt}}>DEAD CAP </span><span style={{fontSize:10,fontWeight:700,color:C.rd}}>${(ut.deadCap).toFixed(1)}M</span></div>}
         <div style={{flex:1,height:6,background:C.bd,borderRadius:3,minWidth:80}}><div style={{width:`${Math.min(100,(capHit(ut)/CAP_CEILING)*100)}%`,height:"100%",background:capSpace(ut)<20?C.rd:capSpace(ut)<50?C.gd:C.gn,borderRadius:3}}/></div>
+        <Btn onClick={exportToPlay} bg="#7c3aed" c="#e9d5ff" style={{fontSize:7,padding:"2px 6px"}}>📤 Play</Btn>
+        {localStorage.getItem('gm_game_result')&&<Btn onClick={importPlayResult} bg={C.gn} style={{fontSize:7,padding:"2px 6px"}}>📥 Results</Btn>}
       </div>
       <PlayerTable players={ut.roster} setSel={setSel} sortCol={sc} sortDir={sd} onSort={tgS} posFilter={rPosF} setPosFilter={setRPosF}/>
     </div>}
