@@ -4,6 +4,23 @@ Append entries. Do not edit historical entries.
 
 ---
 
+## 2026-03-25 (session 16 — v9.0)
+
+- Session: v9.0 — 10 GM features
+- Offseason Extensions (Extend 2SP in PlayerModal, +2yr 15% raise, p.offsznExt)
+- Practice Squad Poaching (psPoachAttempt state, 15%/wk, Block 1SP / Let Go modal)
+- Coaching XP (coach.xp, +3/win +1/loss, level up at 20 XP +5 rating, XP bar in coaching tab)
+- Injury Prone Flag (p.injCount, p.fragile at ≥2, ⚠️ badge in PlayerTable + modal)
+- Trade Deadline Urgency (deadlineUrgency state, wk10 check, CONTEND/SELL modal, gmRep +1)
+- Gem Scout (gemScout state, Scout Gem 1SP in draft, R4+ pot boost to 85+, ⭐ GEM banner)
+- UDFA Pool (udfaPool state, 8 UDFAs after R7, Sign to PS max 5)
+- Holdout Escalation (holdoutWks{} state, 2+ wk → morale -3 gmRep -1)
+- Rookie Wage Scale (rookieSlot() helper, R1 fixed salary, shown in draft + log)
+- Expansion Draft (expansionMode/expansionProtected state, yr≥3, protect 15, Las Vegas Aces)
+- Both builds clean; committed; context files updated
+
+---
+
 ## 2026-03-25 (session 9 — batch 8)
 
 - Session: salary cap penalties, coaching contract expiry, P28 red zone fade route
