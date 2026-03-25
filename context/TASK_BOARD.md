@@ -15,14 +15,14 @@
 
 ## Backlog — Gameplay
 
-- [ ] P29: Trick play — reverse or flea flicker play call; surprise run bonus
+- [x] **P29: Trick play** — 15% chance on run_ calls; NORMAL RUN / TRICK PLAY modal (3s auto); PITCH! button at 650ms; 50/64% big gain 15-34yds, 30/26% medium, 20/10% blown up
 - [ ] P30: Two-minute drill — compressed AI defense, user faster tempo near end of half
 - [ ] P31: Red zone slant — quick inside route option vs press coverage in RZ
 
 ## Backlog — GM Systems
 
-- [ ] GM: Player contract holdout effect — holdout players skip simPG lineup contribution
-- [ ] GM: Salary cap forecast improvements — expiring contracts list + projected space w/wo resignings
+- [x] **GM: Player holdout effect** — `p.holdout=true` from morale event; clears at simWk start; excluded from teamStr + simGame; clears on re-sign
+- [x] **GM: Cap forecast improvements** — expiring list (top 6 by OVR) with est. ask; keep-all / cut-all projected space in cap header
 - [ ] GM: Player trade request resolution — accept (force trade) or negotiate (conf boost)
 
 ## Backlog — Infrastructure

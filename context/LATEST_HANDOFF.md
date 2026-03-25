@@ -1,34 +1,34 @@
 # Latest Handoff
 
-Last updated: 2026-03-25 (session 9 — final closeout)
+Last updated: 2026-03-25 (session 10 — final closeout)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (batch 8 — moves 36-38)
+## What was completed this session (moves 39-41)
 
-### gridiron-gm — v5.7 (App.jsx)
+### gridiron-gm — v5.8 (App.jsx)
 
-**Move 36 — Salary Cap Penalties**
-- At start of `simWk`: loop all teams; if `capHit(t) > CAP_CEILING` → `t.deadCap += 5`
-- User team additionally loses first owned 3rd-round draft pick (if any); logged `⚠️ CAP VIOLATION`
-- CPU teams silently receive dead cap fine only
-- Roster tab: red warning banner when `capSpace(ut) < 0` — "⚠️ OVER THE CAP — $5M fine + 3rd-round pick at next simWk"
+**Move 39 — Player Holdout Effect**
+- `teamStr`: filters out `p.holdout` alongside `p.injured` — holdout players excluded from team strength calc
+- `simGame`: skips `p.holdout` players in stat gen (no stats generated, no gp credited)
+- `simWk` start: `nt.forEach(t=>t.roster.forEach(p=>{p.holdout=false;}))` — clears all flags before game sims
+- Morale event: sets `holdout.holdout=true` after firing — takes effect on NEXT week's games
+- `reSign`: sets `p.holdout=false` when player is re-signed
 
-**Move 37 — Coaching Contract Expiry**
-- `genCoach()`: added `contract: R(1,3)` to all new coaches
-- `newSeason()`: decrements each coach contract by 1; at 0 → push to `faCoaches` with fresh 1-2yr deal, null from team; user expirations logged `📋 CONTRACT EXPIRED`
-- `CoachCard`: shows `[N]yr left` (red when ≤1)
-- `reSignCoach(role)`: preseason only, costs 1 SP, +2yr
-- Re-sign button on CoachCard when `sp==="preseason" && coach.contract<=1`
+**Move 40 — Cap Forecast Improvements**
+- Added expiring contracts section to cap header (after cap bar, before Play button)
+- Shows top 6 expiring players by OVR: name, OVR (color-coded), est. ask ($M, red if can't afford)
+- "keep all $Xm / cut all $Ym" projected next-year space inline
+- Uses `RES_MAX` + gmRep discount for ask calculation — matches actual re-sign cost
 
-### gridiron-gm-play — P28 (FieldScene.js)
+### gridiron-gm-play — P29 (FieldScene.js)
 
-**Move 38 — P28 Red Zone Fade Route**
-- `_onPlayCalled()`: intercepts `pass_*` when `state.yardLine <= 15 && !this._noHuddleActive` → `_showFadeOption(callId)`
-- `_showFadeOption(callId)`: 2-button modal (NORMAL PASS / FADE ROUTE); auto-dismisses to normal pass after 3s
-- `_startFadeRoute()`: hides all, shows QB/WR1/CB1; WR+CB at endzone corner `(yardToX(2), FIELD_Y+10)`; ball arcs over 1100ms; "🤲 CATCH!" button appears at 900ms; resolves at 1400ms
-- `_resolveFade(caught)`: if not caught → incomplete; if caught → WR vs CB OVR contest (40-85%); TD `+6 + recTD stat` or "KNOCKED AWAY"
-- `this._noHuddleActive=false; this._fadeEls=null` added to `create()` init
+**Move 41 — P29 Trick Play**
+- `create()`: added `this._trickEls = null` init
+- `_onPlayCalled`: 15% intercept on `run_*` (non-no-huddle) → `_showTrickOption(callId)`
+- `_showTrickOption(callId)`: NORMAL RUN / TRICK PLAY modal (3s auto-dismiss to normal run)
+- `_startTrickPlay()`: QB→RB handoff (400ms) → RB→WR pitch (350ms) → WR runs reverse; "🏈 PITCH!" button at 650ms
+- `_resolveTrickPlay(pitchPressed)`: 50/64% big 15-34yds, 30/26% medium 3-11yds, 20/10% -3 to -6yds
 
 ---
 
@@ -40,9 +40,9 @@ Nothing. Both builds clean and committed.
 
 ## What to do next (priority order)
 
-1. **GM: Player holdout effect** — holdout players (from morale events) skip simPG lineup; simGame OVR contribution zeroed
-2. **P29: Trick play** — reverse/flea flicker option in play call; intercepts `run_*` occasionally; surprise yards bonus
-3. **GM: Salary cap forecast improvements** — expiring contracts list below cap forecast + projected space with/without re-signing top players
+1. **P30: Two-minute drill** — compressed AI defense, user faster tempo near end of half
+2. **GM: Player trade request resolution** — accept (force trade) or negotiate (conf boost)
+3. **P31: Red zone slant** — quick inside route option vs press coverage in RZ
 
 ---
 
@@ -58,6 +58,7 @@ Nothing. Both builds clean and committed.
 - Score fields in FieldScene: `state.score.opp` (AI), `state.score.team` (user)
 - Injury fields: `p.injured`, `p.injWk`, `p.injType`, `p.injSev`, `p.injRecWks`
 - Coach fields: `coach.contract` (years remaining, default 2 if missing)
+- Holdout fields: `p.holdout` (boolean, cleared at start of each simWk, set by morale event)
 
 ## Read first next session
 
