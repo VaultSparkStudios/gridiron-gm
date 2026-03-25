@@ -20,6 +20,12 @@
 - [x] Defense sub-positions: DE/DT, MLB/OLB, FS in gridiron-gm-play
 - [x] Drive chart in GameOverScene (gridiron-gm-play)
 - [x] ci.yml workflow for gridiron-gm-play
+- [x] P7: Fix DE/MLB/FS position lookups in FieldScene, BootScene, defaultRoster (was stale DL/LB/S)
+- [x] P7: 4th-down decision in PlayCallScene (Punt / FG range-gated / Go For It)
+- [x] P7: PAT choice after user TD (Kick PAT +1 97% / Go for 2 +2 45%)
+- [x] P7: FG attempt handler — distance-based success, possession flip, drive chart 'FG' entry
+- [x] P7: Punt handler — possession flip in FieldScene
+- [x] BootScene matchup card (was already live since P5; fixed DE lookup now corrected)
 
 ## In Progress
 
@@ -31,11 +37,10 @@
 
 ## Backlog — gridiron-gm-play (companion repo)
 
-- [ ] BootScene matchup card: key positional matchups (LT vs top DE, QB vs top CB)
-- [ ] Special teams in Phaser
-- [ ] 4th-down decision in PlayCall scene (Phaser-side counterpart)
+- [x] P8: Kickoff return mini-game — user returns kick (WASD, 7 coverage defenders), AI returns after user score, opening kickoff at game start
 
 ## Backlog — Infrastructure
 
 - [ ] OG image: `public/images/cover.png` (social sharing)
-- [ ] Mobile layout improvements
+- [x] Mobile layout improvements (gridiron-gm-play: Scale.FIT, user-scalable=no, D-pad sz 44)
+- [x] Player progression visibility: dev report in game log, expired players enter FA pool, ⬆ DEV badge in PlayerTable (age≤24, pot-ovr≥12)
