@@ -4,7 +4,7 @@
 
 - Date: 2026-03-25
 - Overall status: Live on GitHub Pages, active development
-- Current version: v5.9 (trade request resolution) / P31 — both builds clean
+- Current version: v6.0 (gridiron-gm) / P35 (gridiron-gm-play) — both builds clean
 - Studio OS: Fully compliant
 
 ## What exists
@@ -23,17 +23,22 @@
 - Opponent Scouting Report, Practice Squad (max 10), IR (max 8 per team)
 - Contract re-signing, restructure, franchise tag, mid-season extension (1 SP)
 - **Coaching & scheme system** — OC/DC/ST; coaching upgrades (2 SP → +5 rating)
-- **Coaching Contract Expiry** — coaches have `contract` (1-3yr from `genCoach`); `newSeason` decrements; at 0 → auto-fired to faCoaches; user warned in log; `Re-sign +2yr (1SP)` button in preseason when `contract<=1`; contract years shown on CoachCard
+- **Coaching Contract Expiry** — coaches have `contract` (1-3yr); `newSeason` decrements; auto-fired to faCoaches; Re-sign +2yr (1SP) preseason
 - Division/Conference Standings, Wild Card Seeding, Rivalry System, Playoff Picture
 - Player Aging/Decline, Breakout Seasons, AI Cap Management, FA Mid-Season Refresh
 - Season awards, Career stats, Cap space forecast, Draft grade report
 - Preseason games, Rookie dev camp, Coaching hot seat, Trade deadline surge
-- Player Morale Events (trade request / holdout / leadership boost per week)
-- **Player Holdout Effect** — holdout flag (`p.holdout=true`) set by morale event; cleared at start of next simWk; holdout players excluded from `teamStr` and `simGame` stat gen; cleared on re-sign
-- Injury Severity Tiers (minor/moderate/major; major → auto IR; modal shows wk remaining)
-- **Salary Cap Penalties** — teams over $200M at simWk: +$5M dead cap; user also loses one 3rd-round pick; red warning banner in roster tab when over cap
-- **Cap Forecast Improvements** — expiring contracts list in cap header (top 6 by OVR) with est. ask; "keep all / cut all" projected space for next year
-- **Trade Request Resolution** — morale event sets `p.tradeRequest=true` for user team; roster banner during regular season with Negotiate (1SP→conf+20, morale+3) or Find Trade (auto-generate trade offer via AI team lookup); `resolveTradeReq(pid, action)`
+- **Player Morale Events** — trade request / holdout / leadership boost per week
+- **Player Holdout Effect** — `p.holdout=true`; cleared at simWk start + on re-sign; excluded from teamStr/simGame
+- **Injury Severity Tiers** — minor/moderate/major; major → auto IR; modal shows wk remaining
+- **Salary Cap Penalties** — over $200M at simWk: +$5M dead cap + 3rd-round pick forfeit; red warning banner
+- **Cap Forecast Improvements** — expiring contracts top 6 by OVR with est. ask; keep-all/cut-all projected space
+- **Trade Request Resolution** — morale event sets `p.tradeRequest=true`; banner with Negotiate (1SP) or Find Trade
+- **Owner Goals** — adaptive win target per season, evaluated wk 18, banner in schedule tab; resets each season
+- **League News** — collapsible section in log tab, generated from sim results/events each week
+- **Training Camp Focus** — preseason only; 2SP to boost 1 player attribute (+1); marks `trainedThisCamp`
+- **Contract Negotiation Modal** — Negotiate button in preseason re-sign; counter-offer / midpoint / walk away
+- **Draft Scout (1SP)** — lighter-accuracy scout button on active draft tab player rows
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -41,17 +46,20 @@
 ### Phaser Play module (gridiron-gm-play)
 
 - P1–P27: Full gameplay — run/pass/defense, all special teams, pass rush mini-game, hurry-up defense, goal line stand, no-huddle, muffed punt, two-point mini-game
-- **P28: Red zone fade route** — inside 15yd, pass calls show "FADE ROUTE" option (3s auto-dismiss); `_startFadeRoute()` positions WR+CB in endzone corner; ball arcs 1100ms; "🤲 CATCH!" button at 900ms; `_resolveFade()` — WR vs CB OVR contest (40-85%); TD or knocked away; `_noHuddleActive` guard
-- **P29: Trick play** — 15% chance on non-no-huddle `run_*` calls: NORMAL RUN / TRICK PLAY modal (3s auto-dismiss); `_startTrickPlay()` animates QB→RB handoff→WR reverse pitch; "🏈 PITCH!" button at 650ms boosts big-gain odds (50→64%); resolves 50/64% big gain 15-34yds, 30/26% medium 3-11yds, 20/10% blown up -3 to -6yds
-- **P30: Two-minute drill** — `state._drillMode=true` after warning fires; user drives auto no-huddle (defenders out of position) + "⚡ 2-MIN DRILL" flash; AI drives auto-prevent (no def call modal); clears at halftime
-- **P31: Red zone slant** — `_showFadeOption` now 3 buttons (Normal/Slant/Fade at W/2±150,0); `_startSlantRoute` animates WR inside cut + 500ms snap; `_resolveSlant` — CB press INT risk, ~70% comp for 4-11yds, 38% TD inside 9yd; auto-resolves, no timing button
-- Per-player stat tracking, drive chart, halftime, two-minute warning
-- Mobile: Scale.FIT, D-pad
+- **P28: Red zone fade route** — 15yd intercept; WR+CB corner; CATCH! button at 900ms; WR vs CB OVR TD contest (40-85%)
+- **P29: Trick play** — 15% on non-no-huddle run_*; NORMAL/TRICK modal; PITCH! at 650ms; 50/64% big gain 15-34yds
+- **P30: Two-minute drill** — `state._drillMode=true`; auto no-huddle user / auto-prevent AI; clears at halftime
+- **P31: Red zone slant** — 3-button RZ modal (Normal/Slant/Fade); WR inside cut; CB press INT risk; ~70% comp
+- **P32: Screen pass** — `screen_pass` in PlayCallScene; RB swings flat 580ms; THROW! at 520ms; 82% catch 3-10yds; 15% CB stuff; 5% INT
+- **P33: Play action pass** — `pass_action` → `_startPlayAction()`; QB fake→RB 280ms; CB bites upfield; 65%+ comp 10-28yds; 4% INT
+- **P34: Fumble risk mechanic** — runs >7yds trigger `fumble_risk` phase; TAP! 1.4s window; <2 taps = fumble ×4; ≥4 taps = fumble ×0.25
+- **P35: Defensive blitz control** — `_showDefCall()` pre-snap modal on AI drives (cover2/man/blitz/prevent)
 
 ## Important paths
 
-- `src/App.jsx` — all game code (~1180+ lines, v5.8)
+- `src/App.jsx` — all game code (~1200+ lines, v6.0)
 - `gridiron-gm-play/src/scenes/FieldScene.js` — primary Phaser gameplay file
+- `gridiron-gm-play/src/scenes/PlayCallScene.js` — play call menu (8 runs/passes)
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()
 - `.github/workflows/` — ci.yml + deploy-pages.yml
 - `context/` — Studio OS project memory
@@ -60,8 +68,6 @@
 
 - (nothing blocked)
 
-## Next 3 moves
+## Next session task board
 
-1. **GM: Player retirement** — age 34+ chance at season end; hall of fame log entry
-2. **P32: Goal line QB sneak** — inside 1yd, short yardage option; button mash mini-game
-3. **GM: Season awards panel** — MVP/DPOY/OROY/DROY at season end from stats; +rep for winner's GM
+See context/TASK_BOARD.md — 15 features queued (7 GM + 8 Play P36-P43)
