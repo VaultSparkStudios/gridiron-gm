@@ -73,7 +73,7 @@ This is the authoritative active handoff for Gridiron GM.
   - Trigger map: game start → `_startKickoffReturn`; AI TD → `_startKickoffReturn`; user PAT done → `_startKickoffCover`; made FG → `_pendingKickoffCover` flag → `_startKickoffCover`
   - All stats/scoring/drive tracking unchanged — kickoff return IS a run play, chains into normal `_afterPlay`
 
-### This session (2026-03-24 — P8 + mobile + progression visibility)
+### This session (2026-03-24 — P8 + mobile + progression + AI FA + fumbles)
 
 - **Mobile layout** (gridiron-gm-play):
   - `main.js`: added `scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }`
@@ -87,6 +87,17 @@ This is the authoritative active handoff for Gridiron GM.
   - Game log updated: `Dev: X+3 | Y-2 | ...` line (top 6) + `N notable FA(s) hit market` line
   - `PlayerTable`: `⬆` cyan badge after player name for age≤24, pot-ovr≥12 prospects
 
+- **AI FA signings** (gridiron-gm App.jsx):
+  - `newSeason`: CPU teams iterate POS roster needs, claim matching expFAs before user market opens
+  - `aiSigned` Set tracks claimed IDs; `filteredExpFAs` strips them from user FA pool
+  - CPU teams sign with salary `(ovr/99)*Rf(2,8)` and random 1-3yr contract
+  - Fixed setLog spread bug: expFAs notable FA count line was array-in-array (missing `...`)
+
+- **Fumbles** (gridiron-gm-play FieldScene):
+  - `_tackled()`: ~4% base fumble rate, reduced by RB strength (`str 70+` lowers chance)
+  - Fumble: Sound.incomplete, red flash, `state.stats.team.fum++`, possession flip
+  - Drive chart shows 'FUM' entry (red) in GameOverScene — existing path already handled it
+
 ### Prior sessions
 
 - v3.2: Sim Draft, PlayerTable, FA Overhaul, Clickable Box Scores, Live Sim with SVG field
@@ -97,13 +108,13 @@ This is the authoritative active handoff for Gridiron GM.
 
 ## What is mid-flight
 
-- gridiron-gm-play: P7 + P8 + mobile complete, not yet committed
+- nothing mid-flight; all committed and builds pass
 
 ## What to do next
 
 1. OG image `public/images/cover.png` for social sharing (requires design asset)
-2. Commit gridiron-gm-play (P7 + P8 + mobile)
-3. Commit gridiron-gm (progression visibility + dev badge)
+2. P9 candidates: halftime scene, two-minute warning, broken play / scramble
+3. gridiron-gm season awards: MVP, OPOY, DPOY banner on season end
 
 ## Constraints
 

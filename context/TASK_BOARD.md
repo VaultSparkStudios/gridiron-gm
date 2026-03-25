@@ -34,13 +34,17 @@
 ## Backlog — Gameplay
 
 - [ ] Analytics/telemetry (privacy-safe, no PII)
+- [ ] Season awards: MVP, OPOY, DPOY banner on season end in gridiron-gm
 
 ## Backlog — gridiron-gm-play (companion repo)
 
 - [x] P8: Kickoff return mini-game — user returns kick (WASD, 7 coverage defenders), AI returns after user score, opening kickoff at game start
+- [x] P9: Fumble mechanic on run tackle (~4%, RB str-weighted, red flash, drive chart FUM)
+- [ ] P9 candidates: halftime scene, two-minute warning indicator, scramble / broken play
 
 ## Backlog — Infrastructure
 
 - [ ] OG image: `public/images/cover.png` (social sharing)
 - [x] Mobile layout improvements (gridiron-gm-play: Scale.FIT, user-scalable=no, D-pad sz 44)
 - [x] Player progression visibility: dev report in game log, expired players enter FA pool, ⬆ DEV badge in PlayerTable (age≤24, pot-ovr≥12)
+- [x] AI FA signings: CPU teams fill roster holes from expFA pool before user market opens

@@ -4,7 +4,7 @@
 
 - Date: 2026-03-24
 - Overall status: Live on GitHub Pages, active development
-- Current version: v3.7 + Track 2 (Phaser Play module live)
+- Current version: v3.7+ + P8 (Phaser Play module live, all committed)
 - Studio OS: Fully compliant
 
 ## What exists
@@ -26,6 +26,8 @@
 - **Depth chart view** — Roster tab toggle; ST/BK/INJ labels per position with injury indicator
 - **Save/load state** — JSON download (💾 header button) + upload (splash + header 📂 button)
 - **4th-down decision UI** — Punt / FG (range-gated, kicker OVR shown) / Go For It panel in live sim
+- **Player progression visibility** — Dev report in game log on season rollover; expired FAs enter market; `⬆` badge in PlayerTable for age≤24, pot-ovr≥12
+- **AI FA signings** — CPU teams sign notable expFAs on season rollover before user FA market opens
 
 ### POS system (updated)
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -36,8 +38,11 @@
 
 ### Phaser Play module (gridiron-gm-play companion repo)
 - 5-man OL (LT/LG/C/RG/RT) with individual ovr-weighted pocket hold times
-- Full run/pass/defense gameplay
+- Full run/pass/defense gameplay with interceptions, fumbles
 - Per-player stat tracking exported back to GM franchise
+- P7: 4th-down panel, PAT choice, FG handler, punt handler, position string fixes
+- P8: Kickoff return mini-game (opening kick, user/AI returns after each score), PAT overlay
+- Mobile: Scale.FIT, user-scalable=no, D-pad touch targets enlarged
 
 ## Important paths
 
@@ -53,6 +58,6 @@
 
 ## Next 3 moves
 
-1. OG image `public/images/cover.png` for social sharing
-2. Special teams in Phaser (gridiron-gm-play)
-3. Mobile layout improvements
+1. OG image `public/images/cover.png` for social sharing (requires design asset)
+2. P9 candidates: halftime scene, two-minute warning, scramble/broken play
+3. gridiron-gm: season awards (MVP, OPOY, DPOY) at season end

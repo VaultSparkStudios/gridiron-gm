@@ -53,3 +53,16 @@ Append entries. Do not edit historical entries.
 - gridiron-gm-play: ci.yml GitHub Actions workflow
 - Both builds clean: gridiron-gm 303kB, gridiron-gm-play 1240kB (Phaser bundle, pre-existing warning)
 - State: Both repos committed (not yet pushed)
+
+---
+
+## 2026-03-24 (continued) — P7/P8/mobile/progression/AI FA/fumbles
+
+- Session: Continued from context compaction; completed all remaining backlog and additional features
+- gridiron-gm-play: P7 (4th-down panel, PAT choice, FG handler, punt, position string fixes), P8 (kickoff return mini-game — opening kick, user/AI returns after each score), mobile (Scale.FIT, user-scalable=no, D-pad sz=44) — committed master b410796
+- gridiron-gm App.jsx: Player progression visibility (⬆ DEV badge in PlayerTable, dev report in game log, expFAs to FA market) — committed main 4553108
+- gridiron-gm App.jsx: AI FA signings on season rollover (CPU teams claim expFAs to fill holes, filtered out of user pool), fixed setLog spread bug — committed main a9d82d7
+- gridiron-gm-play FieldScene: Fumble mechanic on tackle (~4% base rate, RB str-weighted, possession flip, red flash, drive chart FUM) — committed master 7a52c14
+- Both builds clean: gridiron-gm 305kB, gridiron-gm-play 1247kB
+- State: All committed; nothing mid-flight
+
