@@ -200,6 +200,8 @@ function genLivePlay(offTeam,defTeam,yard,down,toGo,uCall,qteBonus=1){
   const rb=rbs[0]||qb;const wr=pick(wrs.length?wrs:[qb]);const te=tes[0]||wr;
   const dl=pick(dls.length?dls:[{name:"Defender",ovr:55,id:"x"}]);
   const db=pick(dbs.length?dbs:[{name:"DB",ovr:55,id:"x"}]);
+  if(uCall==="punt")return{text:"Team punts away.",yards:0,type:"punt",player:null,newDown:1,td:false,turnover:true};
+  if(uCall==="fg"){const made=k?Math.random()<cl(.65+(k.ovr-50)*.005,.3,.95):false;return{text:made?`${k?.name||"K"} kicks... GOOD! 3 points!`:`${k?.name||"K"}'s kick is NO GOOD.`,yards:0,type:made?"fg":"fg_miss",player:k||null,newDown:1,td:false,turnover:!made,score:made?3:0};}
   // Penalty 5%
   if(Math.random()<.05){const pens=["False start, offense. 5-yard penalty.","Holding, offense. 10-yard penalty.","Pass interference, defense. Auto first down.","Offsides, defense. 5-yard penalty."];const pen=pick(pens);const offP=pen.includes("offense");return{text:`🚩 ${pen}`,yards:offP?-5:5,type:"penalty",player:null,newDown:offP?down:1,td:false,turnover:false};}
   // 4th down
@@ -302,6 +304,9 @@ const PlayerTable=({players,setSel,sortCol,sortDir,onSort,posFilter,setPosFilter
   </div>);
 };
 
+const DC_S={QB:1,RB:2,WR:3,TE:1,LT:1,LG:1,C:1,RG:1,RT:1,DL:4,LB:3,CB:2,S:2,K:1};
+const DepthChartView=({roster,setSel})=><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(185px,1fr))",gap:4}}>{POS.map(pos=>{const pl=roster.filter(p=>p.pos===pos).sort((a,b)=>b.ovr-a.ovr);const n=DC_S[pos]||2;return(<div key={pos} style={{background:C.cd,borderRadius:5,padding:"5px 7px",border:`1px solid ${C.bd}`}}><div style={{fontSize:7,fontWeight:800,color:pC(pos),marginBottom:3,letterSpacing:1}}>{pos}</div>{pl.slice(0,Math.min(pl.length,n+2)).map((p,i)=>{const isSt=i<n;return(<div key={p.id} style={{display:"flex",alignItems:"center",gap:3,padding:"1px 2px",opacity:p.injured?.45:1}}><span style={{fontSize:6,color:isSt?(!p.injured?C.gn:C.rd):C.mt,minWidth:12,fontWeight:700}}>{isSt?(!p.injured?"ST":"INJ"):"BK"}</span><PN p={p} setSel={setSel} style={{fontSize:8,flex:1}}/><span style={{fontWeight:800,color:oC(p.ovr),fontSize:8}}>{p.ovr}</span>{p.injured&&<span style={{color:C.rd,fontSize:6}}> {p.injWk}w</span>}</div>);})}{!pl.length&&<span style={{fontSize:8,color:C.mt}}>—</span>}</div>);})}</div>;
+
 // ═══════════ MAIN APP ═══════════
 export default function GridironGM(){
   const[phase,setPhase]=useState("splash");
@@ -317,6 +322,7 @@ export default function GridironGM(){
   const[draftPicks,setDraftPicks]=useState([]);const[draftIdx,setDraftIdx]=useState(0);const[draftLog,setDraftLog]=useState([]);
   const[draftTimer,setDraftTimer]=useState(120);const[draftActive,setDraftActive]=useState(false);const[draftPaused,setDraftPaused]=useState(false);
   const[rPosF,setRPosF]=useState("ALL");const[faPosF,setFaPosF]=useState("ALL");const[scPosF,setScPosF]=useState("ALL");const[drPosF,setDrPosF]=useState("ALL");
+const[fourthChoice,setFourthChoice]=useState(null);const[showDepth,setShowDepth]=useState(false);
   const[faSc,setFaSc]=useState("ovr");const[faSd,setFaSd]=useState(-1);
   // Live sim
   const[liveSim,setLiveSim]=useState(null);const[liveLog,setLiveLog]=useState([]);
@@ -424,7 +430,7 @@ export default function GridironGM(){
       for(const side of["h","a"])for(const[,ps]of Object.entries(nst[side]||{})){const val=(ps.passYds||0)+(ps.rushYds||0)+(ps.recYds||0)+(ps.td||0)*30+(ps.sack||0)*15+(ps.int||0)*25;if(val>bestVal){bestVal=val;best={...ps,side};}}
       setLivePOG(best);setLiveDone(true);
     }
-    setLiveLog(nLog);setLiveStats(nst);setLiveScore(ns);setLiveYard(ny);setLivePoss(np);setLiveDown(nd);setLiveToGo(ntg);setLiveQtr(nq);setLivePlay(nPlay);
+    setLiveLog(nLog);setLiveStats(nst);setLiveScore(ns);setLiveYard(ny);setLivePoss(np);setLiveDown(nd);setLiveToGo(ntg);setLiveQtr(nq);setLivePlay(nPlay);setFourthChoice(null);
   }
   function qb_id(t){const qb=t.roster.filter(p=>p.pos==="QB"&&!p.injured).sort((a,b)=>b.ovr-a.ovr)[0];return qb?.id;}
   function startLiveSim(game){setLiveSim(game);setLiveLog([]);setLiveStats({h:{},a:{}});setLiveScore({h:0,a:0});setLiveQtr(1);setLiveYard(25);setLivePoss("h");setLiveDown(1);setLiveToGo(10);setLivePlay(0);setLiveDone(false);setLivePaused(false);setLivePOG(null);setLastLivePlay(null);setLiveAwaitingCall(false);setLivePhase(null);setLivePendingCall(null);setLiveQteBar(50);setLiveRecTargets([]);setTab("livesim");}
@@ -479,6 +485,8 @@ export default function GridironGM(){
   const myPicks=useMemo(()=>draftPicks.filter(pk=>pk.owner===ui),[draftPicks,ui]);
   const curPick=draftPicks[draftIdx];
 
+  const saveGame=()=>{const d={v:1,yr,wk,sp,ui,teams,sched,fa,dc,draftPicks,draftIdx,draftLog,log,champs,pb,myScout,faScouts,scPts,faCoaches};const b=new Blob([JSON.stringify(d)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=`gm-${yr}-wk${wk}.json`;a.click();sm("Saved!");};
+  const loadGame=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(!d.teams||!d.v){sm("Invalid save");return;}setYr(d.yr);setWk(d.wk);setSp(d.sp);setUi(d.ui);setTeams(d.teams);setSched(d.sched||[]);setFa(d.fa||[]);setDc(d.dc||{});setDraftPicks(d.draftPicks||[]);setDraftIdx(d.draftIdx||0);setDraftLog(d.draftLog||[]);setLog(d.log||[]);setChamps(d.champs||[]);setPb(d.pb||null);setMyScout(d.myScout||null);setFaScouts(d.faScouts||[]);setScPts(d.scPts||10);setFaCoaches(d.faCoaches||[]);setPhase("main");setTab("roster");sm("Loaded!");}catch{sm("Load failed");}};r.readAsText(f);};
   // ═══ PLAYER MODAL ═══
   const PM=({p,onClose})=>{if(!p)return null;const ss=p.ss||{};const dO=p.scoutLvl>=2?p.trueOvr:p.scoutedOvr||p.ovr;const dP=p.scoutLvl>=2?p.truePot:p.scoutedPot||p.pot;
     return(<div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.88)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:12}} onClick={onClose}>
@@ -504,7 +512,8 @@ export default function GridironGM(){
     </div></div>);};
 
   // ═══ RENDER ═══
-  if(phase==="splash")return(<div style={{minHeight:"100vh",background:`linear-gradient(135deg,${C.bg},#131b2e)`,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:C.f,color:C.tx}}><div style={{textAlign:"center"}}><div style={{fontSize:15,letterSpacing:8,textTransform:"uppercase",color:C.gn,fontWeight:600}}>Gridiron</div><h1 style={{fontSize:68,fontWeight:900,margin:0,background:"linear-gradient(to bottom,#fff,#94a3b8)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>GM</h1><div style={{fontSize:10,color:"#475569",letterSpacing:2}}>V3.2 — LIVE SIM • BOX SCORES • FULL DRAFT</div><Btn onClick={()=>setPhase("teamSelect")} bg={C.gn} style={{padding:"12px 44px",fontSize:15,marginTop:16,borderRadius:8}}>NEW GAME</Btn></div></div>);
+  if(phase==="splash")return(<div style={{minHeight:"100vh",background:`linear-gradient(135deg,${C.bg},#131b2e)`,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:C.f,color:C.tx}}><div style={{textAlign:"center"}}><div style={{fontSize:15,letterSpacing:8,textTransform:"uppercase",color:C.gn,fontWeight:600}}>Gridiron</div><h1 style={{fontSize:68,fontWeight:900,margin:0,background:"linear-gradient(to bottom,#fff,#94a3b8)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>GM</h1><div style={{fontSize:10,color:"#475569",letterSpacing:2}}>V3.2 — LIVE SIM • BOX SCORES • FULL DRAFT</div><Btn onClick={()=>setPhase("teamSelect")} bg={C.gn} style={{padding:"12px 44px",fontSize:15,marginTop:16,borderRadius:8}}>NEW GAME</Btn>
+<label style={{cursor:"pointer",display:"block",marginTop:8}}><span style={{display:"inline-block",background:"#1e293b",color:C.mt,padding:"8px 24px",borderRadius:8,fontWeight:700,fontSize:12,cursor:"pointer"}}>📂 LOAD GAME</span><input type="file" accept=".json" style={{display:"none"}} onChange={loadGame}/></label></div></div>);
   if(phase==="teamSelect")return(<div style={{minHeight:"100vh",background:C.bg,fontFamily:C.f,color:C.tx,padding:24}}><h2 style={{textAlign:"center",fontSize:20,fontWeight:800,marginBottom:16}}>Choose Your Team</h2><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:6,maxWidth:900,margin:"0 auto"}}>{TEAMS.map((t,i)=><button key={i} onClick={()=>startGame(i)} style={{background:`linear-gradient(135deg,${t.clr}cc,${t.clr})`,border:`2px solid ${t.ac}33`,borderRadius:8,padding:"10px 8px",cursor:"pointer",textAlign:"left",color:"#fff"}}><div style={{fontSize:8,textTransform:"uppercase",letterSpacing:2,opacity:.7}}>{t.city}</div><div style={{fontSize:14,fontWeight:800}}>{t.name}</div><div style={{fontSize:8,color:t.ac,fontWeight:700,marginTop:2}}>{t.ab} • {t.c} {t.d}</div></button>)}</div></div>);
 
   const TABS=["roster","standings","schedule","stats","scouting","coaching","trade","draft","freeagency","playoffs","log"];
@@ -525,6 +534,7 @@ export default function GridironGM(){
         {sp==="combine"&&<Btn onClick={startDraft} bg={C.gd} c="#000">→ Draft</Btn>}
         {sp==="draft"&&draftActive&&<><Btn onClick={()=>setDraftPaused(p=>!p)} bg={draftPaused?"#22c55e":"#f97316"}>{draftPaused?"▶ Resume":"⏸ Pause"}</Btn><Btn onClick={simEntireDraft} bg="#6366f1">⏭ Sim Draft</Btn></>}
         {sp==="freeagency"&&<Btn onClick={newSeason} bg={C.gn}>→ Next Season</Btn>}
+        <Btn onClick={saveGame} bg="#334155" style={{padding:"3px 7px",fontSize:9}}>💾</Btn><label style={{cursor:"pointer",display:"flex",alignItems:"center"}}><span style={{background:"#334155",color:C.mt,padding:"3px 7px",borderRadius:4,fontWeight:700,fontSize:9,cursor:"pointer"}}>📂</span><input type="file" accept=".json" style={{display:"none"}} onChange={loadGame}/></label>
       </div>
     </div>
     {msg&&<div style={{background:`${C.gn}12`,borderLeft:`3px solid ${C.gn}`,padding:"4px 10px",fontSize:10,color:C.gn,fontWeight:600}}>{msg}</div>}
@@ -541,7 +551,8 @@ export default function GridironGM(){
         <Btn onClick={exportToPlay} bg="#7c3aed" c="#e9d5ff" style={{fontSize:7,padding:"2px 6px"}}>📤 Play</Btn>
         {localStorage.getItem('gm_game_result')&&<Btn onClick={importPlayResult} bg={C.gn} style={{fontSize:7,padding:"2px 6px"}}>📥 Results</Btn>}
       </div>
-      <PlayerTable players={ut.roster} setSel={setSel} sortCol={sc} sortDir={sd} onSort={tgS} posFilter={rPosF} setPosFilter={setRPosF}/>
+      <div style={{display:"flex",gap:2,marginBottom:4}}><button onClick={()=>setShowDepth(false)} style={{background:!showDepth?"#1e293b":"transparent",color:!showDepth?"#fff":C.mt,border:`1px solid ${C.bd}`,padding:"2px 8px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>Roster</button><button onClick={()=>setShowDepth(true)} style={{background:showDepth?"#1e293b":"transparent",color:showDepth?"#fff":C.mt,border:`1px solid ${C.bd}`,padding:"2px 8px",borderRadius:3,fontSize:8,fontWeight:700,cursor:"pointer"}}>Depth Chart</button></div>
+      {showDepth?<DepthChartView roster={ut.roster} setSel={setSel}/>:<PlayerTable players={ut.roster} setSel={setSel} sortCol={sc} sortDir={sd} onSort={tgS} posFilter={rPosF} setPosFilter={setRPosF}/>}
     </div>}
 
     {/* STANDINGS */}
@@ -681,6 +692,7 @@ export default function GridironGM(){
       {liveCallMode&&liveAwaitingCall&&!liveDone&&!livePhase&&(()=>{
         const offT=livePoss==="h"?teams[liveSim.h]:teams[liveSim.a];
         const defT=livePoss==="h"?teams[liveSim.a]:teams[liveSim.h];
+        if(liveDown===4&&!fourthChoice){const k4=offT.roster.filter(p=>p.pos==="K"&&!p.injured).sort((a,b)=>b.ovr-a.ovr)[0];const inRng=liveYard>=52;return<div style={{background:`${C.rd}12`,border:`1px solid ${C.rd}33`,borderRadius:8,padding:8,marginBottom:8}}><div style={{fontSize:8,color:C.rd,fontWeight:800,marginBottom:6,letterSpacing:1}}>4th & {liveToGo} • Yd {liveYard} — DECISION TIME</div><div style={{display:"flex",flexDirection:"column",gap:4}}><button onClick={()=>advanceLivePlay("punt")} style={{background:`${C.mt}22`,border:`1px solid ${C.mt}44`,borderRadius:5,padding:"7px 10px",cursor:"pointer",color:"#fff",fontWeight:700,fontSize:10,textAlign:"left"}}>⬆️ Punt — Give up possession</button>{inRng&&k4&&<button onClick={()=>advanceLivePlay("fg")} style={{background:`${C.gd}22`,border:`1px solid ${C.gd}44`,borderRadius:5,padding:"7px 10px",cursor:"pointer",color:"#fff",fontWeight:700,fontSize:10,textAlign:"left"}}>🎯 FG — {k4.name} ({k4.ovr} OVR)</button>}<button onClick={()=>setFourthChoice("goforit")} style={{background:`${C.gn}22`,border:`1px solid ${C.gn}44`,borderRadius:5,padding:"7px 10px",cursor:"pointer",color:C.gn,fontWeight:900,fontSize:10,textAlign:"left"}}>💪 Go For It — 4th & {liveToGo}</button></div></div>;}
         const pcQB=offT.roster.filter(p=>p.pos==="QB"&&!p.injured).sort((a,b)=>b.ovr-a.ovr)[0];
         const pcRB=offT.roster.filter(p=>p.pos==="RB"&&!p.injured).sort((a,b)=>b.ovr-a.ovr)[0];
         const pcDL=defT.roster.filter(p=>p.pos==="DL"&&!p.injured).sort((a,b)=>b.ovr-a.ovr)[0];
