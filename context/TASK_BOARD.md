@@ -16,14 +16,17 @@
 ## Backlog — Gameplay
 
 - [x] **P29: Trick play** — 15% chance on run_ calls; NORMAL RUN / TRICK PLAY modal (3s auto); PITCH! button at 650ms; 50/64% big gain 15-34yds, 30/26% medium, 20/10% blown up
-- [ ] P30: Two-minute drill — compressed AI defense, user faster tempo near end of half
-- [ ] P31: Red zone slant — quick inside route option vs press coverage in RZ
+- [x] **P30: Two-minute drill** — state._drillMode after warning; auto no-huddle user drives; auto prevent AI; clears at halftime
+- [x] **P31: Red zone slant** — 3rd RZ option in _showFadeOption; WR inside cut animation; CB press INT risk; ~70% comp 4-11yds; 38% TD inside 9yd
+- [ ] P32: Goal line QB sneak — inside 1yd short yardage option; button mash mini-game
 
 ## Backlog — GM Systems
 
 - [x] **GM: Player holdout effect** — `p.holdout=true` from morale event; clears at simWk start; excluded from teamStr + simGame; clears on re-sign
 - [x] **GM: Cap forecast improvements** — expiring list (top 6 by OVR) with est. ask; keep-all / cut-all projected space in cap header
-- [ ] GM: Player trade request resolution — accept (force trade) or negotiate (conf boost)
+- [x] **GM: Trade request resolution** — p.tradeRequest flag; roster banner; Negotiate (1SP) or Find Trade (auto-offer)
+- [ ] GM: Player retirement — age 34+ chance at season end; hall of fame log
+- [ ] GM: Season awards panel — MVP/DPOY/OROY/DROY from stats; rep bonus for winner's GM
 
 ## Backlog — Infrastructure
 

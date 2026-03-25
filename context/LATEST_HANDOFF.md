@@ -1,34 +1,32 @@
 # Latest Handoff
 
-Last updated: 2026-03-25 (session 10 — final closeout)
+Last updated: 2026-03-25 (session 11 — final closeout)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (moves 39-41)
+## What was completed this session (moves 42-44 / P30-P31)
 
-### gridiron-gm — v5.8 (App.jsx)
+### gridiron-gm — v5.9 (App.jsx)
 
-**Move 39 — Player Holdout Effect**
-- `teamStr`: filters out `p.holdout` alongside `p.injured` — holdout players excluded from team strength calc
-- `simGame`: skips `p.holdout` players in stat gen (no stats generated, no gp credited)
-- `simWk` start: `nt.forEach(t=>t.roster.forEach(p=>{p.holdout=false;}))` — clears all flags before game sims
-- Morale event: sets `holdout.holdout=true` after firing — takes effect on NEXT week's games
-- `reSign`: sets `p.holdout=false` when player is re-signed
+**Move 42 — Player Trade Request Resolution**
+- Morale event: sets `trReq.tradeRequest=true` when fires for user team (`ti===ui`)
+- `resolveTradeReq(pid, action)`:
+  - `'negotiate'` (1SP): clears flag, conf+20, morale+3
+  - `'deal'`: clears flag, finds AI team with fewest players at same position, matches trade value ±30%; sets `trProp` if found
+- Roster tab: trade request banner during `sp==="regular"` showing all `p.tradeRequest` players with Negotiate + Find Trade buttons
 
-**Move 40 — Cap Forecast Improvements**
-- Added expiring contracts section to cap header (after cap bar, before Play button)
-- Shows top 6 expiring players by OVR: name, OVR (color-coded), est. ask ($M, red if can't afford)
-- "keep all $Xm / cut all $Ym" projected next-year space inline
-- Uses `RES_MAX` + gmRep discount for ask calculation — matches actual re-sign cost
+### gridiron-gm-play — P31 (FieldScene.js)
 
-### gridiron-gm-play — P29 (FieldScene.js)
+**P30 — Two-Minute Drill**
+- `_showTwoMinWarning` now sets `state._drillMode=true` before calling its callback
+- `_afterPlay` user possession: if drillMode, auto no-huddle (CBs/LB slightly out of position) + "⚡ 2-MIN DRILL" flash → launch PlayCall at 900ms delay
+- `_startAIDrive`: if drillMode, force `_defCall='prevent'` + show "⚡ 2-MIN DRILL — PREVENT DEFENSE" banner (no `_showDefCall` modal)
+- `_showHalftime`: `state._drillMode=false` (clears at half)
 
-**Move 41 — P29 Trick Play**
-- `create()`: added `this._trickEls = null` init
-- `_onPlayCalled`: 15% intercept on `run_*` (non-no-huddle) → `_showTrickOption(callId)`
-- `_showTrickOption(callId)`: NORMAL RUN / TRICK PLAY modal (3s auto-dismiss to normal run)
-- `_startTrickPlay()`: QB→RB handoff (400ms) → RB→WR pitch (350ms) → WR runs reverse; "🏈 PITCH!" button at 650ms
-- `_resolveTrickPlay(pitchPressed)`: 50/64% big 15-34yds, 30/26% medium 3-11yds, 20/10% -3 to -6yds
+**P31 — Red Zone Slant**
+- `_showFadeOption` reworked to 3 buttons: NORMAL PASS (W/2-150) / SLANT (W/2) / FADE ROUTE (W/2+150); 128px wide buttons
+- `_startSlantRoute(callId)`: QB + WR + CB shown; WR cuts inside toward cy; ball snaps to WR at 500ms; auto-resolves at 820ms
+- `_resolveSlant()`: CB press chance (based on OVR) → INT 38% / defended 62%; ~70% comp → 4-11 yard gain, 38% TD if yardLine ≤ 9; else incomplete
 
 ---
 
@@ -40,9 +38,9 @@ Nothing. Both builds clean and committed.
 
 ## What to do next (priority order)
 
-1. **P30: Two-minute drill** — compressed AI defense, user faster tempo near end of half
-2. **GM: Player trade request resolution** — accept (force trade) or negotiate (conf boost)
-3. **P31: Red zone slant** — quick inside route option vs press coverage in RZ
+1. **GM: Player retirement** — age 34+ chance at season end; hall of fame log entry
+2. **P32: Goal line QB sneak** — inside 1yd; button mash mini-game
+3. **GM: Season awards panel** — MVP/DPOY/OROY/DROY from stats at season end; +gmRep for winner's team
 
 ---
 
@@ -53,12 +51,10 @@ Nothing. Both builds clean and committed.
 - Compact/minified code style — match existing density
 - Bridge keys `gm_roster_export` / `gm_game_result` locked
 - Save state fields: `v:2, yr, wk, sp, ui, teams, sched, byeMap, fa, dc, draftPicks, draftIdx, draftLog, log, champs, pb, myScout, faScouts, scPts, faCoaches, rivalry, ftag, waivers`
-- `ir[]` is part of each team object — saved automatically
-- `sp` = season phase string; `scPts` = staff points (number)
-- Score fields in FieldScene: `state.score.opp` (AI), `state.score.team` (user)
-- Injury fields: `p.injured`, `p.injWk`, `p.injType`, `p.injSev`, `p.injRecWks`
+- Holdout: `p.holdout` (cleared simWk start, set by morale event, cleared on reSign)
+- Trade request: `p.tradeRequest` (set by morale event for user team, cleared by resolveTradeReq)
 - Coach fields: `coach.contract` (years remaining, default 2 if missing)
-- Holdout fields: `p.holdout` (boolean, cleared at start of each simWk, set by morale event)
+- Drill mode: `state._drillMode` in FieldScene — set by 2-min warning, cleared at halftime
 
 ## Read first next session
 

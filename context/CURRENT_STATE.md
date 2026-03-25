@@ -4,7 +4,7 @@
 
 - Date: 2026-03-25
 - Overall status: Live on GitHub Pages, active development
-- Current version: v5.8 (holdout effect, cap forecast, trick play) / P29 — both builds clean
+- Current version: v5.9 (trade request resolution) / P31 — both builds clean
 - Studio OS: Fully compliant
 
 ## What exists
@@ -33,6 +33,7 @@
 - Injury Severity Tiers (minor/moderate/major; major → auto IR; modal shows wk remaining)
 - **Salary Cap Penalties** — teams over $200M at simWk: +$5M dead cap; user also loses one 3rd-round pick; red warning banner in roster tab when over cap
 - **Cap Forecast Improvements** — expiring contracts list in cap header (top 6 by OVR) with est. ask; "keep all / cut all" projected space for next year
+- **Trade Request Resolution** — morale event sets `p.tradeRequest=true` for user team; roster banner during regular season with Negotiate (1SP→conf+20, morale+3) or Find Trade (auto-generate trade offer via AI team lookup); `resolveTradeReq(pid, action)`
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -42,6 +43,8 @@
 - P1–P27: Full gameplay — run/pass/defense, all special teams, pass rush mini-game, hurry-up defense, goal line stand, no-huddle, muffed punt, two-point mini-game
 - **P28: Red zone fade route** — inside 15yd, pass calls show "FADE ROUTE" option (3s auto-dismiss); `_startFadeRoute()` positions WR+CB in endzone corner; ball arcs 1100ms; "🤲 CATCH!" button at 900ms; `_resolveFade()` — WR vs CB OVR contest (40-85%); TD or knocked away; `_noHuddleActive` guard
 - **P29: Trick play** — 15% chance on non-no-huddle `run_*` calls: NORMAL RUN / TRICK PLAY modal (3s auto-dismiss); `_startTrickPlay()` animates QB→RB handoff→WR reverse pitch; "🏈 PITCH!" button at 650ms boosts big-gain odds (50→64%); resolves 50/64% big gain 15-34yds, 30/26% medium 3-11yds, 20/10% blown up -3 to -6yds
+- **P30: Two-minute drill** — `state._drillMode=true` after warning fires; user drives auto no-huddle (defenders out of position) + "⚡ 2-MIN DRILL" flash; AI drives auto-prevent (no def call modal); clears at halftime
+- **P31: Red zone slant** — `_showFadeOption` now 3 buttons (Normal/Slant/Fade at W/2±150,0); `_startSlantRoute` animates WR inside cut + 500ms snap; `_resolveSlant` — CB press INT risk, ~70% comp for 4-11yds, 38% TD inside 9yd; auto-resolves, no timing button
 - Per-player stat tracking, drive chart, halftime, two-minute warning
 - Mobile: Scale.FIT, D-pad
 
@@ -59,6 +62,6 @@
 
 ## Next 3 moves
 
-1. **P30: Two-minute drill** — compressed AI defense, user faster tempo near end of half
-2. **GM: Player trade request resolution** — accept (force trade) or negotiate (conf boost)
-3. **P31: Red zone slant** — quick inside route option vs press coverage in RZ
+1. **GM: Player retirement** — age 34+ chance at season end; hall of fame log entry
+2. **P32: Goal line QB sneak** — inside 1yd, short yardage option; button mash mini-game
+3. **GM: Season awards panel** — MVP/DPOY/OROY/DROY at season end from stats; +rep for winner's GM
