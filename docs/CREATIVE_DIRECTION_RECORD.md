@@ -41,3 +41,27 @@ Additive record of human-guided creative decisions. Append only. Do not rewrite.
 - Direction: Incorporate Studio OS fully into gridiron-gm repo structure
 - Outcome: Full context/, logs/, docs/, prompts/ structure applied; AGENTS.md created; deployment standard compliance
 - Canon impact: None — infrastructure change only
+
+---
+
+## 2026-03-24 — NFL OL sub-positions
+
+- Direction: "There should be 5 offensive lineman with specific positions. All of this should tie back to the Front office mode."
+- Outcome: Generic OL replaced with LT/LG/C/RG/RT across all data (POS, PP, CA, PA, STRS, WKNS, genRoster, teamStr). Phaser engine shows 5 labeled OL dots at LOS; each lineman's ovr from GM export controls their individual pocket hold time
+- Canon impact: LT is the blind-side protector (passBlock emphasis); LG/RG are run blockers (runBlock/pulling); C is the quarterback of the line (awareness/snapping); RT is the right-side protector. genRoster produces {LT:2,LG:2,C:1,RG:2,RT:2}. Sack chance in genLivePlay now scales with avg OL ovr.
+
+---
+
+## 2026-03-24 — Dual-repo Studio OS compliance
+
+- Direction: "Incorporate the Studio OS in both repos to be compliant. Make sure the agent updates both games/repos/local file folders in tandem."
+- Outcome: gridiron-gm-play received full Studio OS structure (AGENTS.md, context/, logs/, docs/, prompts/). Both repos document the dual-repo bridge contract. Agents starting any session now have self-sufficient context in whichever repo they land in.
+- Canon impact: The gridiron-gm + gridiron-gm-play combined product is now the canonical delivery unit for Gridiron GM. Neither repo can be worked in isolation without breaking the bridge.
+
+---
+
+## 2026-03-24 — Position filter on draft/scouting boards
+
+- Direction: Backlog item from TASK_BOARD.md — "Position filter on scouting/draft prospect boards"
+- Outcome: scPosF and drPosF state added; position filter bar appears on scouting and draft tabs (both active-draft and pre-draft views); all 14 positions including LT/LG/C/RG/RT available as filters
+- Canon impact: None — UI improvement only
