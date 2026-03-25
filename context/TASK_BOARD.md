@@ -55,6 +55,17 @@
 - [x] **P47: Squib Kick** — DEEP/SQUIB/ONSIDE modal; squib skips return
 - [x] **P48: Defensive Holding** — 8% CB hold; flag if gain <8yds; +5yds auto first down
 
+- [x] **v6.3 GM: AI-Initiated Trades** — 20% chance/wk; `aiOffer` state; ACCEPT/DECLINE/COUNTER in trade tab
+- [x] **v6.3 GM: Playoff Bracket Visual** — visual bracket; seeds/matchups/scores/winner highlights
+- [x] **v6.3 GM: Team Chemistry** — `chemistry` 0-100 per team; win/loss/holdout effects; modifies teamStr
+- [x] **v6.3 GM: Weather Impact on Sim** — per-game roll; rain/snow/wind affect pass comp + FG accuracy
+- [x] **v6.3 GM: Live Stat Write-Back** — Phaser playerDeltas write to p.ss; guarded by playedLive flag
+- [x] **P49: WR vs CB Matchup HUD** — pre-snap OVR bars; ±8% catch modifier
+- [x] **P50: FG Block Attempt** — AI FG BLOCK IT! button; 18%+ chance; ball back at 20
+- [x] **P51: Offensive Holding** — 6% on runs >6yds; -10yds repeat down
+- [x] **P52: QB Injury Risk** — 4% on sack; -8% comp; clears halftime
+- [x] **P53: Clock Management** — Q4 trailing SPIKE IT / OUT OF BOUNDS buttons
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local

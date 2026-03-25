@@ -4,7 +4,7 @@
 
 - Date: 2026-03-25
 - Overall status: Live on GitHub Pages, active development
-- Current version: v6.2 (gridiron-gm) / P48 (gridiron-gm-play) — both builds clean
+- Current version: v6.3 (gridiron-gm) / P53 (gridiron-gm-play) — both builds clean
 - Studio OS: Fully compliant
 
 ## What exists
@@ -51,6 +51,11 @@
 - **Player Development Curve** — age 21–26 probabilistic OVR improvement at season end; logged for user team
 - **Draft Class Strength Rating** — `draftClassRating` rolled each newSeason; Weak/Average/Strong/Elite; affects OVR floor/cap
 - **Press Conference Events** — 30% chance per regular-season week; 8-question pool; 3 answers with morale/gmRep/fanSat effects
+- **AI-Initiated Trades** — 20% chance/week per AI team; `aiOffer` state; ACCEPT/DECLINE/COUNTER in trade tab
+- **Playoff Bracket Visual** — visual bracket in playoffs tab; seeds, matchups, scores, winner highlights
+- **Team Chemistry System** — `chemistry` 0-100 per team; win/loss/holdout/trade effects; modifies teamStr
+- **Weather Impact on Sim** — per-game roll (clear/rain/snow/wind); pass comp / fumble / FG accuracy modifiers
+- **Live Stat Write-Back** — Phaser game results write `playerDeltas` to `p.ss`; guarded by `g.playedLive` flag
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -79,6 +84,11 @@
 - **P46: Red Zone Bootleg** — 25% trigger on pass inside yardLine≥75; QB rolls right; THROW window; scramble fallback
 - **P47: Squib Kick** — kickoff modal DEEP/SQUIB/ONSIDE; squib = opp ball at 30, no return
 - **P48: Defensive Holding** — 8% CB hold roll per pass play; flag if gain <8yds & no TD/turnover; +5yds auto first down
+- **P49: WR vs CB Matchup HUD** — pre-snap OVR comparison; color-coded arrows; ±8% catch chance modifier
+- **P50: FG Block Attempt** — AI FG range triggers BLOCK IT! button 0.8s; 18%+ block chance; ball back at 20
+- **P51: Offensive Holding** — 6% on runs >6yds; -10yds repeat down; yellow flag
+- **P52: QB Injury Risk** — 4% on sack; `_qbInjured` flag; -8% comp; clears at halftime
+- **P53: Clock Management** — Q4 trailing: SPIKE IT (stop clock) or OUT OF BOUNDS button after plays
 
 ## Important paths
 
@@ -95,4 +105,4 @@
 
 ## Next session task board
 
-See context/TASK_BOARD.md — backlog cleared (v6.2 / P48)
+See context/TASK_BOARD.md — backlog cleared (v6.3 / P53)

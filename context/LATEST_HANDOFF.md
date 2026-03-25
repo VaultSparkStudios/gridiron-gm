@@ -1,36 +1,36 @@
 # Latest Handoff
 
-Last updated: 2026-03-25 (session 13 — v6.2 / P48)
+Last updated: 2026-03-25 (session 14 — v6.3 / P53)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v6.2 / P44–P48)
+## What was completed this session (v6.3 / P49–P53)
 
-### gridiron-gm — v6.2 (App.jsx)
+### gridiron-gm — v6.3 (App.jsx)
 
-**Player Retirement** — wk18: age 34–37+ chance (10–55%), +15% low-OVR bonus; HOF log entry; comp 7th-round pick at OVR≥82; all teams processed
+**AI-Initiated Trades** — 20% chance/week per AI team during regular season (35% buy-mode wks 10-11); `aiOffer` state; INCOMING OFFER banner in trade tab with ACCEPT/DECLINE/COUNTER; expires after 2 weeks
 
-**Season Awards Panel** — MVP (QB passer rating ≥8GP), DPOY (DL/LB sacks+tackles), OROY/DROY (rookie yds/tackles); `awards[]` state; log tab UI current year + last 3 seasons; +1 gmRep if user winner
+**Playoff Bracket Visual** — visual bracket in playoffs tab; AFC/NFC columns with seeds, team names, records; connector lines via borders; winners highlighted with team color border; championship game centered
 
-**Player Development Curve** — age 21–26 probabilistic OVR boosts at wk18; user improvements logged; OVR capped 99
+**Team Chemistry System** — `chemistry` field per team (default 75, 0-100); win +3 / loss -2 / re-sign key +4 / cut -3 / holdout -5/wk / trade +1/-2; streak bonuses ±2; `(chemistry-75)*0.2` applied to teamStr; roster tab color bar
 
-**Draft Class Strength Rating** — `draftClassRating` rolled each newSeason (Weak/Average/Strong/Elite); affects prospect OVR floor/cap in `genDC()`; Elite guarantees 90+ prospect; displayed in draft tab header
+**Weather Impact on Sim** — per-game roll: 70% clear / 15% rain / 10% wind / 5% snow; rain -5% pass comp; snow -8% comp +2% fumble; wind -12% FG accuracy; schedule tab weather icon for upcoming game
 
-**Press Conference Events** — 30% chance each regular-season week; 8-question pool; 3 answer buttons per question; effects: morale, gmRep, fanSat, holdout clear, dev trigger; 15s auto-dismiss; `pressConf` state
+**Live Stat Write-Back** — on `gm_game_result` import, `playerDeltas` added to `p.ss` fields; guarded by `g.playedLive=true`; updates gp; "📊 Live stats synced" in success message
 
 ---
 
-### gridiron-gm-play — P48 (FieldScene.js)
+### gridiron-gm-play — P53 (FieldScene.js)
 
-**P44: Hail Mary** — 4th & ≥15 with yardLine<55; modal 2.5s auto-dismiss; QB wind-up 2s; WRs sprint deep; ball arc 1500ms; 8% TD / 22% INT / 70% incomplete
+**P49: WR vs CB Matchup HUD** — `_buildMatchupHUD()` in `_resetFormation`; WR1/WR2 OVR vs CB1/CB2; color arrows; matchupBonus applied to pass comp ±8% at 10-pt diff; auto-dismisses 2.8s
 
-**P45: Audible System** — AUDIBLE button presnap (user possession); RUN/PASS mini-menu; overrides PlayCall; `_audibleUsed` per drive; flash on execute
+**P50: FG Block Attempt** — intercepts AI 4th-down FG in range; BLOCK IT! 0.8s delay; 18% base + DL OVR bonus (cap 40%); blocked = user ball at 20; auto-resolves if not tapped
 
-**P46: Red Zone Bootleg** — 25% trigger on pass_short/pass_medium at yardLine≥75; QB tweens right +80px; THROW button 1s window; 65% catch / 4% INT / else incomplete; no-tap = 2-9yd scramble
+**P51: Offensive Holding** — 6% roll on runs >6yds; `_p51Hold` flag; -10yds repeat down (down counter not advanced); yellow flag + flash
 
-**P47: Squib Kick** — kickoff modal now has DEEP / SQUIB / ONSIDE; squib = opponent ball at 30 instantly; combined with existing onside mechanic
+**P52: QB Injury Risk** — 4% on sack; `_qbInjured`; -8% comp all pass plays; clears at `_showHalftime`; ⚠️ indicator near QB
 
-**P48: Defensive Holding** — 8% CB hold roll per pass play (`_holdingRoll`); if gain <8yds and no turnover/TD: yellow flag, +5yds auto first down; reset each play
+**P53: Clock Management** — `_showClockMgmt(mode)` in `_afterPlay` when Q4 trailing 1-8pts; SPIKE IT (loss of down, clock stop) or OUT OF BOUNDS (yards kept, stop clock); 4s auto-dismiss
 
 ---
 
@@ -42,7 +42,7 @@ Nothing. Both builds clean, committed, pushed.
 
 ## What to do next
 
-All planned backlogs cleared. New features TBD next session.
+All backlogs cleared again. Next session: propose next 10 features.
 
 Infrastructure remaining:
 - Wire analytics endpoint (VITE_ANALYTICS_URL in .env.local)
@@ -52,12 +52,10 @@ Infrastructure remaining:
 
 ## Constraints
 
-- ALL changes to `src/App.jsx` must be ADDITIVE
-- Single-file React, inline styles, no external deps
-- Compact/minified code style
+- ALL changes ADDITIVE; single-file React; compact style; no external deps
 - Bridge keys `gm_roster_export` / `gm_game_result` locked
-- Save state fields now include: `awards, draftClassRating, pressConf`
-- New Phaser flags: `_audibleUsed`, `_audibleActive`, `_holdingRoll`
+- New save state fields: `aiOffer`, `chemistry` (per team), game weather per schedule entry
+- New FieldScene flags: `_qbInjured`, `_p51Hold`, `_matchupWR1`, `_matchupWR2`
 
 ## Read first next session
 
