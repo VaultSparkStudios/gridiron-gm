@@ -44,6 +44,17 @@
 - [x] **P42: Challenge Flag** — 1 per game; 45% overturn; pre-play state snapshot
 - [x] **P43: 4th Quarter Comeback Mode** — trailing 7+ Q4; +3% comp; AI false start +5%
 
+- [x] **v6.2 GM: Player Retirement** — age 34–37+; HOF log; comp 7th-round pick OVR≥82
+- [x] **v6.2 GM: Season Awards Panel** — MVP/DPOY/OROY/DROY; `awards[]`; log tab display
+- [x] **v6.2 GM: Player Development Curve** — age 21–26 OVR boosts at wk18; user logged
+- [x] **v6.2 GM: Draft Class Strength Rating** — Weak/Average/Strong/Elite; OVR floor/cap effect
+- [x] **v6.2 GM: Press Conference Events** — 30% per wk; 8-question pool; morale/gmRep/fanSat effects
+- [x] **P44: Hail Mary** — 4th & ≥15; QB wind-up; 8% TD / 22% INT / 70% incomplete
+- [x] **P45: Audible System** — presnap RUN/PASS override; 1 per drive
+- [x] **P46: Red Zone Bootleg** — 25% trigger inside 25; QB rolls; THROW window
+- [x] **P47: Squib Kick** — DEEP/SQUIB/ONSIDE modal; squib skips return
+- [x] **P48: Defensive Holding** — 8% CB hold; flag if gain <8yds; +5yds auto first down
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local

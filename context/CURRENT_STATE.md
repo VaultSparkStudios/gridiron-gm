@@ -4,7 +4,7 @@
 
 - Date: 2026-03-25
 - Overall status: Live on GitHub Pages, active development
-- Current version: v6.1 (gridiron-gm) / P43 (gridiron-gm-play) — both builds clean
+- Current version: v6.2 (gridiron-gm) / P48 (gridiron-gm-play) — both builds clean
 - Studio OS: Fully compliant
 
 ## What exists
@@ -46,6 +46,11 @@
 - **Stadium Upgrades** — `stadium.upgrades[]`; crowd noise / premium turf / expanded capacity tiers
 - **Practice Squad Call-Up** — `callUpPS()`; in-season only; 1SP; auto-returns after 3 weeks
 - **Multi-Year Owner Goal History** — `ownerGoalHistory[]` + `ownerGoalStreak`; dynasty bonus at 3 consecutive
+- **Player Retirement** — age 34–37+ chance at wk18; HOF log entry; comp 7th-round pick if OVR≥82
+- **Season Awards Panel** — MVP/DPOY/OROY/DROY from stats at wk18; +gmRep for user winners; log tab history
+- **Player Development Curve** — age 21–26 probabilistic OVR improvement at season end; logged for user team
+- **Draft Class Strength Rating** — `draftClassRating` rolled each newSeason; Weak/Average/Strong/Elite; affects OVR floor/cap
+- **Press Conference Events** — 30% chance per regular-season week; 8-question pool; 3 answers with morale/gmRep/fanSat effects
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -69,6 +74,11 @@
 - **P41: Drive Momentum Meter** — ⚡ HUD bar; ±% comp modifier; fills on completions/runs; drains on turnovers
 - **P42: Challenge Flag** — 1 per game after turnovers; 45% overturn; pre-play state snapshot
 - **P43: 4th Quarter Comeback Mode** — trailing 7+ Q4; +3% comp; AI false start +5%; COMEBACK MODE banner
+- **P44: Hail Mary** — 4th & ≥15 inside own 45; QB wind-up 2s; WRs sprint deep; 8% TD / 22% INT / 70% incomplete
+- **P45: Audible System** — AUDIBLE button presnap; RUN/PASS override; 1 per drive; `_audibleUsed` flag
+- **P46: Red Zone Bootleg** — 25% trigger on pass inside yardLine≥75; QB rolls right; THROW window; scramble fallback
+- **P47: Squib Kick** — kickoff modal DEEP/SQUIB/ONSIDE; squib = opp ball at 30, no return
+- **P48: Defensive Holding** — 8% CB hold roll per pass play; flag if gain <8yds & no TD/turnover; +5yds auto first down
 
 ## Important paths
 
@@ -85,4 +95,4 @@
 
 ## Next session task board
 
-See context/TASK_BOARD.md — backlog cleared this session (v6.1 / P43)
+See context/TASK_BOARD.md — backlog cleared (v6.2 / P48)

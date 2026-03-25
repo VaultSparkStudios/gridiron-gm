@@ -1,71 +1,52 @@
 # Latest Handoff
 
-Last updated: 2026-03-25 (session 12 — full backlog clear)
+Last updated: 2026-03-25 (session 13 — v6.2 / P48)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v6.1 / P36–P43)
+## What was completed this session (v6.2 / P44–P48)
 
-### gridiron-gm — v6.1 (App.jsx)
+### gridiron-gm — v6.2 (App.jsx)
 
-**Fan Satisfaction Meter**
-- `fanSat` state (0–100, starts 50); +8 win / +15 playoff win / +5 star FA signed; -10 loss / -5 cut OVR≥80 / -3 lose star to FA
-- SP gain rate modifier: fanSat <30 = -1 SP/wk; >70 = +1 SP/wk
-- Color bar (red/yellow/green) in standings tab header + schedule tab
+**Player Retirement** — wk18: age 34–37+ chance (10–55%), +15% low-OVR bonus; HOF log entry; comp 7th-round pick at OVR≥82; all teams processed
 
-**Trade Deadline AI Buy/Sell Mode**
-- `_aiTradeMode` useMemo: weeks 10-11 regular season only
-- Buyers (wins≥6): +15% value in trade offers; Sellers (wins≤4): accept -20% value
-- "TRADE DEADLINE ACTIVE" banner + ▲/▽ buyer/seller tags on AI team buttons in trade tab
+**Season Awards Panel** — MVP (QB passer rating ≥8GP), DPOY (DL/LB sacks+tackles), OROY/DROY (rookie yds/tackles); `awards[]` state; log tab UI current year + last 3 seasons; +1 gmRep if user winner
 
-**Scouting Budget Allocation**
-- `scoutBudget: { speed:1, scheme:1, injury:1, combine:1 }` state (sum=5, preseason only)
-- +/- UI in scouting tab; accuracy multipliers applied in scout reveal logic
+**Player Development Curve** — age 21–26 probabilistic OVR boosts at wk18; user improvements logged; OVR capped 99
 
-**Coaching Hire Market**
-- `coachMarket` state — 5-8 coaches per season; `genCoachMarket()` at newSeason
-- "COACH MARKET" section in coaching tab; SP-cost hire buttons; fired coaches re-enter pool
+**Draft Class Strength Rating** — `draftClassRating` rolled each newSeason (Weak/Average/Strong/Elite); affects prospect OVR floor/cap in `genDC()`; Elite guarantees 90+ prospect; displayed in draft tab header
 
-**Stadium Upgrades**
-- `stadium: { lvl:0, upgrades:[] }` state; `buyStadium(key)` function
-- 3 tiers: crowd noise (1SP), premium turf (2SP), expanded capacity (3SP)
-- Effects: simGame AI rating penalty, injury rate reduction, seasonal SP bonus
-
-**Practice Squad Call-Up**
-- `callUpPS(pid)` — moves PS player to main roster; 1SP; sets `p.psCallUp=true` / `p.callUpWk=wk`
-- Auto-return at simWk start if wk >= callUpWk + 3
-- "↑ Call Up (1SP)" button in PS view, in-season only
-
-**Multi-Year Owner Goal History**
-- `ownerGoalHistory[]` + `ownerGoalStreak` state
-- Push result at wk18 eval; +2 SP dynasty bonus at 3 consecutive met; last 3 shown in schedule tab
+**Press Conference Events** — 30% chance each regular-season week; 8-question pool; 3 answer buttons per question; effects: morale, gmRep, fanSat, holdout clear, dev trigger; 15s auto-dismiss; `pressConf` state
 
 ---
 
-### gridiron-gm-play — P43 (FieldScene.js)
+### gridiron-gm-play — P48 (FieldScene.js)
 
-**P36: Pick-Six Return** — phase `pick_six_return`; DB (cb1) controlled by user; lb/lb2 as blockers; qb/rb/wr1 pursue; TD at x<FIELD_LEFT+10
-**P37: Onside Kick** — enhanced post-score modal; 1.2s rapid-tap RECOVER!; ≥3 taps = recovery bonus
-**P38: QB Scramble Spin Move** — SPIN button DL <40px during `pass_wait`; `_spinUsed` flag; 70% break / 30% sack
-**P39: Fake Punt/Fake FG** — modal before punt/FG; FAKE IT / REAL KICK; 3s auto-dismiss to real
-**P40: Goal Line QB Sneak** — yardLine≥94 & toGo≤1 on runs; PUSH! mash 4/0.8s; QB x+15 tween
-**P41: Drive Momentum Meter** — `_momentum` 0-100; `_momentumBar` + `_momentumText` HUD; ±comp modifier
-**P42: Challenge Flag** — `_challengeUsed` per game; `_prePlayState` snapshot; 45% overturn; 4s dismiss
-**P43: 4th Quarter Comeback Mode** — `_comebackMode`; trailing 7+ Q4; +3% comp; AI false start +5%; banner
+**P44: Hail Mary** — 4th & ≥15 with yardLine<55; modal 2.5s auto-dismiss; QB wind-up 2s; WRs sprint deep; ball arc 1500ms; 8% TD / 22% INT / 70% incomplete
+
+**P45: Audible System** — AUDIBLE button presnap (user possession); RUN/PASS mini-menu; overrides PlayCall; `_audibleUsed` per drive; flash on execute
+
+**P46: Red Zone Bootleg** — 25% trigger on pass_short/pass_medium at yardLine≥75; QB tweens right +80px; THROW button 1s window; 65% catch / 4% INT / else incomplete; no-tap = 2-9yd scramble
+
+**P47: Squib Kick** — kickoff modal now has DEEP / SQUIB / ONSIDE; squib = opponent ball at 30 instantly; combined with existing onside mechanic
+
+**P48: Defensive Holding** — 8% CB hold roll per pass play (`_holdingRoll`); if gain <8yds and no turnover/TD: yellow flag, +5yds auto first down; reset each play
 
 ---
 
 ## What is mid-flight
 
-Nothing. Both builds clean and committed.
+Nothing. Both builds clean, committed, pushed.
 
 ---
 
-## What to do next (priority order)
+## What to do next
 
-1. Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local
-2. Generate PNG OG image — open scripts/gen-og.html → download → public/images/cover.png
-3. New backlog items TBD — all current features complete
+All planned backlogs cleared. New features TBD next session.
+
+Infrastructure remaining:
+- Wire analytics endpoint (VITE_ANALYTICS_URL in .env.local)
+- Generate PNG OG image (scripts/gen-og.html)
 
 ---
 
@@ -73,10 +54,10 @@ Nothing. Both builds clean and committed.
 
 - ALL changes to `src/App.jsx` must be ADDITIVE
 - Single-file React, inline styles, no external deps
-- Compact/minified code style — match existing density
+- Compact/minified code style
 - Bridge keys `gm_roster_export` / `gm_game_result` locked
-- Save state fields: `v:2, yr, wk, sp, ui, teams, sched, byeMap, fa, dc, draftPicks, draftIdx, draftLog, log, champs, pb, myScout, faScouts, scPts, faCoaches, rivalry, ftag, waivers, fanSat, scoutBudget, coachMarket, stadium, ownerGoalHistory, ownerGoalStreak`
-- New Phaser flags: `_spinUsed`, `_challengeUsed`, `_prePlayState`, `_momentum`, `_comebackMode`
+- Save state fields now include: `awards, draftClassRating, pressConf`
+- New Phaser flags: `_audibleUsed`, `_audibleActive`, `_holdingRoll`
 
 ## Read first next session
 
