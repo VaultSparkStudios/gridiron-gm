@@ -65,6 +65,16 @@ Append new entries. Do not erase historical reasoning unless it is wrong.
 
 ---
 
+### 2026-03-24 — Depth chart, save/load, 4th-down UI (v3.7)
+
+- Status: Complete
+- Context: Backlog clearance session — all remaining GM gameplay backlog items
+- Decision: Depth chart as a toggle on the Roster tab (not a separate page); save/load as JSON Blob; 4th-down as a pre-play decision panel blocking the call grid
+- Why: Single-file constraint means no routing; JSON download is zero-infrastructure; blocking panel matches the real decision moment before a play clock
+- Follow-up: `saveGame` JSON includes full `teams`, `sched`, `picks`, `season`, `user`, `week`, `phase` — all state needed to restore a session
+
+---
+
 ### 2026-03-24 — vite.config.js base path fix
 
 - Status: Complete

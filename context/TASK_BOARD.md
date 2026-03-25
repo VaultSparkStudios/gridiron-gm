@@ -14,6 +14,12 @@
 - [x] Studio OS migration: AGENTS.md, context/, logs/, docs/, prompts/, updated workflows
 - [x] OL sub-positions: LT/LG/C/RG/RT replacing generic OL in POS, PP, CA, PA, STRS, WKNS, genRoster, teamStr
 - [x] genLivePlay: OL avg ovr reduces sack chance
+- [x] Injury depth chart: Roster tab toggle with ST/BK/INJ labels per position
+- [x] Export/import save state: JSON download/upload via 💾/📂 buttons
+- [x] 4th-down decision UI: Punt / FG (range+kicker gated) / Go For It panel
+- [x] Defense sub-positions: DE/DT, MLB/OLB, FS in gridiron-gm-play
+- [x] Drive chart in GameOverScene (gridiron-gm-play)
+- [x] ci.yml workflow for gridiron-gm-play
 
 ## In Progress
 
@@ -21,19 +27,13 @@
 
 ## Backlog — Gameplay
 
-- [ ] Position filter on scouting/draft prospect boards (only roster + FA have it now)
-- [ ] Injury depth chart (backup auto-promotion when starter injured)
-- [ ] Export/import save state (JSON download/upload)
 - [ ] Analytics/telemetry (privacy-safe, no PII)
 
 ## Backlog — gridiron-gm-play (companion repo)
 
 - [ ] BootScene matchup card: key positional matchups (LT vs top DE, QB vs top CB)
-- [ ] Defense sub-positions: DE/DT, MLB/OLB, FS/SS
-- [ ] 4th-down decision UI (punt / go for it / field goal)
 - [ ] Special teams in Phaser
-- [ ] Drive chart in GameOverScene
-- [ ] ci.yml workflow for gridiron-gm-play
+- [ ] 4th-down decision in PlayCall scene (Phaser-side counterpart)
 
 ## Backlog — Infrastructure
 

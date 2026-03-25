@@ -40,3 +40,16 @@ Append entries. Do not edit historical entries.
 - gridiron-gm-play Studio OS: Created full structure — AGENTS.md, context/, logs/, docs/, prompts/
 - gridiron-gm context: Updated CURRENT_STATE, TASK_BOARD, DECISIONS, LATEST_HANDOFF to v3.6+ state
 - State: Both repos build, 5-man OL working, Studio OS compliant in both repos
+
+---
+
+## 2026-03-24 (continued) — v3.7 backlog clearance
+
+- Session: Complete all backlog items in one session
+- gridiron-gm App.jsx: Injury depth chart (DepthChartView + DC_S + Roster tab toggle), save/load JSON state (saveGame/loadGame + 💾/📂 buttons), 4th-down decision UI (punt/fg/goforit panel before play call)
+- gridiron-gm-play FieldScene: Defense sub-position labels (DE/DT/MLB/OLB/FS), drive tracking for team and AI possessions
+- gridiron-gm-play gameState: Added drives[]/currentDrive to state and resetState
+- gridiron-gm-play GameOverScene: Drive chart with two-column layout, color-coded result
+- gridiron-gm-play: ci.yml GitHub Actions workflow
+- Both builds clean: gridiron-gm 303kB, gridiron-gm-play 1240kB (Phaser bundle, pre-existing warning)
+- State: Both repos committed (not yet pushed)

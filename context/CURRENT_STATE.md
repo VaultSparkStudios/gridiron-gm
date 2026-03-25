@@ -4,7 +4,7 @@
 
 - Date: 2026-03-24
 - Overall status: Live on GitHub Pages, active development
-- Current version: v3.6 + Track 2 (Phaser Play module live)
+- Current version: v3.7 + Track 2 (Phaser Play module live)
 - Studio OS: Fully compliant
 
 ## What exists
@@ -23,6 +23,9 @@
 - Salary cap ($200M hard ceiling, capHit/capSpace, dead cap, contract extensions)
 - QTE interactive gameplay (pre-snap reads, receiver targeting, run timing bar)
 - GM Bridge: exportGameToPlay() + importPlayResult() — full round-trip with gridiron-gm-play
+- **Depth chart view** — Roster tab toggle; ST/BK/INJ labels per position with injury indicator
+- **Save/load state** — JSON download (💾 header button) + upload (splash + header 📂 button)
+- **4th-down decision UI** — Punt / FG (range-gated, kicker OVR shown) / Go For It panel in live sim
 
 ### POS system (updated)
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -50,6 +53,6 @@
 
 ## Next 3 moves
 
-1. Position filter on scouting/draft prospect boards (backlog)
-2. BootScene matchup card in gridiron-gm-play (show LT vs DE ratings)
-3. OG image `public/images/cover.png` for social sharing
+1. OG image `public/images/cover.png` for social sharing
+2. Special teams in Phaser (gridiron-gm-play)
+3. Mobile layout improvements
