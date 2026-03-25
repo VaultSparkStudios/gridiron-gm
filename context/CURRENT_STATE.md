@@ -4,7 +4,7 @@
 
 - Date: 2026-03-25
 - Overall status: Live on GitHub Pages, active development
-- Current version: v8.0 (gridiron-gm) / P63 (gridiron-gm-play) — both builds clean
+- Current version: v9.0 (gridiron-gm) / P68 (gridiron-gm-play) — both builds clean
 - Studio OS: Fully compliant
 
 ## What exists
@@ -66,6 +66,16 @@
 - **Media Storylines** — `mediaStory` state; generated at newSeason based on prior wins/rivalry; italic banner in schedule tab
 - **Preseason Power Rankings** — `powerRankings` state; trend arrows (▲/▽/—); collapsible section in standings tab
 - **IR Designations** — `p.irReturnWk` field set on moveToIR; Est.WkX + Min:Xwk shown in IR list
+- **Offseason Extensions** — preseason "Extend (2SP)" in PlayerModal for contract===2 players; +2yr 15% raise, sets `p.offsznExt`
+- **Practice Squad Poaching** — 15% chance/wk AI poaches user PS player; modal Block(1SP)/Let Go
+- **Coaching XP** — OC/DC/ST gain +3/win +1/loss; level up (+5 rating) at 20 XP; XP bar in coaching tab
+- **Injury Prone Flag** — `p.injCount` tracked; `p.fragile=true` at injCount≥2; ⚠️ badge in PlayerTable + modal
+- **Trade Deadline Urgency** — wk10 if 2+ behind division: owner CONTEND/SELL modal; gmRep +1 on CONTEND
+- **Late-Round Gem Scouting** — "Scout Gem (1SP)" in draft tab; boosts R4+ prospect to 85+ pot; GEM banner
+- **UDFA Pool** — 8 UDFAs generated after R7; Sign to PS buttons; max 5 signings
+- **Holdout Escalation** — 2+ wk holdout → team morale -3, gmRep -1, logged; tracked via `holdoutWks{}`
+- **Rookie Wage Scale** — R1 picks get `rookieSlot()` fixed salary (slot-based, ~$4M→$0.8M); shown in draft
+- **Expansion Draft Mode** — yr≥3 option; protect 15 players; Las Vegas Aces added as expansion team
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -109,10 +119,15 @@
 - **P61: Two-Point Choice** — RUN IT (mini-game) / PASS IT (stat-based) modal before 2pt attempt
 - **P62: Wind HUD** — `_wind` rolled at create(); shown on FG/punt; crosswind/head/tailwind accuracy modifiers
 - **P63: Defensive Run Stop** — STACK IT! button 1.2s window on AI runs; 52% speed reduction on success
+- **P64: No-Huddle Hurry-Up** — HURRY UP button after incomplete; saves 15s clock; -5% comp penalty next play
+- **P65: Receiver Route Tree** — CURL/POST/CORNER/GO selector pre-snap; comp%/yard modifiers; 3s auto-CURL
+- **P66: Defensive Pass Rush Lane** — INSIDE/OUTSIDE choice on AI passes; sack% / coverage% modifiers
+- **P67: QB Checkdown Under Pressure** — 500ms window; guaranteed 1-6yd gain; CHECKDOWN! flash; no INT risk
+- **P68: Red Zone Fade to Corner** — FADE ROUTE button 3rd/4th &5+ inside 25; 48% catch/18% INT/34% inc; TD if in endzone
 
 ## Important paths
 
-- `src/App.jsx` — all game code (~1200+ lines, v6.0)
+- `src/App.jsx` — all game code (~1600+ lines, v9.0)
 - `gridiron-gm-play/src/scenes/FieldScene.js` — primary Phaser gameplay file
 - `gridiron-gm-play/src/scenes/PlayCallScene.js` — play call menu (8 runs/passes)
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()

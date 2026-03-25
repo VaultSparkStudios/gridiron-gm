@@ -87,6 +87,22 @@
 - [x] **v8.0 GM: Preseason Power Rankings** — `powerRankings` state; trend arrows; collapsible in standings tab
 - [x] **v8.0 GM: IR Designations** — `irReturnWk` field; Est.WkX + Min:Xwk shown in IR section
 
+- [x] **v9.0 GM: Offseason Extensions** — preseason Extend (2SP); +2yr 15% raise; `p.offsznExt`
+- [x] **v9.0 GM: Practice Squad Poaching** — 15%/wk AI poach attempt; Block(1SP)/Let Go modal; `psPoachAttempt`
+- [x] **v9.0 GM: Coaching XP** — `coach.xp`; +3/win +1/loss; level up at 20XP; XP bar in coaching tab
+- [x] **v9.0 GM: Injury Prone Flag** — `p.injCount`; `p.fragile` at ≥2; ⚠️ badge; "Injury Prone" in modal
+- [x] **v9.0 GM: Trade Deadline Urgency** — wk10 2+ behind → CONTEND/SELL modal; gmRep +1; `deadlineUrgency`
+- [x] **v9.0 GM: Gem Scout** — "Scout Gem (1SP)" in draft; R4–R7 pot boost to 85+; ⭐ GEM banner; `gemScout`
+- [x] **v9.0 GM: UDFA Pool** — 8 UDFAs after R7; Sign to PS (max 5); `udfaPool`
+- [x] **v9.0 GM: Holdout Escalation** — 2+ wk holdout → morale -3 gmRep -1; `holdoutWks{}`
+- [x] **v9.0 GM: Rookie Wage Scale** — `rookieSlot()` fixed R1 salary; shown in draft + log
+- [x] **v9.0 GM: Expansion Draft** — yr≥3; protect 15; Las Vegas Aces expansion team; `expansionMode`
+- [x] **P64: No-Huddle Hurry-Up** — HURRY UP after incomplete; 15s saved; -5% comp next play
+- [x] **P65: Receiver Route Tree** — CURL/POST/CORNER/GO pre-snap; comp%/yard mods; 3s auto-CURL
+- [x] **P66: Defensive Pass Rush Lane** — INSIDE/OUTSIDE on AI passes; sack%/coverage% mods
+- [x] **P67: QB Checkdown Under Pressure** — 500ms window; 1-6yd guaranteed; no INT; CHECKDOWN! flash
+- [x] **P68: Red Zone Fade to Corner** — FADE ROUTE 3rd/4th &5+ inside 25; 48%/18%/34%; TD possible
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local

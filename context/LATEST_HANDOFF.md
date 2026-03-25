@@ -1,46 +1,46 @@
 # Latest Handoff
 
-Last updated: 2026-03-25 (session 15 — v8.0 / P63)
+Last updated: 2026-03-25 (session 16 — v9.0 / P68)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v8.0 / P59–P63)
+## What was completed this session (v9.0 / P64–P68)
 
-### gridiron-gm — v8.0 (App.jsx) — 10 new GM features
+### gridiron-gm — v9.0 (App.jsx) — 10 new GM features
 
-**Contract Year Boost** — `p.contract===1` adds +2 to teamStr per CY player (avg); gold CY badge in PlayerTable name cell and player modal
+**Offseason Extensions** — preseason PlayerModal "Extend (2SP)" button for contract===2 players; +2yr, +15% salary, sets `p.offsznExt`; logged
 
-**Player Mentorship** — on newSeason, OVR≥85/age≥30 players assigned as mentors to age≤24 same-side players; 35% chance at wk18 dev curve to boost bonus to 1
+**Practice Squad Poaching** — `psPoachAttempt` state; 15%/wk chance AI poaches user PS player; Block(1SP) / Let Go modal in roster tab
 
-**Scheme Fit Ratings** — `p.fit` 0-100 per player; FIT column in PlayerTable; `avgFit` modifier `(avgFit-70)*0.05` in teamStr; colors green/yellow/red
+**Coaching Coordinators XP** — `coach.xp` field; +3/win +1/loss in simWk; level up at 20XP (rating +5, reset xp); XP/20 bar in coaching tab with "↑ READY" indicator
 
-**Trade Block** — `p.onBlock` boolean toggle via PM button; 🔖 badge in name cell; AI offer probability doubled for teams with block players; TRADE BLOCK section at top of trade tab
+**Injury Prone Flag** — `p.injCount` incremented each injury; `p.fragile = injCount>=2`; ⚠️ badge in PlayerTable name cell + "Injury Prone" label in modal
 
-**Player Agent Types** — `p.agent` Aggressive/Moderate/Passive on all players; salary demand multiplier 1.15x/1.0x/0.9x applied in reSign; colored label in PM
+**Trade Deadline Urgency** — `deadlineUrgency` state; wk10 check if user 2+ games behind division leader; CONTEND/SELL modal in schedule tab; gmRep +1 on CONTEND
 
-**Combine Scores for Prospects** — `genCombine(pos, trueOvr)` called in `genDC` on all draft class prospects; shown in draft player modal
+**Late-Round Gem Scouting** — `gemScout` state; "Scout Gem (1SP)" in draft tab; finds R4–R7 prospect, boosts pot to 85+; ⭐ GEM banner in draft list
 
-**OFF/DEF Split Ratings** — `calcOffStr(t)` / `calcDefStr(t)` helper functions; O: / D: numeric labels on every standings team row
+**UDFA Pool** — `udfaPool` state; 8 UDFA prospects generated after R7 completes; "Sign to PS" buttons; max 5 signings tracked
 
-**Media Storylines** — `mediaStory` useState; generated at newSeason based on prevW≥10/prevW≤4/rivalry flag; italic📰 banner in schedule tab
+**Holdout Escalation** — `holdoutWks{}` state; 2+ wk holdout triggers team morale -3, gmRep -1, logged; escalation count label near holding-out player
 
-**Preseason Power Rankings** — `powerRankings` useState array; calculated after each simWk; all 32 teams with trend arrows (▲/▽/—); collapsible section in standings tab
+**Rookie Wage Scale** — `rookieSlot(pick)` helper; R1 picks get fixed slot salary (~$4M–$0.8M) in makePick; shown in draft list and log
 
-**IR Designations** — `p.irReturnWk` field set in moveToIR as `wk+(p.injRecWks||8)`; IR section now shows Est.WkX and Min:Xwk labels
+**Expansion Draft Mode** — `expansionMode` / `expansionProtected` state; yr≥3 button; protect 15 players modal; Las Vegas Aces expansion team created from unprotected players
 
 ---
 
-### gridiron-gm-play — P63 (FieldScene.js) — 5 new Phaser features
+### gridiron-gm-play — P68 (FieldScene.js) — 5 new Phaser features
 
-**P59: Punt Return Decision** — AI 4th & >42 triggers `_showAIPuntDecision()`; FAIR CATCH / RETURN modal (2.5s auto → fair catch); RETURN shows L/M/R lane choice; fumble risk 12%/6%/12%
+**P64: No-Huddle Hurry-Up** — HURRY UP amber button after incomplete passes; 3s window; saves 15s from clock; `-5%` comp penalty on next play; `_hurryUpActive` / `_hurryUpPenalty` flags
 
-**P60: Overtime Mechanic** — `_isOT` flag; tie game in `_afterPlay` triggers `_showOTCoinFlip()`; OVERTIME flash tween; coin flip modal; `state.quarter=5`; sudden death possession
+**P65: Receiver Route Tree** — CURL/POST/CORNER/GO selector appears post-snap; 3s auto-CURL; `_routeChoice {compMod, yardMod}` stored and applied to pass resolution
 
-**P61: Two-Point Choice** — GO FOR 2 now calls `_showTwoPointChoice()`; RUN IT (existing mini-game) / PASS IT (stat-based: `passRate = clamp(40+(qbOvr-70)*0.8, 30, 72)`)
+**P66: Defensive Pass Rush Lane** — INSIDE/OUTSIDE RUSH choice on AI passes; 2s window; modifies sack threshold and coverage in pass resolution; `_rushLane` flag
 
-**P62: Wind HUD** — `this._wind = {dir, mph}` rolled in create(); shown during FG/punt in amber/orange; crosswind (-mph*0.8%) / headwind (-mph*0.5%) / tailwind (+mph*0.3%) FG modifiers
+**P67: QB Checkdown Under Pressure** — 500ms window after snap; clicking any receiver target during window triggers guaranteed 1-6yd gain, no INT; CHECKDOWN! flash; `_checkdownFired` flag
 
-**P63: Defensive Run Stop** — `_showDefRunStop()` called 300ms into AI run drive; STACK IT! 1.2s button; on success `_stackItBonus=true`; AI run speed reduced to 48% in update loop
+**P68: Red Zone Fade to Corner** — FADE ROUTE purple button 3rd/4th &5+ from yardLine≥75; WR fade tween; LOFT IT! after 1.5s; 48% catch(TD if endzone)/18% INT/34% inc; WR/CB matchup modifier; `_fadePlaying` flag
 
 ---
 
@@ -52,7 +52,7 @@ Nothing. Both builds clean.
 
 ## What to do next
 
-All backlogs cleared again. Next session: propose next 10 GM + 5 Phaser features.
+All backlogs cleared. Next session: propose next 10 GM + 5 Phaser features.
 
 Infrastructure remaining:
 - Wire analytics endpoint (VITE_ANALYTICS_URL in .env.local)
@@ -64,9 +64,10 @@ Infrastructure remaining:
 
 - ALL changes ADDITIVE; single-file React; compact style; no external deps
 - Bridge keys `gm_roster_export` / `gm_game_result` locked
-- New state vars (v8.0): `mediaStory`, `powerRankings`
-- New player fields: `fit`, `agent`, `onBlock`, `mentor`, `irReturnWk`
-- New FieldScene flags: `_isOT`, `_wind`, `_stackItEls`, `_stackItBonus`
+- New state vars (v9.0): `psPoachAttempt`, `deadlineUrgency`, `gemScout`, `udfaPool`, `holdoutWks`, `expansionMode`, `expansionProtected`
+- New player fields: `offsznExt`, `fragile`, `injCount`
+- New coach fields: `xp`
+- New FieldScene flags: `_hurryUpActive`, `_hurryUpPenalty`, `_routeChoice`, `_rushLane`, `_checkdownFired`, `_fadePlaying`
 
 ## Read first next session
 
