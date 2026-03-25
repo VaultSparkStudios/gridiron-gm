@@ -4,7 +4,7 @@
 
 - Date: 2026-03-25
 - Overall status: Live on GitHub Pages, active development
-- Current version: v6.3 (gridiron-gm) / P53 (gridiron-gm-play) — both builds clean
+- Current version: v8.0 (gridiron-gm) / P63 (gridiron-gm-play) — both builds clean
 - Studio OS: Fully compliant
 
 ## What exists
@@ -56,6 +56,16 @@
 - **Team Chemistry System** — `chemistry` 0-100 per team; win/loss/holdout/trade effects; modifies teamStr
 - **Weather Impact on Sim** — per-game roll (clear/rain/snow/wind); pass comp / fumble / FG accuracy modifiers
 - **Live Stat Write-Back** — Phaser game results write `playerDeltas` to `p.ss`; guarded by `g.playedLive` flag
+- **Contract Year Boost** — `p.contract===1` adds +2 teamStr per CY player; CY gold badge in PlayerTable + modal
+- **Player Mentorship** — OVR≥85/age≥30 assigned as mentor to age≤24 players; 35% wk18 dev bonus
+- **Scheme Fit Ratings** — `p.fit` 0-100 per player; FIT column in PlayerTable; avgFit modifier in teamStr
+- **Trade Block** — `p.onBlock` toggle; 🔖 badge; AI offer bias toward on-block players; TRADE BLOCK section in trade tab
+- **Player Agent Types** — `p.agent` Aggressive/Moderate/Passive; 1.15x/0.9x salary demand multiplier on re-sign
+- **Combine Scores for Prospects** — `genCombine()` on all draft class prospects; percentile shown in player modal
+- **OFF/DEF Split Ratings** — `calcOffStr/calcDefStr` helpers; O: / D: labels on every standings row
+- **Media Storylines** — `mediaStory` state; generated at newSeason based on prior wins/rivalry; italic banner in schedule tab
+- **Preseason Power Rankings** — `powerRankings` state; trend arrows (▲/▽/—); collapsible section in standings tab
+- **IR Designations** — `p.irReturnWk` field set on moveToIR; Est.WkX + Min:Xwk shown in IR list
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -89,6 +99,16 @@
 - **P51: Offensive Holding** — 6% on runs >6yds; -10yds repeat down; yellow flag
 - **P52: QB Injury Risk** — 4% on sack; `_qbInjured` flag; -8% comp; clears at halftime
 - **P53: Clock Management** — Q4 trailing: SPIKE IT (stop clock) or OUT OF BOUNDS button after plays
+- **P54: QB Reads** — 3 pre-snap zone buttons (CHECKDOWN/PRIMARY/GO ROUTE); 2.5s auto; comp%/yards modifiers
+- **P55: Player Fatigue** — `_fatigue{}` dict; accumulates per carry/scramble; -20/quarter recovery; orange HUD >60
+- **P56: Goal Line Package** — `_isGoalLine()` at yardLine≥93; gold flash; 0-2yd run range; STR bonus
+- **P57: Expanded Audibles** — AUDIBLE_ROUTES (RB SCREEN/SLANT/FADE/OUT ROUTE); 4 buttons at 89% screen height
+- **P58: Defensive Formations** — DEF_FORMATIONS (4-3/3-4/NICKEL/DIME/BLITZ); top-right selector; coverage/sack bonuses
+- **P59: Punt Return Decision** — AI punts on 4th & >42; FAIR CATCH / RETURN modal; L/M/R lane choice; wind modifier
+- **P60: Overtime Mechanic** — tie → OVERTIME flash; coin flip modal; `_isOT=true`; sudden death possession
+- **P61: Two-Point Choice** — RUN IT (mini-game) / PASS IT (stat-based) modal before 2pt attempt
+- **P62: Wind HUD** — `_wind` rolled at create(); shown on FG/punt; crosswind/head/tailwind accuracy modifiers
+- **P63: Defensive Run Stop** — STACK IT! button 1.2s window on AI runs; 52% speed reduction on success
 
 ## Important paths
 

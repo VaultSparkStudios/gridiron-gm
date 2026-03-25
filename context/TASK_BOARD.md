@@ -65,6 +65,27 @@
 - [x] **P51: Offensive Holding** — 6% on runs >6yds; -10yds repeat down
 - [x] **P52: QB Injury Risk** — 4% on sack; -8% comp; clears halftime
 - [x] **P53: Clock Management** — Q4 trailing SPIKE IT / OUT OF BOUNDS buttons
+- [x] **P54: QB Reads** — 3 pre-snap zones; 2.5s auto; comp%/yards modifiers
+- [x] **P55: Player Fatigue** — accumulates per carry/scramble; -20/quarter recovery; orange HUD >60
+- [x] **P56: Goal Line Package** — at yardLine≥93; gold flash; 0-2yd range; STR bonus
+- [x] **P57: Expanded Audibles** — 4 hot routes; 4 buttons at 89% screen; modifiers
+- [x] **P58: Defensive Formations** — 5 formations; top-right selectors; coverage/sack bonuses
+- [x] **P59: Punt Return Decision** — AI punts on 4th & >42; FAIR CATCH / RETURN; lane choice (L/M/R); wind modifier
+- [x] **P60: Overtime Mechanic** — tie → OVERTIME flash; coin flip modal; sudden death; AI or user possession
+- [x] **P61: Two-Point Choice** — RUN (mini-game) / PASS (stat-based) before 2pt attempt
+- [x] **P62: Wind HUD** — roll per game; shown on FG/punt; crosswind/head/tailwind accuracy modifiers
+- [x] **P63: Defensive Run Stop** — STACK IT! button 1.2s window on AI runs; 52% speed reduction on success
+
+- [x] **v8.0 GM: Contract Year Boost** — `p.contract===1` → +2 teamStr per CY player; CY badge in PlayerTable/modal
+- [x] **v8.0 GM: Player Mentorship** — OVR≥85/age≥30 mentor assigned to age≤24; 35% dev bonus at wk18
+- [x] **v8.0 GM: Scheme Fit Ratings** — `p.fit` 0-100; FIT column in PlayerTable; avgFit modifier in teamStr
+- [x] **v8.0 GM: Trade Block** — `p.onBlock` toggle; 🔖 badge; AI offer bias; TRADE BLOCK section in trade tab
+- [x] **v8.0 GM: Player Agent Types** — Aggressive/Moderate/Passive; 1.15x/0.9x salary demand multiplier
+- [x] **v8.0 GM: Combine Scores for Prospects** — `genCombine()` on all draft prospects; shown in player modal
+- [x] **v8.0 GM: OFF/DEF Split Ratings** — `calcOffStr/calcDefStr` helpers; O:/D: shown on standings rows
+- [x] **v8.0 GM: Media Storylines** — `mediaStory` state; generated at newSeason; italic banner in schedule tab
+- [x] **v8.0 GM: Preseason Power Rankings** — `powerRankings` state; trend arrows; collapsible in standings tab
+- [x] **v8.0 GM: IR Designations** — `irReturnWk` field; Est.WkX + Min:Xwk shown in IR section
 
 ## Backlog — Infrastructure
 

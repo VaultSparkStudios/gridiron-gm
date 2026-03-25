@@ -1,48 +1,58 @@
 # Latest Handoff
 
-Last updated: 2026-03-25 (session 14 — v6.3 / P53)
+Last updated: 2026-03-25 (session 15 — v8.0 / P63)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v6.3 / P49–P53)
+## What was completed this session (v8.0 / P59–P63)
 
-### gridiron-gm — v6.3 (App.jsx)
+### gridiron-gm — v8.0 (App.jsx) — 10 new GM features
 
-**AI-Initiated Trades** — 20% chance/week per AI team during regular season (35% buy-mode wks 10-11); `aiOffer` state; INCOMING OFFER banner in trade tab with ACCEPT/DECLINE/COUNTER; expires after 2 weeks
+**Contract Year Boost** — `p.contract===1` adds +2 to teamStr per CY player (avg); gold CY badge in PlayerTable name cell and player modal
 
-**Playoff Bracket Visual** — visual bracket in playoffs tab; AFC/NFC columns with seeds, team names, records; connector lines via borders; winners highlighted with team color border; championship game centered
+**Player Mentorship** — on newSeason, OVR≥85/age≥30 players assigned as mentors to age≤24 same-side players; 35% chance at wk18 dev curve to boost bonus to 1
 
-**Team Chemistry System** — `chemistry` field per team (default 75, 0-100); win +3 / loss -2 / re-sign key +4 / cut -3 / holdout -5/wk / trade +1/-2; streak bonuses ±2; `(chemistry-75)*0.2` applied to teamStr; roster tab color bar
+**Scheme Fit Ratings** — `p.fit` 0-100 per player; FIT column in PlayerTable; `avgFit` modifier `(avgFit-70)*0.05` in teamStr; colors green/yellow/red
 
-**Weather Impact on Sim** — per-game roll: 70% clear / 15% rain / 10% wind / 5% snow; rain -5% pass comp; snow -8% comp +2% fumble; wind -12% FG accuracy; schedule tab weather icon for upcoming game
+**Trade Block** — `p.onBlock` boolean toggle via PM button; 🔖 badge in name cell; AI offer probability doubled for teams with block players; TRADE BLOCK section at top of trade tab
 
-**Live Stat Write-Back** — on `gm_game_result` import, `playerDeltas` added to `p.ss` fields; guarded by `g.playedLive=true`; updates gp; "📊 Live stats synced" in success message
+**Player Agent Types** — `p.agent` Aggressive/Moderate/Passive on all players; salary demand multiplier 1.15x/1.0x/0.9x applied in reSign; colored label in PM
+
+**Combine Scores for Prospects** — `genCombine(pos, trueOvr)` called in `genDC` on all draft class prospects; shown in draft player modal
+
+**OFF/DEF Split Ratings** — `calcOffStr(t)` / `calcDefStr(t)` helper functions; O: / D: numeric labels on every standings team row
+
+**Media Storylines** — `mediaStory` useState; generated at newSeason based on prevW≥10/prevW≤4/rivalry flag; italic📰 banner in schedule tab
+
+**Preseason Power Rankings** — `powerRankings` useState array; calculated after each simWk; all 32 teams with trend arrows (▲/▽/—); collapsible section in standings tab
+
+**IR Designations** — `p.irReturnWk` field set in moveToIR as `wk+(p.injRecWks||8)`; IR section now shows Est.WkX and Min:Xwk labels
 
 ---
 
-### gridiron-gm-play — P53 (FieldScene.js)
+### gridiron-gm-play — P63 (FieldScene.js) — 5 new Phaser features
 
-**P49: WR vs CB Matchup HUD** — `_buildMatchupHUD()` in `_resetFormation`; WR1/WR2 OVR vs CB1/CB2; color arrows; matchupBonus applied to pass comp ±8% at 10-pt diff; auto-dismisses 2.8s
+**P59: Punt Return Decision** — AI 4th & >42 triggers `_showAIPuntDecision()`; FAIR CATCH / RETURN modal (2.5s auto → fair catch); RETURN shows L/M/R lane choice; fumble risk 12%/6%/12%
 
-**P50: FG Block Attempt** — intercepts AI 4th-down FG in range; BLOCK IT! 0.8s delay; 18% base + DL OVR bonus (cap 40%); blocked = user ball at 20; auto-resolves if not tapped
+**P60: Overtime Mechanic** — `_isOT` flag; tie game in `_afterPlay` triggers `_showOTCoinFlip()`; OVERTIME flash tween; coin flip modal; `state.quarter=5`; sudden death possession
 
-**P51: Offensive Holding** — 6% roll on runs >6yds; `_p51Hold` flag; -10yds repeat down (down counter not advanced); yellow flag + flash
+**P61: Two-Point Choice** — GO FOR 2 now calls `_showTwoPointChoice()`; RUN IT (existing mini-game) / PASS IT (stat-based: `passRate = clamp(40+(qbOvr-70)*0.8, 30, 72)`)
 
-**P52: QB Injury Risk** — 4% on sack; `_qbInjured`; -8% comp all pass plays; clears at `_showHalftime`; ⚠️ indicator near QB
+**P62: Wind HUD** — `this._wind = {dir, mph}` rolled in create(); shown during FG/punt in amber/orange; crosswind (-mph*0.8%) / headwind (-mph*0.5%) / tailwind (+mph*0.3%) FG modifiers
 
-**P53: Clock Management** — `_showClockMgmt(mode)` in `_afterPlay` when Q4 trailing 1-8pts; SPIKE IT (loss of down, clock stop) or OUT OF BOUNDS (yards kept, stop clock); 4s auto-dismiss
+**P63: Defensive Run Stop** — `_showDefRunStop()` called 300ms into AI run drive; STACK IT! 1.2s button; on success `_stackItBonus=true`; AI run speed reduced to 48% in update loop
 
 ---
 
 ## What is mid-flight
 
-Nothing. Both builds clean, committed, pushed.
+Nothing. Both builds clean.
 
 ---
 
 ## What to do next
 
-All backlogs cleared again. Next session: propose next 10 features.
+All backlogs cleared again. Next session: propose next 10 GM + 5 Phaser features.
 
 Infrastructure remaining:
 - Wire analytics endpoint (VITE_ANALYTICS_URL in .env.local)
@@ -54,8 +64,9 @@ Infrastructure remaining:
 
 - ALL changes ADDITIVE; single-file React; compact style; no external deps
 - Bridge keys `gm_roster_export` / `gm_game_result` locked
-- New save state fields: `aiOffer`, `chemistry` (per team), game weather per schedule entry
-- New FieldScene flags: `_qbInjured`, `_p51Hold`, `_matchupWR1`, `_matchupWR2`
+- New state vars (v8.0): `mediaStory`, `powerRankings`
+- New player fields: `fit`, `agent`, `onBlock`, `mentor`, `irReturnWk`
+- New FieldScene flags: `_isOT`, `_wind`, `_stackItEls`, `_stackItBonus`
 
 ## Read first next session
 
