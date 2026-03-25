@@ -912,7 +912,7 @@ sm(`${ns} season!`);};
 
     {/* DRAFT */}
     {tab==="draft"&&<div>
-      {draftClassRating&&(()=>{const dcrCol={Weak:'#ef4444',Average:'#eab308',Strong:'#22c55e',Elite:'#f59e0b'}[draftClassRating]||'#94a3b8';return(<div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,padding:"4px 8px",background:dcrCol+'22',borderRadius:5,border:`1px solid ${dcrCol}44`}}><span style={{fontSize:9,fontWeight:700,color:dcrCol}}>Draft Class: {draftClassRating}</span></div>);})()}
+      {draftClassRating&&(()=>{const dcrCol={Weak:'#ef4444',Average:'#eab308',Strong:'#22c55e',Elite:'#f59e0b'}[draftClassRating]||'#94a3b8';return(<div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,padding:"4px 8px",background:dcrCol+'22',borderRadius:5,border:'1px solid '+dcrCol+'44'}}><span style={{fontSize:9,fontWeight:700,color:dcrCol}}>Draft Class: {draftClassRating}</span></div>);})()}
       {sp==="draft"&&draftActive&&curPick?<div>
         <div style={{background:`linear-gradient(135deg,${TEAMS[curPick.owner].clr},#1e293b)`,borderRadius:8,padding:10,marginBottom:8,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div><div style={{fontSize:8,color:"#fff8",textTransform:"uppercase"}}>Round {curPick.rd} — Pick #{curPick.overall}</div>
