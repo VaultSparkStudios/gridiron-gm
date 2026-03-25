@@ -4,6 +4,25 @@ Append entries. Do not edit historical entries.
 
 ---
 
+## 2026-03-25 (session 18 — v11.0)
+
+- Session: v11.0 — 10 GM features + P74–P78 Phaser features
+- IR Auto-Return (irReturnWk countdown, auto-roster in simWk)
+- Player Personality (p.personality, badges, Leader/Loner/Hothead/Grinder effects)
+- Rival Game Boost (RIVALRY WEEK banner, +4 teamStr)
+- Scout Network Tiers (scoutTier 1-3, combine/trueOvr unlocks, SP upgrades)
+- Cap Rollover (capRollover, unused cap carries max $10M)
+- Veteran Minimum (VET MIN $0.5M/1yr for OVR≤65)
+- Coaching Hot Seat (hotSeat state, auto-fire at streak≤-4)
+- Player Suspension (suspensionEvent, 2%/wk, Handle/Release modal)
+- Draft Board (draftBoard ordered pids, MY BOARD section, ↑/↓)
+- Preseason Injury Risk (preseasonRisk toggle, 8% per starter)
+- P74: DB Bump Coverage; P75: Scramble Slide; P76: Red Zone Run Choice
+- P77: Penalty Accept/Decline; P78: Two-Minute Warning Timeout
+- Both builds clean; committed; context updated
+
+---
+
 ## 2026-03-25 (session 17 — v10.0)
 
 - Session: v10.0 — 10 GM features + P69–P73 Phaser features

@@ -1,46 +1,46 @@
 # Latest Handoff
 
-Last updated: 2026-03-25 (session 17 — v10.0 / P73)
+Last updated: 2026-03-25 (session 18 — v11.0 / P78)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v10.0 / P69–P73)
+## What was completed this session (v11.0 / P74–P78)
 
-### gridiron-gm — v10.0 (App.jsx) — 10 new GM features
+### gridiron-gm — v11.0 (App.jsx) — 10 new GM features
 
-**Salary Cap Floor** — CAP_FLOOR=150; auto-sign cheapest FA at simWk if under floor; red "⚠ Cap Floor" banner in roster tab
+**IR Auto-Return** — `irReturnWk` countdown shown in IR section; simWk auto-moves player to roster at return week; logged
 
-**Player Option Years** — `p.playerOption` bool on genPlayer; OVR≥80 25% chance; 60% opt-out at contract=1 in newSeason; purple OPT badge in salary column
+**Player Personality Types** — `p.personality` (Leader/Loner/Hothead/Grinder); colored pill in PlayerModal; single-letter badge in PlayerTable; Loner skips LKR conf effects; Grinder +10% dev chance; Hothead 10% extra morale hit/wk
 
-**PUP/NFI Designations** — `p.irType` field set in moveToIR (wk<4: 30%PUP/20%NFI/50%IR); PUP no return until wk9; NFI season-ending (injRecWks=99); colored badge in IR list
+**Rival Game Boost** — `⚔️ RIVALRY WEEK` banner in schedule tab when next game is vs rivalry team; +4 teamStr applied in simWk for that game
 
-**Coaching Tree Legacy** — `coachLegacy` state; stored on fireCoach; 20% protege +3 rating bonus on hire from coachMarket; logged
+**Scout Network Tiers** — `scoutTier` state (1–3); Tier 2 (3SP) unlocks combine on scoutLvl≥1; Tier 3 (6SP) reveals trueOvr on scoutLvl≥1; upgrade buttons in scouting tab
 
-**Draft Pick Compensation** — `compPickQueue` state; gmRep≥60 + faLostCount>0 → comp pick R3–R5 in newSeason; "Add to Pool" button in draft tab; `faLostCount` incremented when AI signs user's FAs
+**Salary Cap Rollover** — `capRollover` state; at newSeason: min(10, unused/2) carries over; "+ $XM rollover" shown green in cap header
 
-**Franchise QB Mode** — `franchiseQB` state; "Set FQB (1SP)" in QB PlayerModal; gold FQB badge; trade/release blocked; +5 teamStr bonus; 1SP deducted per newSeason if set
+**Veteran Minimum Contracts** — VET MIN button for OVR≤65 in FA tab + waiver wire; $0.5M/1yr; VET MIN badge
 
-**Preseason Depth Chart Battles** — "Battle (1SP)" per position in preseason roster tab; top 2 by OVR compete; 60% higher wins; winner +1 OVR; `battlesDone[]` tracks completed; reset in newSeason
+**Coaching Hot Seat** — `hotSeat` state; streak≤-3 → all coordinators on hot seat (🔥 badge); streak≤-4 → auto-fire worst rated; clears on win
 
-**League Trade History Feed** — `tradeHistory` state; push on acceptTrade/acceptAiOffer; 10% AI-AI fake trades per simWk; collapsible TRADE HISTORY section in trade tab (last 20)
+**Player Suspension Event** — `suspensionEvent` state; 2%/wk random player suspended; modal: Handle Internally (1SP, 1wk, gmRep-1) or Release (gmRep-2); `p.suspended` flag excludes from teamStr
 
-**Player Breakout Alert** — `breakoutAlerts` state; +2 OVR dev gains push to list; orange BREAKOUT banner in log tab with dismiss
+**Draft Board Rankings** — `draftBoard` state (ordered pid array); MY BOARD section in draft tab; Add/↑/↓/Remove; gold rank badges; visible during combine/draft phases
 
-**Scouting Accuracy Decay** — `scoutTimestamps` state; freshness = 100-(wk-scoutWk)*5; green FRESH / yellow AGING / red STALE bar in scouting list
+**Preseason Injury Risk Toggle** — `preseasonRisk` state (default true); ON/OFF toggle in preseason block; 8% injury chance per top-22 starter when ON; logs injuries
 
 ---
 
-### gridiron-gm-play — P73 (FieldScene.js + PlayCallScene.js) — 5 new Phaser features
+### gridiron-gm-play — P78 (FieldScene.js) — 5 new Phaser features
 
-**P69: Pass Interference Call** — 12% roll on deep incomplete; "🚩 FLAG — PASS INTERFERENCE!" overlay; +15yds auto first down; `_piChecked` flag
+**P74: DB Bump Coverage** — BUMP! button 1.2s window on AI pass plays; CB tween forward; comp% -15%, INT +6%; `_bumpActive` flag
 
-**P70: Hurry-Up Defense** — AI scores Q4 within 8pts: 3s PREVENT D / AGGRESSIVE D modal; `_hurryUpDef {covMod,sackMod}`; applied to next AI pass drive; auto-PREVENT on timeout
+**P75: Scramble Slide** — SLIDE button during QB scramble inside own 20 (yardLine≤20); 2s window; 2-5yd gain, no fumble/injury; `_slid` flag
 
-**P71: Motion Pre-Snap** — MOTION button 2s before pass snaps; WR1 tween left 30px; -8% coverage +10% comp; `_motionActive` flag; auto-dismiss
+**P76: Red Zone Run Choice** — DIVE/SWEEP 2s choice on user runs at yardLine≥80; DIVE=0-3yd/88%/no fumble; SWEEP=4-12yd/55%/normal fumble; `_rzRunChoice`
 
-**P72: Third Down Tracker** — `_thirdDownAtt/_thirdDownConv` in create(); HUD "3RD: X/Y"; momentum +20 at ≥50% rate ≥4 att; "3RD DOWN MACHINE! ⚡" flash
+**P77: Penalty Accept/Decline** — modal after any flag; ACCEPT (apply yards) / DECLINE (revert); 3s auto-ACCEPT; wraps existing penalty logic
 
-**P73: Sideline Route** — "SIDELINE" added to PlayCallScene; WR tween right 60px at 500ms; 78%/15%/7% outcomes; all stop clock; "OUT OF BOUNDS — CLOCK STOPS" text
+**P78: Two-Minute Warning Timeout** — fires at clock≤120s in Q2/Q4; "⏱ TWO-MINUTE WARNING" overlay; FREE TIMEOUT button +15s; `_twoMinWarningFired{}` per quarter
 
 ---
 
@@ -63,10 +63,11 @@ Infrastructure remaining:
 ## Constraints
 
 - ALL changes ADDITIVE; single-file React; compact style; no external deps
+- Import line: `import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";`
 - Bridge keys `gm_roster_export` / `gm_game_result` locked
-- New state vars (v10.0): `compPickQueue`, `faLostCount`, `franchiseQB`, `battlesDone`, `tradeHistory`, `breakoutAlerts`, `scoutTimestamps`, `coachLegacy`
-- New player fields: `playerOption`, `irType`
-- New FieldScene flags: `_piChecked`, `_hurryUpDef`, `_motionActive`, `_thirdDownAtt`, `_thirdDownConv`
+- New state vars (v11.0): `scoutTier`, `capRollover`, `hotSeat`, `suspensionEvent`, `draftBoard`, `preseasonRisk`
+- New player fields: `personality`, `suspended`
+- New FieldScene flags: `_bumpActive`, `_slid`, `_rzRunChoice`, `_twoMinWarningFired`
 
 ## Read first next session
 

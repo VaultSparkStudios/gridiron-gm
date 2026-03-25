@@ -4,7 +4,7 @@
 
 - Date: 2026-03-25
 - Overall status: Live on GitHub Pages, active development
-- Current version: v10.0 (gridiron-gm) / P73 (gridiron-gm-play) — both builds clean
+- Current version: v11.0 (gridiron-gm) / P78 (gridiron-gm-play) — both builds clean
 - Studio OS: Fully compliant
 
 ## What exists
@@ -86,6 +86,16 @@
 - **League Trade History Feed** — `tradeHistory` state; user + AI-AI trades logged; collapsible in trade tab
 - **Player Breakout Alert** — `breakoutAlerts` state; +2 OVR dev = BREAKOUT banner in log tab
 - **Scouting Accuracy Decay** — `scoutTimestamps` state; freshness bar FRESH/AGING/STALE in scouting list
+- **IR Auto-Return** — `irReturnWk` countdown shown in IR list; auto-moves player to roster at return week in simWk
+- **Player Personality Types** — `p.personality` (Leader/Loner/Hothead/Grinder); badges in PlayerTable + modal; morale/dev effects
+- **Rival Game Boost** — `⚔️ RIVALRY WEEK` banner in schedule tab; +4 teamStr vs rivalry opponent
+- **Scout Network Tiers** — `scoutTier` state (1-3); Tier2=3SP (combine data), Tier3=6SP (true OVR reveal)
+- **Salary Cap Rollover** — `capRollover` state; unused space carries (max $10M); shown in cap header
+- **Veteran Minimum Contracts** — VET MIN button for OVR≤65 FAs/waivers; flat $0.5M/1yr
+- **Coaching Hot Seat** — `hotSeat` state; streak≤-3 triggers warning; streak≤-4 auto-fires worst coordinator
+- **Player Suspension Event** — `suspensionEvent` state; 2%/wk; Handle Internally(1SP) or Release modal
+- **Draft Board Rankings** — `draftBoard` state; MY BOARD section in draft tab; ↑/↓ ordering; gold rank badges
+- **Preseason Injury Risk Toggle** — `preseasonRisk` state; ON/OFF toggle; 8% injury chance to top-22 starters
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -139,6 +149,11 @@
 - **P71: Motion Pre-Snap** — MOTION button before pass snaps; WR1 tween; -8% coverage +10% comp; `_motionActive`
 - **P72: Third Down Tracker** — `_thirdDownAtt/_thirdDownConv` HUD; momentum +20 burst at ≥50% rate ≥4 att
 - **P73: Sideline Route** — PlayCallScene new play; WR sideline tween; 78% catch 4-8yds; clock stops
+- **P74: DB Bump Coverage** — BUMP! button on AI passes; CB tween forward; -15% comp +6% INT; `_bumpActive`
+- **P75: Scramble Slide** — SLIDE button during QB scramble inside own 20; 2-5yd gain, no fumble/injury; `_slid`
+- **P76: Red Zone Run Choice** — DIVE/SWEEP before runs at yardLine≥80; DIVE=0-3yd high%, SWEEP=4-12yd lower%; `_rzRunChoice`
+- **P77: Penalty Accept/Decline** — modal after flags; ACCEPT/DECLINE; 3s auto-dismiss; wraps existing flag logic
+- **P78: Two-Minute Warning Timeout** — Q2/Q4 clock≤120s; overlay + free timeout +15s; `_twoMinWarningFired{}`
 
 ## Important paths
 

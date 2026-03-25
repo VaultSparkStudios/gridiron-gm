@@ -119,6 +119,22 @@
 - [x] **P72: Third Down Tracker** — HUD 3RD: X/Y; momentum +20 at ≥50% rate; flash
 - [x] **P73: Sideline Route** — PlayCallScene new play; WR sideline tween; clock stops
 
+- [x] **v11.0 GM: IR Auto-Return** — irReturnWk countdown in IR list; auto-roster return in simWk
+- [x] **v11.0 GM: Player Personality** — p.personality (Leader/Loner/Hothead/Grinder); badges; morale/dev effects
+- [x] **v11.0 GM: Rival Game Boost** — RIVALRY WEEK banner; +4 teamStr vs rivalry opponent
+- [x] **v11.0 GM: Scout Network Tiers** — scoutTier (1-3); Tier2=combine, Tier3=trueOvr; SP upgrades
+- [x] **v11.0 GM: Cap Rollover** — capRollover state; unused cap carries (max $10M); shown in cap header
+- [x] **v11.0 GM: Veteran Minimum** — VET MIN button OVR≤65; $0.5M/1yr; FA + waiver
+- [x] **v11.0 GM: Coaching Hot Seat** — hotSeat state; streak≤-3 warning; streak≤-4 auto-fire
+- [x] **v11.0 GM: Player Suspension** — suspensionEvent state; 2%/wk; Handle/Release modal; p.suspended
+- [x] **v11.0 GM: Draft Board** — draftBoard state; MY BOARD section; ↑/↓ ordering; gold badges
+- [x] **v11.0 GM: Preseason Injury Risk** — preseasonRisk toggle; 8% per starter when ON
+- [x] **P74: DB Bump Coverage** — BUMP! on AI passes; -15% comp +6% INT; _bumpActive
+- [x] **P75: Scramble Slide** — SLIDE inside own 20; 2-5yd safe gain; _slid
+- [x] **P76: Red Zone Run Choice** — DIVE/SWEEP at yardLine≥80; _rzRunChoice
+- [x] **P77: Penalty Accept/Decline** — modal after flags; ACCEPT/DECLINE; 3s auto
+- [x] **P78: Two-Minute Warning Timeout** — Q2/Q4 ≤120s overlay; FREE TIMEOUT +15s
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local
