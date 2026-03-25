@@ -4,7 +4,7 @@
 
 - Date: 2026-03-24
 - Overall status: Live on GitHub Pages, active development
-- Current version: v3.7+ + P8 (Phaser Play module live, all committed)
+- Current version: v3.7+ (season awards) / P10 (halftime + 2-min warning) — both committed
 - Studio OS: Fully compliant
 
 ## What exists
@@ -28,6 +28,7 @@
 - **4th-down decision UI** — Punt / FG (range-gated, kicker OVR shown) / Go For It panel in live sim
 - **Player progression visibility** — Dev report in game log on season rollover; expired FAs enter market; `⬆` badge in PlayerTable for age≤24, pot-ovr≥12
 - **AI FA signings** — CPU teams sign notable expFAs on season rollover before user FA market opens
+- **Season awards** — MVP (QB passer rating), OPOY (RB/WR/TE yds+TDs), DPOY (DL/LB/CB/S sacks+tkl+ints) logged in game log on `newSeason()`
 
 ### POS system (updated)
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -59,5 +60,5 @@
 ## Next 3 moves
 
 1. OG image `public/images/cover.png` for social sharing (requires design asset)
-2. P9 candidates: halftime scene, two-minute warning, scramble/broken play
-3. gridiron-gm: season awards (MVP, OPOY, DPOY) at season end
+2. Scramble / broken play in gridiron-gm-play (QB breaks pocket, WASD scramble)
+3. Analytics/telemetry (privacy-safe, no PII)

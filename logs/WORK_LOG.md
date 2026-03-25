@@ -66,3 +66,31 @@ Append entries. Do not edit historical entries.
 - Both builds clean: gridiron-gm 305kB, gridiron-gm-play 1247kB
 - State: All committed; nothing mid-flight
 
+
+## 2026-03-24 — Season awards + P10
+
+### gridiron-gm (be4c860)
+- Season awards computed in `newSeason()`: MVP (QB passer RTG), OPOY (RB/WR/TE yds+TDs), DPOY (DL/LB/CB/S sacks+tkl+ints)
+- Three award log lines prepend the `--- NS Season ---` block
+
+### gridiron-gm-play (a713645)
+- `_showHalftime()`: full-screen overlay with score + stats; fires Q3+ first play; 4s then 2nd-half kickoff return
+- `_showTwoMinWarning()`: banner overlay + whistle SFX; fires at plays 14 (Q2) and 38 (Q4)
+- `gameState.js`: `_halfShown`, `_twoMin1`, `_twoMin2` added to `resetState()`
+
+## 2026-03-24 — P11: Scramble + OG image + Analytics
+
+### gridiron-gm (722fb81)
+- `track()` beacon function in App.jsx — VITE_ANALYTICS_URL, no PII
+- Events: franchise_start, season_simmed, draft_started, play_exported, play_imported
+- OG+Twitter meta tags in index.html
+- public/images/cover.svg (1200×630 dark theme)
+- scripts/gen-og.html — canvas PNG generator for both repos
+- .env.example with VITE_ANALYTICS_URL
+
+### gridiron-gm-play (57bdae1)
+- _sack(): 22% scramble — QB WASD run with _startOLBlocker + _aiRushers + _aiCBsSupport
+- _tackled(): fumble uses runner pos (QB or RB)
+- src/utils/analytics.js: sendBeacon tracker
+- BootScene: track game_boot; GameOverScene: track game_complete
+- OG+Twitter meta tags; public/images/cover.svg; .env.example

@@ -33,18 +33,20 @@
 
 ## Backlog — Gameplay
 
-- [ ] Analytics/telemetry (privacy-safe, no PII)
-- [ ] Season awards: MVP, OPOY, DPOY banner on season end in gridiron-gm
+- [x] Analytics/telemetry — privacy-safe beacon tracker (VITE_ANALYTICS_URL), events: franchise_start/season_simmed/draft_started/play_exported/play_imported/game_boot/game_complete
+- [x] Season awards: MVP (QB RTG), OPOY (RB/WR/TE), DPOY (DL/LB/CB/S) — logged in game log on newSeason()
 
 ## Backlog — gridiron-gm-play (companion repo)
 
 - [x] P8: Kickoff return mini-game — user returns kick (WASD, 7 coverage defenders), AI returns after user score, opening kickoff at game start
 - [x] P9: Fumble mechanic on run tackle (~4%, RB str-weighted, red flash, drive chart FUM)
-- [ ] P9 candidates: halftime scene, two-minute warning indicator, scramble / broken play
+- [x] P10: Halftime screen (score + stats overlay, 4s display, then 2nd-half kickoff return)
+- [x] P10: Two-minute warning overlay (Q2 at play 14, Q4 at play 38 — whistle + banner, 2.2s)
+- [x] P11: QB scramble — 22% chance on sack trigger; QB runs WASD; _tackled uses runner pos for fumble
 
 ## Backlog — Infrastructure
 
-- [ ] OG image: `public/images/cover.png` (social sharing)
+- [x] OG image: `public/images/cover.svg` live; `scripts/gen-og.html` generates PNG; OG+Twitter meta tags in both index.html
 - [x] Mobile layout improvements (gridiron-gm-play: Scale.FIT, user-scalable=no, D-pad sz 44)
 - [x] Player progression visibility: dev report in game log, expired players enter FA pool, ⬆ DEV badge in PlayerTable (age≤24, pot-ovr≥12)
 - [x] AI FA signings: CPU teams fill roster holes from expFA pool before user market opens

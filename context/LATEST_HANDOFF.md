@@ -1,10 +1,53 @@
 # Latest Handoff
 
-Last updated: 2026-03-24
+Last updated: 2026-03-24 (P11)
 
 This is the authoritative active handoff for Gridiron GM.
 
 ## What was completed
+
+### This session (2026-03-24 — P11: scramble + OG image + analytics)
+
+- **QB Scramble** (gridiron-gm-play FieldScene.js):
+  - `_sack()`: 22% chance rolls scramble instead of sack
+  - Sets `state.currentCall='scramble'`, `this.runner=this.qb`, `this.startX=this.qb.x`
+  - Starts `_startOLBlocker()` + `_aiRushers([dl,dl2,lb])` + `_aiCBsSupport()` + blue `_tdFlash`
+  - `_tackled()`: fumble uses `runnerPos = this.runner===this.qb?'QB':'RB'`
+  - commit: `57bdae1`
+
+- **OG image** (both repos):
+  - `public/images/cover.svg` — 1200×630 dark-theme image with title, tagline, gold accents
+  - `scripts/gen-og.html` (gridiron-gm) — canvas-based PNG generator, auto-downloads both variants
+  - OG+Twitter meta tags in both `index.html` (og:title, og:description, og:image, twitter:card)
+  - PNG at `public/images/cover.png` after running gen-og.html in browser
+
+- **Analytics** (both repos):
+  - gridiron-gm: module-level `track(e)` in App.jsx — `sendBeacon` to `VITE_ANALYTICS_URL`; events: franchise_start, season_simmed, draft_started, play_exported, play_imported
+  - gridiron-gm-play: `src/utils/analytics.js`; BootScene: `game_boot`; GameOverScene: `game_complete`
+  - `.env.example` in both repos with `VITE_ANALYTICS_URL=` — no-op if unset
+  - commit: `722fb81` / `57bdae1`
+
+### This session (2026-03-24 — season awards + P10: halftime + 2-min warning)
+
+- **Season awards** (gridiron-gm App.jsx):
+  - Computed in `newSeason()` from all-team `ss` data (players with `gp>0`)
+  - MVP: QB ranked by passer rating (`qbRate`) — logged with yds, TD, RTG
+  - OPOY: RB/WR/TE ranked by `rushYds+recYds+(rushTD+recTD)*20` — logged with yds, TD
+  - DPOY: DL/LB/CB/S ranked by `sacks*15+tkl+ints*10+pd*3` — logged with sacks, tkl, INT
+  - Three award lines prepended to the `--- NS Season ---` log block
+  - commit: `be4c860`
+
+- **Halftime screen** (gridiron-gm-play FieldScene.js):
+  - `_showHalftime()`: full-screen overlay at depth 62-63; shows "HALFTIME", score, rush yds, TDs
+  - Fires when `state.quarter>=3 && !state._halfShown` across `_afterPlay()`, `_resolveAIPlay()`, `_aiTouchdown()`
+  - After 4s fade → resets possession to 'team', starts `_startKickoffReturn()` (2nd-half kickoff)
+  - `_halfShown` flag in gameState prevents repeat
+
+- **Two-minute warning** (gridiron-gm-play FieldScene.js):
+  - `_showTwoMinWarning(cb)`: banner overlay at mid-screen; "⏱ TWO-MINUTE WARNING"; whistle SFX
+  - Fires at `state.plays===14` (end of Q2) and `state.plays===38` (end of Q4) in `_afterPlay()` user path
+  - `_twoMin1` / `_twoMin2` flags prevent repeat; cb() resumes normal play call flow after 2.2s
+  - commit: `a713645`
 
 ### This session (2026-03-24 — P7: special teams + position fixes)
 
@@ -112,9 +155,9 @@ This is the authoritative active handoff for Gridiron GM.
 
 ## What to do next
 
-1. OG image `public/images/cover.png` for social sharing (requires design asset)
-2. P9 candidates: halftime scene, two-minute warning, broken play / scramble
-3. gridiron-gm season awards: MVP, OPOY, DPOY banner on season end
+1. Wire analytics endpoint — set `VITE_ANALYTICS_URL` in `.env.local` on both repos (Plausible, Umami, or custom)
+2. Generate PNG OG image — open `scripts/gen-og.html` in browser → download both variants → place in `public/images/cover.png`
+3. Next gameplay: trade deadline / waiver wire, or win condition / playoffs UI polish
 
 ## Constraints
 
