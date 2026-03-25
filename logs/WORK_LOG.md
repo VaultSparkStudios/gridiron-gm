@@ -4,6 +4,15 @@ Append entries. Do not edit historical entries.
 
 ---
 
+## 2026-03-25 (session 8 — batch 7)
+
+- Session: player morale events, injury severity tiers, P27 pass rush mini-game
+- gridiron-gm: 3 morale events per team/week (trade request 5%, holdout 4%, leadership boost 7%); injSev+injRecWks fields; simGame rolls severity (40% minor 1-2wk / 40% moderate 3-5wk / 20% major 6-8wk); major auto-placed on IR in simWk; recovery countdown via injWk; modal shows type+sev+weeks; newSeason clears severity; v5.6
+- gridiron-gm-play: P27 — ⚡ BLITZ button on _startAIPass (720ms window); _activatePassRush() reschedules to 1500ms; _passRushMode speeds up userDef +12px/s; _checkRushResult() sack if dist<22; _passRushCoverBreak lowers INT threshold -20 on miss; P27
+- State: both builds clean; gridiron-gm v5.6 / gridiron-gm-play P27
+
+---
+
 ## 2026-03-25 (session 7 — batch 6)
 
 - Session: P26 two-point conversion mini-game, coaching staff upgrades, waiver wire system
