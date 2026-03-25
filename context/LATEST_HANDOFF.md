@@ -1,32 +1,57 @@
 # Latest Handoff
 
-Last updated: 2026-03-25 (session 11 — final closeout)
+Last updated: 2026-03-25 (session 12 — full backlog clear)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (moves 42-44 / P30-P31)
+## What was completed this session (v6.1 / P36–P43)
 
-### gridiron-gm — v5.9 (App.jsx)
+### gridiron-gm — v6.1 (App.jsx)
 
-**Move 42 — Player Trade Request Resolution**
-- Morale event: sets `trReq.tradeRequest=true` when fires for user team (`ti===ui`)
-- `resolveTradeReq(pid, action)`:
-  - `'negotiate'` (1SP): clears flag, conf+20, morale+3
-  - `'deal'`: clears flag, finds AI team with fewest players at same position, matches trade value ±30%; sets `trProp` if found
-- Roster tab: trade request banner during `sp==="regular"` showing all `p.tradeRequest` players with Negotiate + Find Trade buttons
+**Fan Satisfaction Meter**
+- `fanSat` state (0–100, starts 50); +8 win / +15 playoff win / +5 star FA signed; -10 loss / -5 cut OVR≥80 / -3 lose star to FA
+- SP gain rate modifier: fanSat <30 = -1 SP/wk; >70 = +1 SP/wk
+- Color bar (red/yellow/green) in standings tab header + schedule tab
 
-### gridiron-gm-play — P31 (FieldScene.js)
+**Trade Deadline AI Buy/Sell Mode**
+- `_aiTradeMode` useMemo: weeks 10-11 regular season only
+- Buyers (wins≥6): +15% value in trade offers; Sellers (wins≤4): accept -20% value
+- "TRADE DEADLINE ACTIVE" banner + ▲/▽ buyer/seller tags on AI team buttons in trade tab
 
-**P30 — Two-Minute Drill**
-- `_showTwoMinWarning` now sets `state._drillMode=true` before calling its callback
-- `_afterPlay` user possession: if drillMode, auto no-huddle (CBs/LB slightly out of position) + "⚡ 2-MIN DRILL" flash → launch PlayCall at 900ms delay
-- `_startAIDrive`: if drillMode, force `_defCall='prevent'` + show "⚡ 2-MIN DRILL — PREVENT DEFENSE" banner (no `_showDefCall` modal)
-- `_showHalftime`: `state._drillMode=false` (clears at half)
+**Scouting Budget Allocation**
+- `scoutBudget: { speed:1, scheme:1, injury:1, combine:1 }` state (sum=5, preseason only)
+- +/- UI in scouting tab; accuracy multipliers applied in scout reveal logic
 
-**P31 — Red Zone Slant**
-- `_showFadeOption` reworked to 3 buttons: NORMAL PASS (W/2-150) / SLANT (W/2) / FADE ROUTE (W/2+150); 128px wide buttons
-- `_startSlantRoute(callId)`: QB + WR + CB shown; WR cuts inside toward cy; ball snaps to WR at 500ms; auto-resolves at 820ms
-- `_resolveSlant()`: CB press chance (based on OVR) → INT 38% / defended 62%; ~70% comp → 4-11 yard gain, 38% TD if yardLine ≤ 9; else incomplete
+**Coaching Hire Market**
+- `coachMarket` state — 5-8 coaches per season; `genCoachMarket()` at newSeason
+- "COACH MARKET" section in coaching tab; SP-cost hire buttons; fired coaches re-enter pool
+
+**Stadium Upgrades**
+- `stadium: { lvl:0, upgrades:[] }` state; `buyStadium(key)` function
+- 3 tiers: crowd noise (1SP), premium turf (2SP), expanded capacity (3SP)
+- Effects: simGame AI rating penalty, injury rate reduction, seasonal SP bonus
+
+**Practice Squad Call-Up**
+- `callUpPS(pid)` — moves PS player to main roster; 1SP; sets `p.psCallUp=true` / `p.callUpWk=wk`
+- Auto-return at simWk start if wk >= callUpWk + 3
+- "↑ Call Up (1SP)" button in PS view, in-season only
+
+**Multi-Year Owner Goal History**
+- `ownerGoalHistory[]` + `ownerGoalStreak` state
+- Push result at wk18 eval; +2 SP dynasty bonus at 3 consecutive met; last 3 shown in schedule tab
+
+---
+
+### gridiron-gm-play — P43 (FieldScene.js)
+
+**P36: Pick-Six Return** — phase `pick_six_return`; DB (cb1) controlled by user; lb/lb2 as blockers; qb/rb/wr1 pursue; TD at x<FIELD_LEFT+10
+**P37: Onside Kick** — enhanced post-score modal; 1.2s rapid-tap RECOVER!; ≥3 taps = recovery bonus
+**P38: QB Scramble Spin Move** — SPIN button DL <40px during `pass_wait`; `_spinUsed` flag; 70% break / 30% sack
+**P39: Fake Punt/Fake FG** — modal before punt/FG; FAKE IT / REAL KICK; 3s auto-dismiss to real
+**P40: Goal Line QB Sneak** — yardLine≥94 & toGo≤1 on runs; PUSH! mash 4/0.8s; QB x+15 tween
+**P41: Drive Momentum Meter** — `_momentum` 0-100; `_momentumBar` + `_momentumText` HUD; ±comp modifier
+**P42: Challenge Flag** — `_challengeUsed` per game; `_prePlayState` snapshot; 45% overturn; 4s dismiss
+**P43: 4th Quarter Comeback Mode** — `_comebackMode`; trailing 7+ Q4; +3% comp; AI false start +5%; banner
 
 ---
 
@@ -38,9 +63,9 @@ Nothing. Both builds clean and committed.
 
 ## What to do next (priority order)
 
-1. **GM: Player retirement** — age 34+ chance at season end; hall of fame log entry
-2. **P32: Goal line QB sneak** — inside 1yd; button mash mini-game
-3. **GM: Season awards panel** — MVP/DPOY/OROY/DROY from stats at season end; +gmRep for winner's team
+1. Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local
+2. Generate PNG OG image — open scripts/gen-og.html → download → public/images/cover.png
+3. New backlog items TBD — all current features complete
 
 ---
 
@@ -50,11 +75,8 @@ Nothing. Both builds clean and committed.
 - Single-file React, inline styles, no external deps
 - Compact/minified code style — match existing density
 - Bridge keys `gm_roster_export` / `gm_game_result` locked
-- Save state fields: `v:2, yr, wk, sp, ui, teams, sched, byeMap, fa, dc, draftPicks, draftIdx, draftLog, log, champs, pb, myScout, faScouts, scPts, faCoaches, rivalry, ftag, waivers`
-- Holdout: `p.holdout` (cleared simWk start, set by morale event, cleared on reSign)
-- Trade request: `p.tradeRequest` (set by morale event for user team, cleared by resolveTradeReq)
-- Coach fields: `coach.contract` (years remaining, default 2 if missing)
-- Drill mode: `state._drillMode` in FieldScene — set by 2-min warning, cleared at halftime
+- Save state fields: `v:2, yr, wk, sp, ui, teams, sched, byeMap, fa, dc, draftPicks, draftIdx, draftLog, log, champs, pb, myScout, faScouts, scPts, faCoaches, rivalry, ftag, waivers, fanSat, scoutBudget, coachMarket, stadium, ownerGoalHistory, ownerGoalStreak`
+- New Phaser flags: `_spinUsed`, `_challengeUsed`, `_prePlayState`, `_momentum`, `_comebackMode`
 
 ## Read first next session
 

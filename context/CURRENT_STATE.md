@@ -4,7 +4,7 @@
 
 - Date: 2026-03-25
 - Overall status: Live on GitHub Pages, active development
-- Current version: v6.0 (gridiron-gm) / P35 (gridiron-gm-play) — both builds clean
+- Current version: v6.1 (gridiron-gm) / P43 (gridiron-gm-play) — both builds clean
 - Studio OS: Fully compliant
 
 ## What exists
@@ -39,6 +39,13 @@
 - **Training Camp Focus** — preseason only; 2SP to boost 1 player attribute (+1); marks `trainedThisCamp`
 - **Contract Negotiation Modal** — Negotiate button in preseason re-sign; counter-offer / midpoint / walk away
 - **Draft Scout (1SP)** — lighter-accuracy scout button on active draft tab player rows
+- **Fan Satisfaction Meter** — `fanSat` 0-100; SP rate modifier; color bar in standings + schedule tab
+- **Trade Deadline AI Buy/Sell** — wk 10-11 buyer/seller classification; banner + tags in trade tab
+- **Scouting Budget Allocation** — 5SP split across speed/scheme/injury/combine; accuracy multipliers
+- **Coaching Hire Market** — `coachMarket` pool; SP-cost hires in coaching tab; fired coaches re-enter
+- **Stadium Upgrades** — `stadium.upgrades[]`; crowd noise / premium turf / expanded capacity tiers
+- **Practice Squad Call-Up** — `callUpPS()`; in-season only; 1SP; auto-returns after 3 weeks
+- **Multi-Year Owner Goal History** — `ownerGoalHistory[]` + `ownerGoalStreak`; dynasty bonus at 3 consecutive
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -54,6 +61,14 @@
 - **P33: Play action pass** — `pass_action` → `_startPlayAction()`; QB fake→RB 280ms; CB bites upfield; 65%+ comp 10-28yds; 4% INT
 - **P34: Fumble risk mechanic** — runs >7yds trigger `fumble_risk` phase; TAP! 1.4s window; <2 taps = fumble ×4; ≥4 taps = fumble ×0.25
 - **P35: Defensive blitz control** — `_showDefCall()` pre-snap modal on AI drives (cover2/man/blitz/prevent)
+- **P36: Pick-Six Return** — DB WASD-controlled run after INT; blockers; pursuit AI; TD if reaches endzone
+- **P37: Onside Kick** — post-score modal; rapid-tap RECOVER! 1.2s window; ≥3 taps = recovery bonus
+- **P38: QB Scramble Spin Move** — SPIN button when DL <40px during pass; 70% break; `_spinUsed` per play
+- **P39: Fake Punt/Fake FG** — modal before every punt/FG; FAKE IT / REAL KICK; 3s auto-dismiss
+- **P40: Goal Line QB Sneak** — toGo≤1 on runs; PUSH! mash 4 taps/0.8s; QB surge tween
+- **P41: Drive Momentum Meter** — ⚡ HUD bar; ±% comp modifier; fills on completions/runs; drains on turnovers
+- **P42: Challenge Flag** — 1 per game after turnovers; 45% overturn; pre-play state snapshot
+- **P43: 4th Quarter Comeback Mode** — trailing 7+ Q4; +3% comp; AI false start +5%; COMEBACK MODE banner
 
 ## Important paths
 
@@ -70,4 +85,4 @@
 
 ## Next session task board
 
-See context/TASK_BOARD.md — 15 features queued (7 GM + 8 Play P36-P43)
+See context/TASK_BOARD.md — backlog cleared this session (v6.1 / P43)

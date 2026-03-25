@@ -28,26 +28,21 @@
 
 - (none)
 
-## Backlog — GM Systems (v6.x)
-
-- [ ] **GM: Fan Satisfaction Meter** — tracks wins/stars/cuts; affects SP gain rate; shown in standings/schedule
-- [ ] **GM: Trade Deadline AI Buy/Sell Mode** — wk 10-11 buyer/seller AI classification; realistic deadline offers
-- [ ] **GM: Scouting Budget Allocation** — preseason 5SP split across speed/scheme/injury/combine areas; affects grade accuracy
-- [ ] **GM: Coaching Hire Market** — FA coach pool with ratings/specialties; hire costs 1-2SP; fired coaches re-enter pool
-- [ ] **GM: Stadium Upgrades** — SP-buyable tiers; crowd noise / turf / capacity; home field advantage effects
-- [ ] **GM: Practice Squad Call-Up** — in-season emergency call-up (1SP); auto-returns after 3wks
-- [ ] **GM: Multi-Year Owner Goal History** — goal results persist across seasons; 3 consecutive met = SP bonus
-
-## Backlog — Phaser Play (P36–P43)
-
-- [ ] **P36: Pick-Six Return** — user controls DB after INT; blockers; tap-to-dodge; TD possible
-- [ ] **P37: Onside Kick** — post-score modal; rapid-tap mechanic; 35% base recovery
-- [ ] **P38: QB Scramble Spin Move** — SPIN button when defender <40px; 70% break; one per play
-- [ ] **P39: Fake Punt / Fake FG** — 4th down FAKE option; fake punt RB carry; fake FG TE flat pass
-- [ ] **P40: Goal Line QB Sneak** — toGo<=1; PUSH! mash mechanic (4 presses / 0.8s); OL vs DL
-- [ ] **P41: Drive Momentum Meter** — HUD bar fills on big plays; full = +comp bonus; empty = -comp
-- [ ] **P42: Challenge Flag** — 1 per game; turnover/close play; "UNDER REVIEW" animation; 45% overturn
-- [ ] **P43: 4th Quarter Comeback Mode** — trailing 7+ Q4; WR speed +6%; AI false start +5%; pass window +200ms
+- [x] **v6.1 GM: Fan Satisfaction Meter** — `fanSat` 0-100; SP rate modifier; color bar in standings/schedule
+- [x] **v6.1 GM: Trade Deadline AI Buy/Sell Mode** — wk 10-11 buyer/seller; banner + tags in trade tab
+- [x] **v6.1 GM: Scouting Budget Allocation** — 5SP across speed/scheme/injury/combine; accuracy multipliers
+- [x] **v6.1 GM: Coaching Hire Market** — `coachMarket` pool; SP-cost hires; fired coaches re-enter
+- [x] **v6.1 GM: Stadium Upgrades** — crowd noise / premium turf / expanded capacity
+- [x] **v6.1 GM: Practice Squad Call-Up** — 1SP; in-season; auto-returns after 3 wks
+- [x] **v6.1 GM: Multi-Year Owner Goal History** — `ownerGoalHistory[]`; dynasty bonus at 3 consecutive
+- [x] **P36: Pick-Six Return** — DB WASD run after INT; pursuit AI; TD/tackle resolution
+- [x] **P37: Onside Kick** — post-score modal; rapid-tap RECOVER! 1.2s window
+- [x] **P38: QB Scramble Spin Move** — SPIN button DL <40px; 70% break; `_spinUsed` per play
+- [x] **P39: Fake Punt / Fake FG** — modal before punt/FG; FAKE IT / REAL KICK; 3s auto-dismiss
+- [x] **P40: Goal Line QB Sneak** — toGo≤1; PUSH! mash 4 taps/0.8s; QB surge tween
+- [x] **P41: Drive Momentum Meter** — ⚡ HUD bar; ±% comp modifier; color-coded
+- [x] **P42: Challenge Flag** — 1 per game; 45% overturn; pre-play state snapshot
+- [x] **P43: 4th Quarter Comeback Mode** — trailing 7+ Q4; +3% comp; AI false start +5%
 
 ## Backlog — Infrastructure
 
