@@ -2,30 +2,23 @@
 
 ## Done (recent)
 
-- [x] v3.2: Sim Draft, Enhanced Roster Table, FA Table Overhaul, Clickable Box Scores, Live Sim with SVG field
-- [x] v3.3: Interactive play-calling (8 call types, QTE toggle)
-- [x] v3.4: Coaching & scheme system (OC/DC/ST, fit bonuses, schemeRunPct)
-- [x] v3.5: Salary cap ($200M hard ceiling, capHit/capSpace, dead cap, contract extensions)
-- [x] v3.6: QTE interactive gameplay (pre-snap reads, receiver targeting, run timing bar)
-- [x] Track 2 (Phaser): Full gridiron-gm-play module live — P1–P5 complete
-- [x] GM Bridge: exportGameToPlay() + importPlayResult() — full round-trip loop
-- [x] importPlayResult: marks schedule game played with correct H/A score
-- [x] Boot screen: week/records/scheme display
-- [x] Studio OS migration: AGENTS.md, context/, logs/, docs/, prompts/, updated workflows
-- [x] OL sub-positions: LT/LG/C/RG/RT replacing generic OL in POS, PP, CA, PA, STRS, WKNS, genRoster, teamStr
-- [x] genLivePlay: OL avg ovr reduces sack chance
-- [x] Injury depth chart: Roster tab toggle with ST/BK/INJ labels per position
-- [x] Export/import save state: JSON download/upload via 💾/📂 buttons
-- [x] 4th-down decision UI: Punt / FG (range+kicker gated) / Go For It panel
-- [x] Defense sub-positions: DE/DT, MLB/OLB, FS in gridiron-gm-play
-- [x] Drive chart in GameOverScene (gridiron-gm-play)
-- [x] ci.yml workflow for gridiron-gm-play
-- [x] P7: Fix DE/MLB/FS position lookups in FieldScene, BootScene, defaultRoster (was stale DL/LB/S)
-- [x] P7: 4th-down decision in PlayCallScene (Punt / FG range-gated / Go For It)
-- [x] P7: PAT choice after user TD (Kick PAT +1 97% / Go for 2 +2 45%)
-- [x] P7: FG attempt handler — distance-based success, possession flip, drive chart 'FG' entry
-- [x] P7: Punt handler — possession flip in FieldScene
-- [x] BootScene matchup card (was already live since P5; fixed DE lookup now corrected)
+- [x] v3.2–v4.5: Full franchise sim, Phaser play module P1–P18, 18-week season, NFL stats, stage tracker
+- [x] P19–P21: Punt return, FG block, onside kick
+- [x] GM: Player aging/decline, breakout seasons, locker room detail, AI cap mgmt, FA refresh
+- [x] Division standings, Wild card seeding, Rivalry system, Score ceiling
+- [x] Career stats, AI FA signings, season awards, AI trade proposals
+- [x] GM: IR, franchise tag, contract restructure
+- [x] GM: Depth chart auto-fill, trade surge, coaching hot seat, draft grades, cap forecast
+- [x] Preseason games, rookie dev camp
+- [x] P22: Muffed punt — 5% muff, proximity recovery
+- [x] P23: No-huddle offense — first down modal, defender displacement
+- [x] P24: Goal line stand — 6 defenders, user LB, STR-based AI RB, 4s timer
+- [x] P25: Hurry-up defense — Q4 trailing ≥7pts, skip defCall, pass 0.65, flash banner
+- [x] GM: Scout report depth — scGrade() helper, top-5 per position panel in scouting tab
+- [x] GM: Mid-season contract extension — extendContract(), regular season, 1 SP, +1yr/+2yr modal
+- [x] P26: Two-point conversion mini-game — WASD QB, DL pursuer, 3.5s timer, endzone win
+- [x] GM: Coaching staff upgrades — upgradeCoach(), 2 SP → +5 rating (cap 95), ⬆ button on card
+- [x] GM: Waiver wire — waivers[] state; regular-season releases → waivers; CPU claims (worst first, 60%); unclaimed → FA; saved
 
 ## In Progress
 
@@ -33,20 +26,17 @@
 
 ## Backlog — Gameplay
 
-- [x] Analytics/telemetry — privacy-safe beacon tracker (VITE_ANALYTICS_URL), events: franchise_start/season_simmed/draft_started/play_exported/play_imported/game_boot/game_complete
-- [x] Season awards: MVP (QB RTG), OPOY (RB/WR/TE), DPOY (DL/LB/CB/S) — logged in game log on newSeason()
+- [ ] P27: Pass rush mini-game — user controls DL rusher on AI pass plays; pressure/sack QB
+- [ ] P28: Red zone fade route — specific play call option in red zone; user WR fights for jump ball
+- [ ] GM: Injury severity tiers — minor/moderate/major; major → auto IR; shown in modal
 
-## Backlog — gridiron-gm-play (companion repo)
+## Backlog — GM Systems
 
-- [x] P8: Kickoff return mini-game — user returns kick (WASD, 7 coverage defenders), AI returns after user score, opening kickoff at game start
-- [x] P9: Fumble mechanic on run tackle (~4%, RB str-weighted, red flash, drive chart FUM)
-- [x] P10: Halftime screen (score + stats overlay, 4s display, then 2nd-half kickoff return)
-- [x] P10: Two-minute warning overlay (Q2 at play 14, Q4 at play 38 — whistle + banner, 2.2s)
-- [x] P11: QB scramble — 22% chance on sack trigger; QB runs WASD; _tackled uses runner pos for fumble
+- [ ] GM: Player morale events — random weekly: trade request, holdout, leadership boost
+- [ ] GM: Salary cap penalties — exceeding cap triggers fine/draft pick penalty
+- [ ] GM: Coaching staff contract expiry — coaches have 1-3yr deals; re-sign or lose to FA
 
 ## Backlog — Infrastructure
 
-- [x] OG image: `public/images/cover.svg` live; `scripts/gen-og.html` generates PNG; OG+Twitter meta tags in both index.html
-- [x] Mobile layout improvements (gridiron-gm-play: Scale.FIT, user-scalable=no, D-pad sz 44)
-- [x] Player progression visibility: dev report in game log, expired players enter FA pool, ⬆ DEV badge in PlayerTable (age≤24, pot-ovr≥12)
-- [x] AI FA signings: CPU teams fill roster holes from expFA pool before user market opens
+- [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local
+- [ ] Generate PNG OG image — open scripts/gen-og.html → download → public/images/cover.png

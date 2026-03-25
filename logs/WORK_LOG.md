@@ -4,6 +4,59 @@ Append entries. Do not edit historical entries.
 
 ---
 
+## 2026-03-25 (session 7 — batch 6)
+
+- Session: P26 two-point conversion mini-game, coaching staff upgrades, waiver wire system
+- gridiron-gm: `upgradeCoach(role)` (2 SP → +5 rating, max 95, ⬆ button on CoachCard); `waivers[]` state + saveGame/loadGame; `releaseP` sends to waivers during regular season; `simWk` processes waivers (CPU worst-first, 60% claim, unclaimed→FA); waiver wire UI in freeagency tab (amber header, Claim button); `setWaivers([])` in startGame/newSeason; v5.5
+- gridiron-gm-play: P26 — `_startTwoPointPlay()` launched from PATChoice GO FOR 2; qb/wr1/dl positioned at yards 5/3/8; WASD QB, DL pursues 55px/s, 3.5s countdown; `_resolveTwoPoint(success,reason)` awards pts, post-PAT flow; `two_point` phase in update(); P26
+- State: both builds clean; gridiron-gm v5.5 / gridiron-gm-play P26
+
+---
+
+## 2026-03-25 (session 6 — batch 5)
+
+- Session: P25 hurry-up defense, scout report depth, mid-season contract extension
+- gridiron-gm: `scGrade(ovr)` helper A+→F; top-5 scouted prospects panel per position in scouting tab (scoutLvl≥1, shows above filter row, only when scout hired); `extendContract(pid,addYrs)` (regular season, 1 scPts, +1yr/+2yr buttons in player modal, salary flat, logged); v5.4
+- gridiron-gm-play: P25 — `_aiHurryUp` flag; triggers when Q4 + state.score.opp−state.score.team≥7; skips _showDefCall, flash banner, pass chance 0.65, _aiRunSpeed×1.08; flag resets each drive; P25
+- State: both builds clean; gridiron-gm v5.4 / gridiron-gm-play P25
+
+---
+
+## 2026-03-25 (session 5 — batch 4)
+
+- Session: depth chart auto-fill, trade surge, coaching hot seat, draft grades, cap forecast, preseason games, rookie dev camp, P22 muffed punt, P23 no-huddle, P24 goal line stand
+- gridiron-gm: `⚡ Auto-Fill by OVR` button in depth chart; trade surge (wk 8-10 probability 0.22→0.44) + surge banner; coaching hot seat (wk≥12, ≤3W, 25% fire OC/DC); `gradePick()` A+→F grade helper logged on pick; cap forecast panel (yr+1/yr+2 projected space + expiring count); `preseasonGames` state + Sim Preseason button (2 exhibitions, no W/L, depth standout); dev camp panel (preseason, 3 SP → +3 OVR for rookie ≤23); v5.3
+- gridiron-gm-play: P22 — 5% muff in `_launchPuntReturn`, `_launchMuffedPunt(catchYard)`, `muffed_punt` update phase, proximity recovery; P23 — `_lastPlayGainedFirstDown` flag, `_showNoHuddleOption()` modal, CB/LB displacement; P24 — `_showGoalLineStand()` triggers when yardLine≤3, 6 defenders, user LB, STR-scaled AI RB, 4s timer, `goal_line` phase; P24
+- State: both builds clean; gridiron-gm v5.3 / gridiron-gm-play P24
+
+---
+
+## 2026-03-25 (session 3)
+
+- Session: 18-week season, NFL stat calibration, stage tracker, per-game stats, DEV tab
+- gridiron-gm: `genByeWeeks` assigns 1 bye/team in wks 5-14; `genSched(teams,byes)` 18-week schedule; `byeMap` state; `simPG` rewritten to NFL targets (QB ~255 yds, WR ~85, TE ~56, LB ~9 tkl); `simGame` base G(22); schedule tab 17→18 + bye week row; stats tab shows `X.X/g` per-game averages; league stage tracker (stage strip: PRE→SEASON×18→PLAYOFFS→COMBINE→DRAFT→FA, bye week `B` boxes in purple); DEV tab shows per-position stat simulation vs NFL targets; v4.5
+- State: gridiron-gm v4.5 build clean (326kB); gridiron-gm-play unchanged (P18)
+
+---
+
+## 2026-03-25 (session 2)
+
+- Session: player confidence, locker room events, GM reputation, P18 kickoff return blocking
+- gridiron-gm: Added `conf` (0-100) field to genPlayer (shown in player modal CONF slot); `LKR_EVENTS` (8 types) fire 15%/week in simWk — shift conf for up to 40% of roster + morale, logged to game log; `gmRep` (0-100) on teams, persists across seasons — gains: +1/win +2/re-sign +1/trade +1/draft pick; tiers ROOKIE→LEGEND; perks: RESPECTED(60+) +1 SP/wk, ELITE(75+) 10% re-sign discount; header + roster cap bar display; v4.4
+- gridiron-gm-play: P18 — 3 BLK wedge blockers spawned in `_launchKickoffReturn`, lerp ahead of runner; coverage dot within 20px → `_engagedCvg.add()` → 1800ms freeze; `_aiRushers` skips engaged; hidden on `_tackled()`/`_endPlay()`
+- State: both builds clean; gridiron-gm v4.4 / gridiron-gm-play P18
+
+---
+
+## 2026-03-25
+
+- Session: picks in trades, contract re-signing, in-game injuries bridge, weekly game plan, weather system
+- gridiron-gm: Modern analytics PICK_VAL chart (4000→60); genTradeOffer 3 offer types (player+pick sweetener, picks-only); acceptTrade picks transfer; reSign(pid,yrs) + RES_MAX + preseason RE-SIGN WINDOW panel; importPlayResult reads injuries[]; gamePlan state + simGame(hPlan,aPlan) modifiers; Schedule tab Game Plan UI
+- gridiron-gm-play: P14 injuries (tackle ~7%RB/4%QB, sack ~5%QB → state.injuries[] → gm_game_result); GameOver injury display; P15 weather (clear/rain/snow roll in BootScene, tint+animated drops, pass/fumble gameplay effects)
+- State: both builds clean; gridiron-gm v4.1 / gridiron-gm-play P15
+
+---
+
 ## 2026-03-10
 
 - Session: v3.2 feature implementation and bug fixes
