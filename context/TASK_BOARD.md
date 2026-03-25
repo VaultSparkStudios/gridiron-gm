@@ -103,6 +103,22 @@
 - [x] **P67: QB Checkdown Under Pressure** — 500ms window; 1-6yd guaranteed; no INT; CHECKDOWN! flash
 - [x] **P68: Red Zone Fade to Corner** — FADE ROUTE 3rd/4th &5+ inside 25; 48%/18%/34%; TD possible
 
+- [x] **v10.0 GM: Salary Cap Floor** — CAP_FLOOR=150; auto-sign FA if under; red banner in roster tab
+- [x] **v10.0 GM: Player Option Years** — `p.playerOption`; 60% opt-out at contract=1; OPT badge
+- [x] **v10.0 GM: PUP/NFI Designations** — `p.irType`; PUP no return wk<9; NFI season-ending; colored badge
+- [x] **v10.0 GM: Coaching Tree Legacy** — `coachLegacy`; 20% protege +3 on hire; logged
+- [x] **v10.0 GM: Draft Pick Compensation** — `compPickQueue`; gmRep≥60 + lost FA → comp pick R3-R5
+- [x] **v10.0 GM: Franchise QB Mode** — `franchiseQB`; FQB badge; +5 teamStr; trade/release blocked; 1SP/season
+- [x] **v10.0 GM: Depth Chart Battles** — "Battle (1SP)" preseason; top 2 compete; winner +1 OVR; `battlesDone`
+- [x] **v10.0 GM: Trade History Feed** — `tradeHistory`; user + AI-AI trades; collapsible in trade tab
+- [x] **v10.0 GM: Breakout Alert** — `breakoutAlerts`; +2 OVR dev → BREAKOUT banner in log tab
+- [x] **v10.0 GM: Scout Accuracy Decay** — `scoutTimestamps`; freshness bar FRESH/AGING/STALE
+- [x] **P69: Pass Interference** — 12% deep incomplete; +15yds auto 1st down; `_piChecked`
+- [x] **P70: Hurry-Up Defense** — AI scores Q4 ≤8pts lead; PREVENT/AGGRESSIVE modal; `_hurryUpDef`
+- [x] **P71: Motion Pre-Snap** — MOTION button; WR1 tween; -8% cov +10% comp; `_motionActive`
+- [x] **P72: Third Down Tracker** — HUD 3RD: X/Y; momentum +20 at ≥50% rate; flash
+- [x] **P73: Sideline Route** — PlayCallScene new play; WR sideline tween; clock stops
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local

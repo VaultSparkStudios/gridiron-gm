@@ -4,7 +4,7 @@
 
 - Date: 2026-03-25
 - Overall status: Live on GitHub Pages, active development
-- Current version: v9.0 (gridiron-gm) / P68 (gridiron-gm-play) — both builds clean
+- Current version: v10.0 (gridiron-gm) / P73 (gridiron-gm-play) — both builds clean
 - Studio OS: Fully compliant
 
 ## What exists
@@ -76,6 +76,16 @@
 - **Holdout Escalation** — 2+ wk holdout → team morale -3, gmRep -1, logged; tracked via `holdoutWks{}`
 - **Rookie Wage Scale** — R1 picks get `rookieSlot()` fixed salary (slot-based, ~$4M→$0.8M); shown in draft
 - **Expansion Draft Mode** — yr≥3 option; protect 15 players; Las Vegas Aces added as expansion team
+- **Salary Cap Floor** — CAP_FLOOR=$150M; auto-sign cheapest FA if under floor; red warning banner in roster tab
+- **Player Option Years** — `p.playerOption` on genPlayer; 60% opt-out at contract=1; purple OPT badge in salary column
+- **PUP/NFI Designations** — `p.irType` (IR/PUP/NFI) set in moveToIR wk<4; PUP no return until wk9; NFI season-ending
+- **Coaching Tree Legacy** — `coachLegacy` state; 20% protege +3 bonus on hire; logged
+- **Draft Pick Compensation** — `compPickQueue` state; gmRep≥60 + lost FA → late comp pick; Add to Pool in draft tab
+- **Franchise QB Mode** — `franchiseQB` state; 1SP/season; gold FQB badge; +5 teamStr; trade/release blocked
+- **Preseason Depth Chart Battles** — "Battle (1SP)" per position group; top 2 compete; winner +1 OVR; `battlesDone`
+- **League Trade History Feed** — `tradeHistory` state; user + AI-AI trades logged; collapsible in trade tab
+- **Player Breakout Alert** — `breakoutAlerts` state; +2 OVR dev = BREAKOUT banner in log tab
+- **Scouting Accuracy Decay** — `scoutTimestamps` state; freshness bar FRESH/AGING/STALE in scouting list
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -124,6 +134,11 @@
 - **P66: Defensive Pass Rush Lane** — INSIDE/OUTSIDE choice on AI passes; sack% / coverage% modifiers
 - **P67: QB Checkdown Under Pressure** — 500ms window; guaranteed 1-6yd gain; CHECKDOWN! flash; no INT risk
 - **P68: Red Zone Fade to Corner** — FADE ROUTE button 3rd/4th &5+ inside 25; 48% catch/18% INT/34% inc; TD if in endzone
+- **P69: Pass Interference Call** — 12% PI roll on deep incomplete; auto +15yds + 1st down; `_piChecked` flag
+- **P70: Hurry-Up Defense** — AI scores Q4 within 8pts: PREVENT D / AGGRESSIVE D modal; covMod/sackMod applied; `_hurryUpDef`
+- **P71: Motion Pre-Snap** — MOTION button before pass snaps; WR1 tween; -8% coverage +10% comp; `_motionActive`
+- **P72: Third Down Tracker** — `_thirdDownAtt/_thirdDownConv` HUD; momentum +20 burst at ≥50% rate ≥4 att
+- **P73: Sideline Route** — PlayCallScene new play; WR sideline tween; 78% catch 4-8yds; clock stops
 
 ## Important paths
 

@@ -4,6 +4,28 @@ Append entries. Do not edit historical entries.
 
 ---
 
+## 2026-03-25 (session 17 — v10.0)
+
+- Session: v10.0 — 10 GM features + P69–P73 Phaser features
+- Salary Cap Floor (CAP_FLOOR=150, auto-sign FA, roster banner)
+- Player Option Years (p.playerOption, 60% opt-out, OPT badge)
+- PUP/NFI Designations (p.irType, PUP/NFI/IR, colored badges)
+- Coaching Tree Legacy (coachLegacy, 20% protege +3 on hire)
+- Draft Pick Compensation (compPickQueue, gmRep≥60 + lost FA → comp pick)
+- Franchise QB Mode (franchiseQB state, FQB badge, +5 teamStr, 1SP/season)
+- Depth Chart Battles (Battle 1SP preseason, winner +1 OVR, battlesDone)
+- Trade History Feed (tradeHistory, user + AI-AI trades, collapsible trade tab)
+- Breakout Alert (breakoutAlerts, +2 OVR → BREAKOUT banner)
+- Scout Accuracy Decay (scoutTimestamps, freshness bar FRESH/AGING/STALE)
+- P69: Pass Interference (12% deep incomplete, +15yds auto 1st down)
+- P70: Hurry-Up Defense (PREVENT/AGGRESSIVE modal Q4 AI score)
+- P71: Motion Pre-Snap (MOTION button, WR1 tween, comp mod)
+- P72: Third Down Tracker (HUD, momentum burst at 50%)
+- P73: Sideline Route (PlayCallScene new play, clock stops)
+- Both builds clean; committed; context files updated
+
+---
+
 ## 2026-03-25 (session 16 — v9.0)
 
 - Session: v9.0 — 10 GM features
