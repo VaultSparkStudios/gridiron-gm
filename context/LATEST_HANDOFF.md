@@ -1,50 +1,48 @@
 # Latest Handoff
 
-Last updated: 2026-03-25 (session 8 — final closeout)
+Last updated: 2026-03-25 (session 9 — final closeout)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (batch 7 — moves 33-35)
+## What was completed this session (batch 8 — moves 36-38)
 
-### gridiron-gm — v5.6 (App.jsx)
+### gridiron-gm — v5.7 (App.jsx)
 
-**Move 33 — Player Morale Events**
-- 3 event types fire per team each week during regular season (alongside LKR_EVENTS)
-- **Trade Request** (5%): OVR ≥ 80, conf < 35 → conf -15, morale -5; log `🔁 TRADE REQUEST`
-- **Holdout** (4%): contract=1, OVR ≥ 75 → conf -12, morale -4; log `✋ HOLDOUT`
-- **Leadership Boost** (7%): OVR ≥ 85, conf > 65 → morale +6, all OVR ≥ 75 players conf +5; log `⭐ LEADERSHIP`
-- Events collected in `moraleEvLogs[]`, flushed to `setLog` at end of `simWk`
+**Move 36 — Salary Cap Penalties**
+- At start of `simWk`: loop all teams; if `capHit(t) > CAP_CEILING` → `t.deadCap += 5`
+- User team additionally loses first owned 3rd-round draft pick (if any); logged `⚠️ CAP VIOLATION`
+- CPU teams silently receive dead cap fine only
+- Roster tab: red warning banner when `capSpace(ut) < 0` — "⚠️ OVER THE CAP — $5M fine + 3rd-round pick at next simWk"
 
-**Move 34 — Injury Severity Tiers**
-- `injSev` ("minor"/"moderate"/"major") and `injRecWks` (total weeks out) added to players
-- simGame injury roll: 40% minor (1-2 wk), 40% moderate (3-5 wk), 20% major (6-8 wk)
-- simWk: major injuries auto-placed on IR if space (< 8); logged as `🚑 MAJOR INJURY`
-- simWk recovery: counts down `injWk` by 1 per week, clears injury at 0
-- Player modal: `[injType] — [injSev] ([N]wk remaining)` display
-- `newSeason`: clears `injSev:""` and `injRecWks:0` on all roster players
+**Move 37 — Coaching Contract Expiry**
+- `genCoach()`: added `contract: R(1,3)` to all new coaches
+- `newSeason()`: decrements each coach contract by 1; at 0 → push to `faCoaches` with fresh 1-2yr deal, null from team; user expirations logged `📋 CONTRACT EXPIRED`
+- `CoachCard`: shows `[N]yr left` (red when ≤1)
+- `reSignCoach(role)`: preseason only, costs 1 SP, +2yr
+- Re-sign button on CoachCard when `sp==="preseason" && coach.contract<=1`
 
-### gridiron-gm-play — P27 (FieldScene.js)
+### gridiron-gm-play — P28 (FieldScene.js)
 
-**Move 35 — P27 Pass Rush Mini-Game**
-- `_startAIPass()`: stores throw timer as `_rushThrowTimer`; spawns orange "⚡ BLITZ" button (top-right, 720ms window)
-- `_activatePassRush()`: cancels 720ms timer, reschedules `_checkRushResult()` at 1500ms, sets `_passRushMode=true`, shows rush hint
-- `update()` `ai_pass` block: speed +12px/s when `_passRushMode` is true
-- `_checkRushResult()`: dist < 22 → SACK (+state.stats.team.sacks, -5-12 yds); else → `_passRushCoverBreak=true`, normal throw
-- `_resolveAIPass()`: INT threshold -20 when `_passRushCoverBreak` (coverage broken); flag cleared after
+**Move 38 — P28 Red Zone Fade Route**
+- `_onPlayCalled()`: intercepts `pass_*` when `state.yardLine <= 15 && !this._noHuddleActive` → `_showFadeOption(callId)`
+- `_showFadeOption(callId)`: 2-button modal (NORMAL PASS / FADE ROUTE); auto-dismisses to normal pass after 3s
+- `_startFadeRoute()`: hides all, shows QB/WR1/CB1; WR+CB at endzone corner `(yardToX(2), FIELD_Y+10)`; ball arcs over 1100ms; "🤲 CATCH!" button appears at 900ms; resolves at 1400ms
+- `_resolveFade(caught)`: if not caught → incomplete; if caught → WR vs CB OVR contest (40-85%); TD `+6 + recTD stat` or "KNOCKED AWAY"
+- `this._noHuddleActive=false; this._fadeEls=null` added to `create()` init
 
 ---
 
 ## What is mid-flight
 
-Nothing. Both builds clean.
+Nothing. Both builds clean and committed.
 
 ---
 
 ## What to do next (priority order)
 
-1. **GM: Salary cap penalties** — exceeding cap triggers $5M dead cap fine + loss of 3rd-round pick next draft
-2. **P28: Red zone fade route** — inside 15yd, play call option; user WR jump timing vs CB; ball arc to corner
-3. **GM: Coaching contract expiry** — coaches have 1-3yr deals; re-sign preseason or lose to FA
+1. **GM: Player holdout effect** — holdout players (from morale events) skip simPG lineup; simGame OVR contribution zeroed
+2. **P29: Trick play** — reverse/flea flicker option in play call; intercepts `run_*` occasionally; surprise yards bonus
+3. **GM: Salary cap forecast improvements** — expiring contracts list below cap forecast + projected space with/without re-signing top players
 
 ---
 
@@ -58,7 +56,8 @@ Nothing. Both builds clean.
 - `ir[]` is part of each team object — saved automatically
 - `sp` = season phase string; `scPts` = staff points (number)
 - Score fields in FieldScene: `state.score.opp` (AI), `state.score.team` (user)
-- Injury fields: `p.injured` (bool), `p.injWk` (recovery countdown), `p.injType` (string), `p.injSev` (severity), `p.injRecWks` (total weeks)
+- Injury fields: `p.injured`, `p.injWk`, `p.injType`, `p.injSev`, `p.injRecWks`
+- Coach fields: `coach.contract` (years remaining, default 2 if missing)
 
 ## Read first next session
 

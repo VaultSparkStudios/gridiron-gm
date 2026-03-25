@@ -4,6 +4,15 @@ Append entries. Do not edit historical entries.
 
 ---
 
+## 2026-03-25 (session 9 — batch 8)
+
+- Session: salary cap penalties, coaching contract expiry, P28 red zone fade route
+- gridiron-gm: cap penalty check at simWk start (>$200M → +$5M dead cap + 3rd-round pick forfeit for user; CPU silent); red warning banner in roster tab; `genCoach()` adds `contract:R(1,3)`; `newSeason` decrements + auto-fires expired coaches to faCoaches; CoachCard shows Nyr left (red≤1); `reSignCoach(role)` preseason 1SP +2yr; Re-sign button on card when contract≤1; v5.7
+- gridiron-gm-play: P28 — `_onPlayCalled` intercepts pass_* inside yardLine≤15; `_showFadeOption()` 2-button modal with 3s auto-dismiss; `_startFadeRoute()` WR+CB endzone corner, ball arc 1100ms, CATCH! button at 900ms; `_resolveFade()` WR vs CB OVR (40-85%), TD or incomplete; _noHuddleActive guard; P28
+- State: both builds clean; gridiron-gm v5.7 / gridiron-gm-play P28
+
+---
+
 ## 2026-03-25 (session 8 — batch 7)
 
 - Session: player morale events, injury severity tiers, P27 pass rush mini-game
