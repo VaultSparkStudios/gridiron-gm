@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- Open in a browser. Image auto-downloads as cover.png → put in public/images/ of both repos. -->
+<html><head><title>OG Image Generator</title></head>
+<body style="background:#0f172a;display:flex;flex-direction:column;align-items:center;padding:24px;font-family:monospace;color:#f1f5f9">
+<h2 style="color:#f59e0b">OG Image Generator — 1200×630</h2>
+<canvas id="c" width="1200" height="630" style="border:1px solid #334155;max-width:100%"></canvas>
+<br>
+<button onclick="dl('gridiron-gm')" style="background:#f59e0b;color:#000;padding:10px 24px;font-size:16px;font-weight:bold;border:none;border-radius:6px;cursor:pointer;margin:8px">⬇ Download GM cover.png</button>
+<button onclick="dl('gridiron-gm-play')" style="background:#3b82f6;color:#fff;padding:10px 24px;font-size:16px;font-weight:bold;border:none;border-radius:6px;cursor:pointer;margin:8px">⬇ Download Play cover.png</button>
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+function drawGM() {
+  ctx.clearRect(0,0,1200,630);
+  ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,1200,630);
+  ctx.fillStyle='#f59e0b'; ctx.fillRect(0,0,1200,4); ctx.fillRect(0,626,1200,4);
+  // hash marks
+  for(let x=0;x<1200;x+=80){ctx.fillStyle='#1e293b';ctx.fillRect(x,0,2,630);}
+  ctx.font='bold 96px monospace'; ctx.fillStyle='#f59e0b'; ctx.textAlign='center';
+  ctx.fillText('GRIDIRON GM',600,240);
+  ctx.font='32px monospace'; ctx.fillStyle='#475569';
+  ctx.fillText('MANAGE  ✦  PLAY  ✦  WIN',600,310);
+  ctx.font='22px monospace'; ctx.fillStyle='#1e3a5f';
+  ctx.fillText('VAULTSPARK STUDIOS',600,560);
+  ctx.font='bold 14px monospace'; ctx.fillStyle='#334155';
+  ctx.fillText('vaultsparkstudios.com/gridiron-gm',600,590);
+}
+function drawPlay() {
+  ctx.clearRect(0,0,1200,630);
+  ctx.fillStyle='#0a0f1a'; ctx.fillRect(0,0,1200,630);
+  ctx.fillStyle='#f59e0b'; ctx.fillRect(0,0,1200,4); ctx.fillRect(0,626,1200,4);
+  for(let x=0;x<1200;x+=80){ctx.fillStyle='#0d1424';ctx.fillRect(x,0,2,630);}
+  ctx.font='bold 86px monospace'; ctx.fillStyle='#f59e0b'; ctx.textAlign='center';
+  ctx.fillText('GRIDIRON GM',600,220);
+  ctx.font='bold 28px monospace'; ctx.fillStyle='#3b82f6';
+  ctx.fillText('— PLAY —',600,275);
+  ctx.font='26px monospace'; ctx.fillStyle='#475569';
+  ctx.fillText('REAL-TIME FOOTBALL ENGINE',600,330);
+  ctx.font='22px monospace'; ctx.fillStyle='#1e3a5f';
+  ctx.fillText('VAULTSPARK STUDIOS',600,560);
+  ctx.font='bold 14px monospace'; ctx.fillStyle='#334155';
+  ctx.fillText('vaultsparkstudios.com/gridiron-gm-play',600,590);
+}
+drawGM();
+function dl(mode) {
+  if(mode==='gridiron-gm') drawGM(); else drawPlay();
+  setTimeout(()=>{
+    const a=document.createElement('a');
+    a.download='cover.png';
+    a.href=c.toDataURL('image/png');
+    a.click();
+  },100);
+}
+</script>
+</body></html>

@@ -1,0 +1,9 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#f59e0b"/>
+  <rect x="0" y="626" width="1200" height="4" fill="#f59e0b"/>
+  <text x="600" y="220" text-anchor="middle" font-family="monospace,Courier New" font-size="96" font-weight="bold" fill="#f59e0b" letter-spacing="4">GRIDIRON GM</text>
+  <text x="600" y="310" text-anchor="middle" font-family="monospace,Courier New" font-size="34" fill="#475569" letter-spacing="8">MANAGE  ✦  PLAY  ✦  WIN</text>
+  <text x="600" y="420" text-anchor="middle" font-family="monospace,Courier New" font-size="72" fill="#1e293b">🏈</text>
+  <text x="600" y="560" text-anchor="middle" font-family="monospace,Courier New" font-size="22" fill="#1e3a5f" letter-spacing="2">VAULTSPARK STUDIOS</text>
+</svg>
