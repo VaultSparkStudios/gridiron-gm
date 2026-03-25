@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
 const R=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const Rf=(a,b)=>Math.random()*(b-a)+a;
 const pick=a=>a[R(0,a.length-1)];
