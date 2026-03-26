@@ -4,7 +4,7 @@
 
 - Date: 2026-03-26
 - Overall status: Live on GitHub Pages, active development
-- Current version: v26.0 (gridiron-gm) / P119 (gridiron-gm-play) — both builds clean, both repos pushed
+- Current version: v27.0 (gridiron-gm) / P125 (gridiron-gm-play) — both builds clean, both repos pushed
 - Studio OS: Fully compliant
 
 ## What exists
@@ -116,6 +116,15 @@
 - **Live injury toasts** — fixed-position toast stack during simWk, 3s auto-dismiss (I75)
 - **Veteran farewell event** — special card for OVR 80+ retirees + fanSat boost for OVR 85+ (I77)
 - **Draft scouting report cards** — top 5 prospect visual card strip in draft tab (I80)
+- **Trade value tag** — TV formula in player modal (I42)
+- **Conference power index** — AFC/NFC top 3 by W-L in standings tab (I43)
+- **Bye week strategy panel** — REST (-injury) or FOCUS (+1 OVR) choice during bye week (I45)
+- **Pre-draft rumor mill** — 3 AI team position buzz cards at combine (I50)
+- **MLE signing** — Mid-Level Exception FA signing once/season, max $6M/yr (v27)
+- **Player loyalty** — LOYAL badge after 48 snaps; 10% discount on re-sign (v27)
+- **Snap count tracker** — p.snaps accumulated weekly; displayed in player modal (v27)
+- **PS promotion race** — wk10 top-2 PS players compete; winner promoted free (v27)
+- **Post-game locker room speech modal** — 3 choices (Inspire/Challenge/Calm) after user game (v27)
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -193,10 +202,23 @@
 - **I76**: Volume/settings overlay in BootScene — gear icon → SFX slider; localStorage
 - **I78**: Cross-play personal records — best pass/rush/TD persisted on GameOver
 - **I79**: Bridge validation badge — GM LIVE / GM STALE / DEFAULT ROSTER in BootScene
+- **I27**: Turnover celebration flash — gold "TURNOVER!" 800ms on INT/fumble
+- **I33**: Pocket collapse tween — OL dot converges toward QB on beat
+- **I34**: Blitz telegraph — LB dots nudge 15px pre-snap when blitz called
+- **I35**: First-down conversion flash — LOS line pulses green 400ms on 1st down
+- **I37**: AI red zone tendency — yardLine≥90 forces run at 65%+ rate
+- **I38**: Field position penalty — drive starting at yardLine≤10 gets -4% compCh
+- **P80-P119**: (prior session — all shipped in gridiron-gm-play)
+- **P120**: Extended jump route — 2nd LATE JUMP window 300ms after first closes
+- **P121**: Pocket shuffle step — QB sidestep +8% comp during pass_wait
+- **P122**: Personal foul — 8% chance on AI run >8yds (+15yds, auto 1st)
+- **P123**: WR double move SHAKE! — +15% comp on covered deep pass
+- **P124**: Fresh DL sub — once/half button in def call panel; +12% sack bonus
+- **P125**: OT defeat card — special overlay on overtime loss
 
 ## Important paths
 
-- `src/App.jsx` — all game code (~1850+ lines, v26.0)
+- `src/App.jsx` — all game code (~1880+ lines, v27.0)
 - `gridiron-gm-play/src/scenes/FieldScene.js` — primary Phaser gameplay file
 - `gridiron-gm-play/src/scenes/PlayCallScene.js` — play call menu (8 runs/passes)
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()
@@ -209,4 +231,4 @@
 
 ## Next session task board
 
-See context/TASK_BOARD.md — backlog cleared (v26.0 / P119)
+See context/TASK_BOARD.md — backlog cleared (v27.0 / P125)
