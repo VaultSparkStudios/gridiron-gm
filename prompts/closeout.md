@@ -12,7 +12,7 @@ If meaningful work happened, update in this order:
 4. `logs/WORK_LOG.md`
 5. `context/DECISIONS.md` — when reasoning changed
 6. `context/SELF_IMPROVEMENT_LOOP.md` — MANDATORY (see below)
-7. `docs/CREATIVE_DIRECTION_RECORD.md` — MANDATORY if human gave any creative direction this session
+7. `docs/CREATIVE_DIRECTION_RECORD.md` — MANDATORY (see below)
 8. Any project-type or repo-specific files whose truth changed
 
 ## Self-Improvement Loop — closeout (mandatory)
@@ -50,15 +50,20 @@ Generate 3–5 innovative solutions, features, or improvements. Push past the ob
 
 Pick 1–2 brainstorm items. Add them to `context/TASK_BOARD.md` labeled `[SIL]`.
 
-## Creative Direction Record — closeout check
+## Creative Direction Record — closeout (mandatory)
 
-Review the session. Did the human give any:
-- Creative direction (features, feel, scope)?
-- Feature assignments or explicit goals?
-- Brand, tone, visual, or quality guidance?
-- Any "do this / don't do this"?
+Review the full session for any human direction given. This step is required at every closeout.
 
-If yes → append to `docs/CREATIVE_DIRECTION_RECORD.md` (ADDITIVE ONLY, never edit existing entries).
+Append an entry to `docs/CREATIVE_DIRECTION_RECORD.md` for each of the following that occurred:
+- Creative direction of any kind (features, feel, scope, priorities)
+- Feature assignments or explicit goals set by the human
+- Brand, tone, visual, or quality guidance
+- Canon-affecting decisions
+- Any "do this / don't do this" instruction
+
+**ADDITIVE ONLY — never edit or delete existing entries.**
+
+If no direction was given this session, do not add a blank entry — simply confirm in the closeout output that CDR was reviewed and no new entries were needed.
 
 ## Required closeout output
 
@@ -68,6 +73,7 @@ Reply with a concise `Session Closeout` containing:
 2. Files changed
 3. Validation status
 4. Self-Improvement Loop summary (scores, top win, top gap, brainstorm highlights, committed items)
-5. Open problems
-6. Recommended next action
-7. Exact files the next agent should read first
+5. CDR update — what direction was recorded, or confirmation that none was given
+6. Open problems
+7. Recommended next action
+8. Exact files the next agent should read first
