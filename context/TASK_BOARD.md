@@ -289,6 +289,42 @@
 - [x] **BootScene** — difficulty badge top-right, streak/weather overlap fix
 - [x] **sound.js** — bigPlay, fumble, fg, penalty, crowd SFX methods
 
+## Done (v26.0 — Audit I51–I80 — 2026-03-26)
+
+### Play Engine (gridiron-gm-play)
+- [x] **I51** — User-controlled Safety dot during AI drives — WASD movement; tackles aiRunner on collision
+- [x] **I52** — Half-time adjustment cards — 3 coaching picks: Quick Strikes / Tighten Up / Run First; apply to 2nd half
+- [x] **I53** — Formation shift tween on audible — OL/WR/TE/RB shift 12-14px (220ms yoyo) when audible called
+- [x] **I54** — Penalty flag arc animation — yellow rectangle tweens from QB to midfield on any flag
+- [x] **I55** — Highlight reel on GameOver — bestPlay dot tween animation + label 800ms post-load
+- [x] **I56** — Mid-game weather progression — 25% chance weather worsens at Q3 (clear→rain, rain→snow)
+- [x] **I57** — Coach headset quote ticker — situational quote in PlayCallScene below down/distance
+- [x] **I58** — End zone celebration tween — runner spins 360° + gold circle arcs upward on user TD
+- [x] **I59** — Practice drill mode — PRACTICE button in BootScene; rookie/drillMode state; unlimited plays
+- [x] **I60** — Crowd reaction meter — score-delta-driven bar below HUD (green/amber/red)
+- [x] **I61** — AI no-repeat rule — `_aiCallLog` prevents 3 consecutive same call type; forces alternation
+- [x] **I62** — Run hole reading visual — green/red triangles between OL gaps at snap (300ms life)
+- [x] **I63** — Night game dark mode — dark grass for rival matchups (50% chance, 0x0a1f12/0x0c2818)
+- [x] **I64** — Defensive pressure ring — shrinking red ring toward AI QB; BLITZ at close range = +15% sack
+- [x] **I65** — Snap count fake visual — QB count 1→2→3 text on draw plays before handoff
+- [x] **I76** — Volume/settings overlay in BootScene — gear icon → SFX vol slider ±10% steps; persisted localStorage
+- [x] **I78** — Cross-play personal records — best pass/rush/TD per game persisted, shown on GameOver
+- [x] **I79** — Bridge validation indicator — ● GM LIVE / GM STALE / DEFAULT ROSTER badge in BootScene
+
+### GM App (gridiron-gm)
+- [x] **I66** — Salary cap bar chart — stacked position group visualization in roster tab (QB/OL/WR/TE/RB/DEF/K)
+- [x] **I67** — Franchise timeline — horizontal season strip in log tab (record, playoff, champion crown)
+- [x] **I68** — Trade deadline countdown — "X WEEKS" widget in schedule tab from week 8–10
+- [x] **I69** — Roster health dashboard — 14-position color-coded dot grid in roster tab
+- [x] **I70** — AI GM reactive trade quotes — personality-driven voice line (rebuilder/win-now/analytics) on offers
+- [x] **I71** — Achievement system — 10 milestones, earned badges in log tab, unlock tracking in save state
+- [x] **I72** — Sim game progress bar — animated loading bar during simWk (400ms async wrapper)
+- [x] **I73** — Player morale timeline — conf sparkline (last 6 weeks) in player modal
+- [x] **I74** — Positional needs matrix — A-F gap grade grid in trade/draft tabs
+- [x] **I75** — Live injury toasts — fixed-position toast stack during simWk (3s auto-dismiss)
+- [x] **I77** — Veteran farewell event — special card for OVR 80+ retirees + fanSat boost for OVR 85+
+- [x] **I80** — Draft scouting report cards — top 5 prospect visual card strip in draft tab
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local

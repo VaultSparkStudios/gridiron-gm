@@ -1,6 +1,6 @@
 # Latest Handoff
 
-Last updated: 2026-03-26 (session — v25.0 / P118)
+Last updated: 2026-03-26 (session — v26.0 / P119)
 
 This is the authoritative active handoff for Gridiron GM.
 
