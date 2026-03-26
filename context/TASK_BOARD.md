@@ -135,6 +135,22 @@
 - [x] **P77: Penalty Accept/Decline** — modal after flags; ACCEPT/DECLINE; 3s auto
 - [x] **P78: Two-Minute Warning Timeout** — Q2/Q4 ≤120s overlay; FREE TIMEOUT +15s
 
+- [x] **v13.0 GM: International Series Game** — intlGameWk; ✈️ badge; +8 fanSat on win
+- [x] **v13.0 GM: Player Endorsement Deals** — endorsed field; 💰 badge; +1SP/4wks per 2 active
+- [x] **v13.0 GM: Franchise Milestones** — milestones state; SP rewards for first_season/50wins/title/dynasty
+- [x] **v13.0 GM: Conditional Draft Picks** — condition field on R4+ picks; 12% chance; shown in War Room
+- [x] **v13.0 GM: Scheme Clash Modifier** — SCHEME_CLASH const; applied in simGame; ±1-2 score adjust
+- [x] **v13.0 GM: Restricted Free Agency** — rfaTenders state; RFA Tender btn preseason; RFA badge
+- [x] **v13.0 GM: Player Role Assignment** — role field (core/rotation/depth); CORE badge; +0.5 teamStr
+- [x] **v13.0 GM: League-Wide Cap Forecast** — capOutlookOpen; collapsible standings panel; all 32 teams
+- [x] **v13.0 GM: Draft War Room** — positional needs + best available per position in draft tab
+- [x] **v13.0 GM: Player Career Milestones** — 20K pyds / 5K scrimmage / 30 TDs; +1SP each
+- [x] **P81: TE Seam Route** — new play; TE upfield 180px; 50-70% catch; 8-18 yds
+- [x] **P82: DL Stunts** — pre-snap btn; +8% INT on opponent passes; _dlStunt flag
+- [x] **P83: WR Crack Block** — 20% on runs; WR blocks CB; +2-4 yd bonus
+- [x] **P84: Pump Fake** — 800ms btn; CB freeze; +10% comp; _pumpFakeBonus
+- [x] **P85: Wildcat Package** — new play; KEEP (RB STR run) or PASS (40% comp 8-20 yds)
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local
