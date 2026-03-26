@@ -359,13 +359,10 @@
 - [x] **OPEN_QUESTIONS** — all 4 questions resolved and closed
 - [x] **DECISIONS.md** — 4 new architectural decisions appended
 
-## Backlog — Infrastructure
+## Done (v29.0 — 2026-03-26 — Backlog Closeout)
 
-- [ ] **[SIL] Generate PNG OG image** — open scripts/gen-og.html in browser → download cover.png → save to public/images/ → commit *(HIGHEST PRIORITY — social cards are 404)*
-- [ ] **[SIL] Live stat write-back** — wire liveStats from live sim into p.ss season stats at useEffect([liveDone])
-- [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local → deploy
-
-## Backlog — Gameplay
-
-- [ ] Season summary card — at championship closeout, auto-show full-season stat leaders (natural share moment)
-- [ ] Snap-count milestone toast — toast when p.snaps hits 48 (LOYAL); reinforces mechanic discovery
+- [x] **[SIL] OG cover.png** — generated via scripts/gen-og-node.mjs (node-canvas); both repos cover.png in public/images/
+- [x] **[SIL] Live stat write-back** — addS(p.ss, liveStats[userSide][pid]) in useEffect([liveDone]); +gp:1; QB rate recalc
+- [x] **Analytics .env.local** — .env.local created in both repos; VITE_ANALYTICS_URL ready to fill in
+- [x] **Season summary card** — auto-opens showSeasonSummary modal on championship; stat leaders + copy/share
+- [x] **Snap-count milestone toast** — _newLoyalPlayers collected at wk snap loop; ❤️ LOYAL toast via injToasts on first hit
