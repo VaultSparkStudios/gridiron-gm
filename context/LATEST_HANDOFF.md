@@ -1,10 +1,10 @@
 # Latest Handoff
 
-Last updated: 2026-03-25 (session — v14.0 / P90)
+Last updated: 2026-03-26 (session — v21.0 / P103)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v14.0 / P86–P90)
+## What was completed this session (v19.0–v21.0 / P100–P103)
 
 ### gridiron-gm — v14.0 (App.jsx) — 10 new GM features
 

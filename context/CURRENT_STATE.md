@@ -4,7 +4,7 @@
 
 - Date: 2026-03-26
 - Overall status: Live on GitHub Pages, active development
-- Current version: v17.0 (gridiron-gm, 1614 lines) / P95 (gridiron-gm-play, 4220 lines) — both builds clean
+- Current version: v21.0 (gridiron-gm) / P103 (gridiron-gm-play) — both builds clean
 - Studio OS: Fully compliant
 
 ## What exists

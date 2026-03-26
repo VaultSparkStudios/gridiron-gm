@@ -195,27 +195,27 @@
 - [x] **v19 GM: Season History Browser** — `seasonHistory[]` state archived in newSeason; shown in log tab as Season Archive
 - [x] **v19 GM: Consequence Memory Press Conf** — `ownerPromises[]` state; Q7 references prior promises + winning/losing context
 
-## Backlog — Wave 2 (from Audit Innovation List)
+## Done (v20.0 — Wave 2 — 2026-03-26)
 
-- [ ] **v20 GM: Player Comparison Tool** — side-by-side 2-player stat modal from PlayerTable; any two players
-- [ ] **v20 GM: Franchise Legacy Score** — single 0-1000 score from wins/champs/playoff apps/gmRep; shown in log tab
-- [ ] **v20 GM: Draft Night Live Ticker** — scrolling AI picks ticker at bottom of draft tab during draft
-- [ ] **v20 GM: Social Media Feed (Mock)** — 8-10 generated fan/media posts per week in log tab
-- [ ] **v20 GM: Player Backstory Generator** — 2-sentence auto-bio on draft prospects using city/trait arrays
-- [ ] **v20 GM: Salary Arbitration Panel** — 3-round contract dispute when mid-season extension declined; mediator splits
-- [ ] **v20 GM: Ownership Pressure Personality** — owner gets personality (patient/demanding/meddling) at game start; impacts hiring/firing
-- [ ] **v20 GM: Franchise Share Code** — 6-char base64 encode of dynasty stats; decode/display on splash screen
+- [x] **v20 GM: Player Comparison Tool** — CompareModal; ⚖ button in PlayerTable; side-by-side stats
+- [x] **v20 GM: Franchise Legacy Score** — 0-1000 metric in log tab (wins/champs/playoff apps/gmRep)
+- [x] **v20 GM: Draft Night Live Ticker** — draftTicker state; scrolling AI picks in draft tab
+- [x] **v20 GM: Social Media Feed (Mock)** — socialFeed state; generated per simWk; 6 posts in log tab
+- [x] **v20 GM: Player Backstory Generator** — BSTORY arrays; p.bio.backstory in genDC; shown in player modal
+- [x] **v20 GM: Salary Arbitration Panel** — arbModal state; 3-round dispute from re-sign; Arb button OVR≥70
+- [x] **v20 GM: Ownership Pressure Personality** — ownerPersonality (patient/demanding/meddling); header badge
+- [x] **v20 GM: Franchise Share Code** — btoa dynasty stats; copy button in log tab
 
-## Backlog — Wave 3 (Big Swings)
+## Done (v21.0 — Wave 3 — 2026-03-26)
 
-- [ ] **v21 GM: Playbook Designer** — pick 3 route combos in coaching tab; becomes live Phaser play call options
-- [ ] **v21 GM: Multi-Team Trade Desk** — 3-way trade UI; pending offer queue; AI logic
-- [ ] **v21 GM: Fan Cam / Stadium Atmosphere** — separate `stadiumAtmosphere` 0-100 affecting FA willingness
-- [ ] **v21 GM: AI GM Personality Voice** — each AI team's GM has name + message style on trade offers
-- [ ] **v21 Play: Defensive Mini-Game** — user calls Man/Zone/Blitz/Prevent before AI offensive drives
-- [ ] **v21 Play: Timeout Management** — explicit TIMEOUT button (3/half); stops clock; triggers 4th-down modal
-- [ ] **v21 Play: Replay Engine** — REPLAY button after big plays; re-animates last 3s via stored trail pts
-- [ ] **v21 Play: Injury Replay** — red flash + cart animation when player injured in live game
+- [x] **v21 GM: Playbook Designer** — PLAYS_POOL; pick 3 in coaching tab; playbook state; saved/loaded
+- [x] **v21 GM: Multi-Team Trade Desk** — 3-way trade UI in trade tab; tradeDeskOpen toggle; execute button
+- [x] **v21 GM: Fan Cam / Stadium Atmosphere** — stadiumAtm 0-100; atm bar in standings; FA willingness modifier
+- [x] **v21 GM: AI GM Personality Voice** — AI_GM_NAMES + AI_GM_VOICE arrays; trade offer banner quote
+- [x] **v21 Play: Defensive Mini-Game (P100)** — Man/Zone/Blitz/Prevent before AI drives; covB/sackB bonuses
+- [x] **v21 Play: Timeout Management (P101)** — TO(3) button; clock stop; 4th-down modal
+- [x] **v21 Play: Replay Engine (P102)** — REPLAY button after plays; ball tween from origin to result
+- [x] **v21 Play: Injury Flash (P103)** — red screen flash + cart tween on player injury
 
 ## Backlog — Infrastructure
 
