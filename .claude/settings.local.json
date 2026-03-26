@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh repo:*)",
+      "Bash(gh api:*)",
+      "Bash(python -c \"import sys,json; [print\\(f[''''name'''']\\) for f in json.load\\(sys.stdin\\)]\")",
+      "Bash(cp \"/c/Users/p4cka/documents/development/VaultSpark Football GM/docs/STUDIO_DEPLOYMENT_STANDARD.md\" /c/Users/p4cka/documents/development/gridiron-gm/docs/STUDIO_DEPLOYMENT_STANDARD.md)",
+      "Bash(cp \"/c/Users/p4cka/documents/development/VaultSpark Football GM/docs/STUDIO_BACKEND_PLAN.md\" /c/Users/p4cka/documents/development/gridiron-gm/docs/STUDIO_BACKEND_PLAN.md)",
+      "Bash(cp \"/c/Users/p4cka/documents/development/VaultSpark Football GM/docs/templates/deploy-pages.template.yml\" /c/Users/p4cka/documents/development/gridiron-gm/docs/templates/)",
+      "Bash(cp \"/c/Users/p4cka/documents/development/VaultSpark Football GM/docs/templates/deploy-backend.docker-compose.template.yml\" /c/Users/p4cka/documents/development/gridiron-gm/docs/templates/)",
+      "Bash(cp \"/c/Users/p4cka/documents/development/VaultSpark Football GM/docs/templates/Caddyfile.studio-backend.template\" /c/Users/p4cka/documents/development/gridiron-gm/docs/templates/)",
+      "Bash(cp \"/c/Users/p4cka/documents/development/VaultSpark Football GM/docs/templates/GAME_LAUNCH_CHECKLIST.template.md\" /c/Users/p4cka/documents/development/gridiron-gm/docs/templates/)",
+      "Bash(npm run:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh pr:*)",
+      "Bash(mkdir -p \"C:\\\\Users\\\\p4cka\\\\documents\\\\development\\\\gridiron-gm-play\")",
+      "Bash(npm create:*)",
+      "Bash(npm install:*)",
+      "Bash(rm -f \"C:\\\\Users\\\\p4cka\\\\documents\\\\development\\\\gridiron-gm-play\\\\src\\\\main.js\" \"C:\\\\Users\\\\p4cka\\\\documents\\\\development\\\\gridiron-gm-play\\\\src\\\\style.css\" \"C:\\\\Users\\\\p4cka\\\\documents\\\\development\\\\gridiron-gm-play\\\\src\\\\counter.js\" \"C:\\\\Users\\\\p4cka\\\\documents\\\\development\\\\gridiron-gm-play\\\\public\\\\vite.svg\")",
+      "Bash(mkdir -p \"C:\\\\Users\\\\p4cka\\\\documents\\\\development\\\\gridiron-gm-play\\\\src/scenes\" \"C:\\\\Users\\\\p4cka\\\\documents\\\\development\\\\gridiron-gm-play\\\\src/data\")",
+      "Bash(C:/Users/p4cka/documents/development/gridiron-gm/logs/WORK_LOG.md:*)",
+      "Bash(C:/Users/p4cka/documents/development/gridiron-gm-play/logs/WORK_LOG.md:*)",
+      "Bash(node -e \"const fs=require\\(''fs''\\);const l=fs.readFileSync\\(''src/App.jsx'',''utf8''\\).split\\(''\\\\n''\\);console.log\\(l[115].slice\\(-80\\)\\)\")",
+      "Bash(grep -v \"//\")",
+      "Bash(git merge:*)",
+      "Bash(python3:*)",
+      "Skill(update-config)",
+      "Bash(timeout /t 25 /nobreak)",
+      "Bash(ls /c/Users/p4cka/documents/development/gridiron-gm/CODEX_HANDOFF*.md)",
+      "Bash(npx vite:*)",
+      "Bash(git pull:*)",
+      "WebSearch",
+      "WebFetch(domain:www.gmgridiron.com)",
+      "WebFetch(domain:football-gm.com)"
+    ]
+  }
+}
