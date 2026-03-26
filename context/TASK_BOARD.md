@@ -258,6 +258,37 @@
 - [x] **[SIL] Play: QB streak HUD indicator** — 🔥 HOT / ❄️ COLD badge in HudScene (streakTxt)
 - [x] **GM: fix stray JSX `}` in player modal RFA badge** (line 979 — esbuild warning cleared)
 
+## Done (v25.0 — Audit I21–I50 — 2026-03-26)
+
+### Play Engine (gridiron-gm-play) — commit cf35d8e
+- [x] **I21** — AI down & distance logic matrix (3rd & short = run power, 3rd & long = pass, RZ run-heavy)
+- [x] **I22** — Safety pursuit on gains ≥8 yards — boosts fumble pressure via S speed/RNG check
+- [x] **I23** — Route visualization pre-snap — blue arcs per receiver fade to 0 at snap (360ms tween)
+- [x] **I24** — Timer registry / scene cleanup — `_regTimer()` wraps 5 loop `addEvent` calls; `shutdown()` clears all
+- [x] **I25** — Streak difficulty nudge — `_dynNudge = clamp(streak*0.012, ±0.06)` applied to `_diffMod`
+- [x] **I26** — Zone coverage visual — Cover2/Prevent shows dual ellipse arcs (blue/purple, 900ms)
+- [x] **I28** — FG trajectory arc — animated ball circle tweens parabolic path to uprights (green/red by result)
+- [x] **I30** — Receiver separation dot — green/yellow/red dot above each receiver 200ms post-snap
+- [x] **I31** — AI 2-min urgency — inter-play delay 700ms (vs 1800ms) when AI trailing in drill mode
+- [x] **I32** — Fatigue visual — runner alpha dim + orange stroke ring when `_fatigue > 60`
+
+### GM App (gridiron-gm) — commit cf17bf4
+- [x] **I39** — `defaultSaveState()` factory (canonical v:3 shape; all saves merge against it)
+- [x] **I40** — Reactive owner events post-game (comeback win / shutout / walkoff → owner message + gmRep)
+- [x] **I41** — Trade partner intelligence ("FIND TRADE" button scans AI teams for your top 2 position needs)
+- [x] **I44** — League-wide simulated transactions feed (1–2 AI-AI moves per simWk in LEAGUE WIRE log)
+- [x] **I46** — Difficulty presets at new game (Casual / Standard / Hardcore with cap/SP/fire modifiers)
+- [x] **I47** — Week preview card in schedule tab (weather + injury report + opponent strength + headline)
+- [x] **I48** — Player career trajectory sparkline (last 4 seasons OVR trend in player modal)
+- [x] **I49** — Draft war room live clock (90s countdown per pick, auto-draft BPA on expire)
+
+### Play Scene Fixes (gridiron-gm-play)
+- [x] **I36** — Drive chart timeline in HudScene — colored segment bar per play (green/grey/gold/red)
+- [x] **I29** — Play call history sidebar in PlayCallScene — last 5 calls with yards/result
+- [x] **GameOverScene** — MVP badge, drive chart cap (6 rows/side), overlap bug fixes
+- [x] **BootScene** — difficulty badge top-right, streak/weather overlap fix
+- [x] **sound.js** — bigPlay, fumble, fg, penalty, crowd SFX methods
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local
