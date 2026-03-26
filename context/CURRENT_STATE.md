@@ -4,7 +4,7 @@
 
 - Date: 2026-03-26
 - Overall status: Live on GitHub Pages, active development
-- Current version: v23.0 (gridiron-gm) / P116 (gridiron-gm-play) — both builds clean
+- Current version: v26.0 (gridiron-gm) / P119 (gridiron-gm-play) — both builds clean, both repos pushed
 - Studio OS: Fully compliant
 
 ## What exists
@@ -96,6 +96,26 @@
 - **Player Suspension Event** — `suspensionEvent` state; 2%/wk; Handle Internally(1SP) or Release modal
 - **Draft Board Rankings** — `draftBoard` state; MY BOARD section in draft tab; ↑/↓ ordering; gold rank badges
 - **Preseason Injury Risk Toggle** — `preseasonRisk` state; ON/OFF toggle; 8% injury chance to top-22 starters
+- **defaultSaveState() factory** — canonical v:3 shape; all saves merge against it (I39)
+- **Reactive owner events** — importPlayResult fires comeback/shutout/walkoff owner message + gmRep effect (I40)
+- **FIND TRADE button** — scans AI teams for top 2 positional needs; shows match candidates (I41)
+- **League wire transactions** — 1-2 AI-AI moves per simWk logged to LEAGUE WIRE section (I44)
+- **Difficulty presets** — Casual/Standard/Hardcore buttons on new game; modifies cap/SP/fire thresholds (I46)
+- **Week preview card** — schedule tab shows weather + injury + opponent strength + headline before game (I47)
+- **OVR sparkline** — newSeason appends to p.ovrHistory; player modal renders last 4 bars (I48)
+- **Draft war room clock** — 90s countdown per pick; auto-draft BPA on expire (I49)
+- **Salary cap bar chart** — stacked position group viz in roster tab (I66)
+- **Franchise timeline** — horizontal season strip in log tab with playoff/champion indicators (I67)
+- **Trade deadline countdown** — weeks widget in schedule tab wk 8-10 (I68)
+- **Roster health dashboard** — 14-position color-coded dot grid in roster tab (I69)
+- **AI GM reactive trade quotes** — personality-driven voice lines (rebuilder/win-now/analytics) (I70)
+- **Achievement system** — 10 milestones, earned badges in log tab, persisted in save state (I71)
+- **Sim game progress bar** — animated loading bar during simWk (I72)
+- **Player morale timeline** — confidence sparkline (last 6 weeks) in player modal (I73)
+- **Positional needs matrix** — A-F gap grade grid in trade/draft tabs (I74)
+- **Live injury toasts** — fixed-position toast stack during simWk, 3s auto-dismiss (I75)
+- **Veteran farewell event** — special card for OVR 80+ retirees + fanSat boost for OVR 85+ (I77)
+- **Draft scouting report cards** — top 5 prospect visual card strip in draft tab (I80)
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
@@ -154,10 +174,29 @@
 - **P76: Red Zone Run Choice** — DIVE/SWEEP before runs at yardLine≥80; DIVE=0-3yd high%, SWEEP=4-12yd lower%; `_rzRunChoice`
 - **P77: Penalty Accept/Decline** — modal after flags; ACCEPT/DECLINE; 3s auto-dismiss; wraps existing flag logic
 - **P78: Two-Minute Warning Timeout** — Q2/Q4 clock≤120s; overlay + free timeout +15s; `_twoMinWarningFired{}`
+- **I21-I32**: AI down/distance matrix, safety pursuit, pre-snap route arcs, timer registry, streak nudge, zone coverage visual, FG arc, play call history, receiver separation, AI 2-min urgency, fatigue visual
+- **I51**: User-controlled Safety dot (WASD) defends AI drives; tackles aiRunner on collision
+- **I52**: Half-time adjustment cards — Quick Strikes / Tighten Up / Run First; applied to 2nd half
+- **I53**: Formation shift tween on audible (OL/WR/TE 12-14px yoyo 220ms)
+- **I54**: Penalty flag arc animation — yellow rect tweens QB→midfield
+- **I55**: Highlight reel on GameOver — bestPlay dot tween + label 800ms post-load
+- **I56**: Mid-game weather progression — 25% chance worsens at Q3
+- **I57**: Coach headset quote ticker in PlayCallScene below down/distance
+- **I58**: End zone celebration tween — 360° spin + gold arc on user TD
+- **I59**: Practice drill mode — PRACTICE button in BootScene; unlimited plays
+- **I60**: Crowd reaction meter — score-delta bar below HUD
+- **I61**: AI no-repeat rule — prevents 3 consecutive same call type
+- **I62**: Run hole reading visual — green/red triangles between OL gaps (300ms)
+- **I63**: Night game dark mode for rival matchups (50% chance)
+- **I64**: Defensive pressure ring — shrinking ring → BLITZ +15% sack
+- **I65**: Snap count fake visual — QB count 1→2→3 on draw plays
+- **I76**: Volume/settings overlay in BootScene — gear icon → SFX slider; localStorage
+- **I78**: Cross-play personal records — best pass/rush/TD persisted on GameOver
+- **I79**: Bridge validation badge — GM LIVE / GM STALE / DEFAULT ROSTER in BootScene
 
 ## Important paths
 
-- `src/App.jsx` — all game code (~1600+ lines, v9.0)
+- `src/App.jsx` — all game code (~1850+ lines, v26.0)
 - `gridiron-gm-play/src/scenes/FieldScene.js` — primary Phaser gameplay file
 - `gridiron-gm-play/src/scenes/PlayCallScene.js` — play call menu (8 runs/passes)
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()
@@ -170,4 +209,4 @@
 
 ## Next session task board
 
-See context/TASK_BOARD.md — backlog cleared (v6.3 / P53)
+See context/TASK_BOARD.md — backlog cleared (v26.0 / P119)
