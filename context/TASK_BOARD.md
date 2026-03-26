@@ -246,6 +246,14 @@
 - [x] **v22 GM: Share Season CTA** — post-wk18 copy-to-clipboard tweet template in log tab
 - [x] **v22 Analytics** — already wired; VITE_ANALYTICS_URL env var; track() calls on key events
 
+- [x] **v23 GM: I1–I10** — AI GM dialogue, comeback arc, draft buzz, owner arc, live ticker, HOF ballot, rival trash talk, holdout mini-game, documentary card, cap arbitrage
+- [x] **P111-P116 Play: Bug fixes + I11-I13/I17-I19** — TDZ fix, nlPumpEls leak, noHuddle dismiss, _resetPlayFlags, star banners, QB streak, disguise defense, AI personality, grade summary, victory screen
+
+## Now — [SIL] items
+
+- [ ] **[SIL] Play: I14/I15/I16/I20** — remaining agent-mapped innovations: play-clock pressure escalation (I14), trick play consequence memory (I15), comeback tracking overlay (I16), weather escalation in 2nd half (I20) — all locations already mapped
+- [ ] **[SIL] Play: QB streak HUD indicator** — small 🔥/❄️ icon next to pass completion % in HudScene when streak >= 3 or <= -2
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local
