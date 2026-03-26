@@ -1,32 +1,44 @@
-# Start Protocol — Gridiron GM
+# Start Protocol
 
-Run this at the beginning of every session.
+Use this when the user says only `start`.
 
-## Steps
+## Read order
 
-1. Read `AGENTS.md` for repo identity and rules
-2. Read `context/CURRENT_STATE.md` for where things stand
-3. Read `context/TASK_BOARD.md` for what needs to be done
-4. Read `context/LATEST_HANDOFF.md` for what was last worked on
-5. If doing game code work, read `HANDOFF.md` for full architecture reference
+1. `AGENTS.md`
+2. `context/PROJECT_BRIEF.md`
+3. `context/SOUL.md`
+4. `context/BRAIN.md`
+5. `context/CURRENT_STATE.md`
+6. `context/DECISIONS.md`
+7. `context/TASK_BOARD.md`
+8. `context/LATEST_HANDOFF.md`
+9. `context/SELF_IMPROVEMENT_LOOP.md`
+10. only then task-specific files
 
-## Startup brief format
+## Startup rules
 
-After reading the above, produce a concise startup brief:
+- Treat repo files as source of truth, not prior chat memory
+- Do not edit code during startup unless the user explicitly asks for implementation immediately
+- Use `context/LATEST_HANDOFF.md` as the active handoff source
+- Treat legacy handoff docs as historical context only
+- Note assumptions clearly
 
-```
-## Session Start — Gridiron GM
+## Self-Improvement Loop — startup check
 
-**Status:** [one line]
-**Last work:** [one line]
-**Active tasks:** [bullet list from TASK_BOARD.md]
-**Blockers:** [any blockers, or "none"]
-**Ready to:** [what you can help with]
-```
+After reading `context/SELF_IMPROVEMENT_LOOP.md`:
+- Note the last audit scores and trajectory per category
+- Identify any open brainstorm ideas not yet actioned
+- Check if prior `[SIL]` TASK_BOARD commitments were completed
+- If a `[SIL]` item appears skipped 2+ sessions in a row, flag it as **Now** on TASK_BOARD and note it in the Startup Brief
 
-## Rules reminder
+## Required startup output
 
-- ALL changes to src/App.jsx are additive — no removals without explicit user approval
-- Single-file React, inline styles, no external deps
-- Match existing compact/minified code style
-- Never hardcode `/Gridiron-GM/` — use env var or lowercase slug
+Reply with a concise `Startup Brief` containing:
+
+1. Project identity
+2. Current state
+3. Active priorities (including any flagged `[SIL]` escalations)
+4. Important constraints
+5. Last audit scores and dominant trajectory
+6. Likely next best move
+7. Blockers or ambiguities
