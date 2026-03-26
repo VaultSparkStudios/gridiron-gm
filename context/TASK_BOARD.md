@@ -249,10 +249,14 @@
 - [x] **v23 GM: I1–I10** — AI GM dialogue, comeback arc, draft buzz, owner arc, live ticker, HOF ballot, rival trash talk, holdout mini-game, documentary card, cap arbitrage
 - [x] **P111-P116 Play: Bug fixes + I11-I13/I17-I19** — TDZ fix, nlPumpEls leak, noHuddle dismiss, _resetPlayFlags, star banners, QB streak, disguise defense, AI personality, grade summary, victory screen
 
-## Now — [SIL] items
+## Done (v24.0 — SIL closeout — 2026-03-26)
 
-- [ ] **[SIL] Play: I14/I15/I16/I20** — remaining agent-mapped innovations: play-clock pressure escalation (I14), trick play consequence memory (I15), comeback tracking overlay (I16), weather escalation in 2nd half (I20) — all locations already mapped
-- [ ] **[SIL] Play: QB streak HUD indicator** — small 🔥/❄️ icon next to pass completion % in HudScene when streak >= 3 or <= -2
+- [x] **[SIL] Play: I14** — play-clock pressure escalation (≤5s: camera shake + clock pulse)
+- [x] **[SIL] Play: I15** — trick play consequence memory (2nd trick = coverage penalty `_trickPlayMem`)
+- [x] **[SIL] Play: I16** — comeback tracking overlay (🔥 COMEBACK! banner when ≥7-pt deficit erased for TD)
+- [x] **[SIL] Play: I20** — weather escalation in 2nd half (fumble/hold ×1.25 rain / ×1.40 snow)
+- [x] **[SIL] Play: QB streak HUD indicator** — 🔥 HOT / ❄️ COLD badge in HudScene (streakTxt)
+- [x] **GM: fix stray JSX `}` in player modal RFA badge** (line 979 — esbuild warning cleared)
 
 ## Backlog — Infrastructure
 
