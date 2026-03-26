@@ -151,6 +151,23 @@
 - [x] **P84: Pump Fake** — 800ms btn; CB freeze; +10% comp; _pumpFakeBonus
 - [x] **P85: Wildcat Package** — new play; KEEP (RB STR run) or PASS (40% comp 8-20 yds)
 
+- [x] **v13.1 GM: NFL Comp Pick Formula** — faLostVal/faGainedVal; OVR×contract net loss; awards R3-R7 pick
+- [x] **v14.0 GM: Two-Point Conversion Strategy** — twoPoint in gamePlan; toggle in game plan UI; 15% +1 score chance in simGame
+- [x] **v14.0 GM: Injury Insurance** — injInsurance state; 🛡️ Insure (2SP) for OVR≥85; IR → $2M cap relief
+- [x] **v14.0 GM: League MVP Race** — mvpRaceLeader state; wk9 check; user QB leading → +3 fanSat
+- [x] **v14.0 GM: Offseason Training Camp** — otcFocus state; preseason picker; +1 OVR top 5 in group at season end
+- [x] **v14.0 GM: Fan Loyalty Index** — fanLoyalty state; consecutive winning seasons → +2 fanSat/wk per year
+- [x] **v14.0 GM: Coaching Buyout** — dead cap on hot-seat fire = salary × contract × 0.5
+- [x] **v14.0 GM: Rival Week Score Boost** — +2-3 crowd surge pts in sim game for rivalry matchups
+- [x] **v14.0 GM: FA Bidding War Enhancement** — faBid modal shows cap space vs bid needed with color indicator
+- [x] **v14.0 GM: Scouting Combine Grade** — combGrade (A+/A/B/C/D) on prospects; colored badge in draft tab
+- [x] **v14.0 GM: Player Conduct Fine** — 3%/wk for OVR≥80; $0.5M fine; morale -3; conductEvent state
+- [x] **P86: Flea Flicker** — new play; handoff → pitch back → deep; 42-88% catch; 12-28 yds; 10% INT risk
+- [x] **P87: End Around** — new play; WR motions to snap; SPD-based 3-18 yds; sweep animation
+- [x] **P88: QB Sneak** — 4th down short yardage button (toGo≤2); STR-based 1-4 yds; QB dive tween
+- [x] **P89: Blitz Package** — defensive 🚀 BLITZ btn; +15% INT chance on AI pass; _blitzPackage flag
+- [x] **PlayCallScene layout** — panelH 310→380, btnH 46→38, gap 5→3; fits 14 plays (6 run, 8 pass)
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local

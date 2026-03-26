@@ -4,7 +4,7 @@
 
 - Date: 2026-03-25
 - Overall status: Live on GitHub Pages, active development
-- Current version: v13.1 (gridiron-gm) / P85 (gridiron-gm-play) — both builds clean
+- Current version: v14.0 (gridiron-gm) / P90 (gridiron-gm-play) — both builds clean
 - Studio OS: Fully compliant
 
 ## What exists

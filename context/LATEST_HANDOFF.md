@@ -1,67 +1,65 @@
 # Latest Handoff
 
-Last updated: 2026-03-25 (session — v13.1 / P85)
+Last updated: 2026-03-25 (session — v14.0 / P90)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v13.1 / P85)
+## What was completed this session (v14.0 / P86–P90)
 
-### gridiron-gm — v13.1 (App.jsx) — Compensatory Pick overhaul
+### gridiron-gm — v14.0 (App.jsx) — 10 new GM features
 
-**NFL-Style Compensatory Picks** — Replaced flavor-text `COND_POOL` / `condition` field on picks with a proper NFL compensatory pick formula:
-- `faLostVal` state: accumulates `OVR × contract` for OVR≥70 players released to FA (non-regular-season)
-- `faGainedVal` state: accumulates `OVR × contract` for OVR≥70 players signed from FA
-- In `newSeason`: net = faLostVal − faGainedVal; awards R3 (net≥150), R4 (net≥100), R5 (net≥60), R6 (net≥30), R7 (net≥10)
-- `COND_POOL` constant and `condition` pick field removed from `initPicks`
-- `saveGame` / `loadGame` updated to persist `faLostVal` + `faGainedVal`
+**Two-Point Conversion Strategy** — `twoPoint` field in `gamePlan` state; toggle in game plan UI; in `simGame`: 15% chance of +1 score when enabled
 
-### gridiron-gm — v13.0 (App.jsx) — 10 new GM features (prior session)
+**Injury Insurance** — `injInsurance` state (array of player IDs); 🛡️ Insure (2SP) button in modal for OVR≥85; when insured player placed on IR → $2M cap relief (reduces deadCap)
 
-**International Series Game** — `intlGameWk` state; one home game wk 7-10 marked `intl:true` in startGame + newSeason; ✈️ INTL badge in schedule; win grants +8 fanSat
+**League MVP Race** — `mvpRaceLeader` state; checked at wk9: top QB passYds tracked league-wide; if user's QB leads → +3 fanSat + log entry
 
-**Player Endorsement Deals** — `endorsed` field (OVR≥82, 30% chance); 💰 badge in PlayerTable; every 4 wks simWk: +1SP per 2 active endorsed players
+**Offseason Training Camp** — `otcFocus` state; preseason UI picker (Passing/Rushing/Defense); in `newSeason`: top 5 players in group get +1 OVR; logged
 
-**Franchise Milestones** — `milestones` state; checks in newSeason: first_season/50wins/100wins/first_title/dynasty; SP rewards 2-8 each; 🏅 section in log tab
+**Fan Loyalty Index** — `fanLoyalty` state (consecutive winning seasons); in `newSeason`: +1 per winning season, reset on losing; each year adds +2 fanSat/wk bonus in `simWk`
 
-**Scheme Clash Modifier** — `SCHEME_CLASH` constant; applied in simGame to adjust scores ±1-2 based on OC vs opponent DC scheme (Air Raid vs Cover 2, Power Run vs 4-3, etc.)
+**Coaching Buyout** — When coach fired on hot seat (streak ≤ -4): dead cap = salary × remaining contract × 0.5; logged
 
-**Restricted Free Agency (RFA)** — `rfaTenders` state; RFA Tender button in modal for preseason OVR 65-77 contract=1 players; flat salary ~$1.5M; RFA badge; resets each newSeason
+**Rival Week Score Boost** — In `simWk` game loop: if rivalry game, home team gets +2-3 score crowd surge
 
-**Player Role Assignment** — `role:'rotation'` default in genPlayer; Core/Rotation/Depth toggle in modal; CORE badge in PlayerTable; core players add +0.5 to teamStr
+**FA Bidding War Enhancement** — `faBid` modal now shows user's current cap space vs bid needed with color indicator (green = can afford, red = short)
 
-**League-Wide Cap Forecast** — `capOutlookOpen` state; collapsible 💰 LEAGUE CAP OUTLOOK in standings tab; shows next-yr cap space for all 32 teams color-coded
+**Scouting Combine Grade** — In `goToCombine`: each prospect gets `combGrade` (A+/A/B/C/D) based on trueOvr; shown as colored badge in draft tab prospect list
 
-**Draft War Room** — Panel in draft tab showing top 6 positional needs with best available prospect at each position
-
-**Player Career Milestones** — In newSeason: checks 20K pass yds (QB), 5K scrimmage (RB/WR/TE), 30 career TDs; each milestone earns +1SP; `p.milestoneFlags[]` tracks earned
+**Player Conduct Fine** — 3%/wk chance in `simWk` for OVR≥80 non-injured players; `conductEvent` state; player fined $0.5M, morale -3; `setConductEvent` reset each `newSeason`
 
 ---
 
-### gridiron-gm-play — P81–P85 (FieldScene.js + PlayCallScene.js)
+### gridiron-gm-play — P86–P90 (FieldScene.js + PlayCallScene.js)
 
-**P81: TE Seam Route** — New play in PlayCallScene; TE animates 180px upfield; 50-70% catch based on OVR vs LB/S; 8-18 yd gain; `_teSeamActive` flag
+**P86: Flea Flicker** — New play in CALLS; QB hands off to RB, pitch back, deep throw; 42-88% catch based on QB acc + WR ovr; 12-28 yds; 10% INT risk; `_fleaFlickerActive` flag
 
-**P82: DL Stunts** — `_showDLStuntBtn()` on opponent possession pre-snap; sets `_dlStunt=true`; +8% INT on opponent passes; resets each play
+**P87: End Around** — New play in CALLS; WR motions to center, takes snap, sweeps edge; SPD-based 3-18 yds; WR tween animation; `_endAroundActive` flag
 
-**P83: WR Crack Block** — `_tryCrackBlock()` on non-scramble runs (20% chance); WR tween blocks CB; +2-4 yd bonus; `_crackBlock` flag
+**P88: QB Sneak** — On 4th down with toGo≤2: extra QB Sneak button appears in 4th down menu; STR-based 1-4 yds; QB forward-lunge tween; `_qbSneakActive` flag
 
-**P84: Pump Fake** — `_showPumpFakeBtn()` 800ms on pass plays; QB fake throw animation; CB pauses 200ms; +10% comp chance via `_pumpFakeBonus`
+**P89: Blitz Package** — 🚀 BLITZ button shown pre-snap on opponent possession (alongside DL Stunt); sets `_blitzPackage=true`; +15% INT chance in AI pass resolution; `_blitzBtn` flag
 
-**P85: Wildcat Package** — New play in PlayCallScene; KEEP (RB runs, STR bonus, 1-7 yds) or PASS (40% comp, 8-20 yds); 4s auto-timeout; `_wildcatActive` flag
+**PlayCallScene layout** — Resized panel to 380px tall (from 310), btnH 38 (from 46), gap 3 (from 5) to fit all 14 plays (6 run, 8 pass); added situational highlights for `end_around` and `flea_flicker`
+
+---
+
+### Bug Fixes
+- Fixed stale `setFaLostCount` reference in `newSeason` → now uses `setFaLostVal` (proper OVR value tracking for comp picks)
 
 ---
 
 ## What is mid-flight
 
 Nothing. Both builds clean.
-- gridiron-gm: v13.1 (current)
-- gridiron-gm-play: `91baff5`
+- gridiron-gm: v14.0 (current)
+- gridiron-gm-play: P90 (current)
 
 ---
 
 ## What to do next
 
-All backlogs cleared. Next session: v14.0 GM + P86–P90.
+Next session: v15.0 GM + P91–P95.
 
 Infrastructure remaining:
 - Wire analytics endpoint (VITE_ANALYTICS_URL in .env.local)
@@ -73,11 +71,10 @@ Infrastructure remaining:
 
 - ALL changes ADDITIVE; single-file React; compact style; no external deps
 - Bridge keys `gm_roster_export` / `gm_game_result` locked
-- New state vars (v13.0): `milestones`, `rfaTenders`, `intlGameWk`, `capOutlookOpen`
-- New state vars (v13.1): `faLostVal`, `faGainedVal` (replace `faLostCount`)
-- New player fields: `endorsed`, `role`, `milestoneFlags[]`
-- Pick field `condition` REMOVED (was flavor-text only; replaced by proper comp pick formula)
-- New FieldScene flags: `_teSeamActive`, `_dlStunt`, `_crackBlock`, `_pumpFakeBonus`, `_wildcatActive`
+- New state vars (v14.0): `otcFocus`, `fanLoyalty`, `injInsurance`, `mvpRaceLeader`, `conductEvent`
+- `gamePlan` now includes `twoPoint: false` field
+- New player field: `combGrade` (A+/A/B/C/D, assigned in goToCombine)
+- New FieldScene flags: `_fleaFlickerActive`, `_endAroundActive`, `_qbSneakActive`, `_blitzPackage`, `_blitzBtn`
 - JSX note: minor structural issue in player modal action section (extend/FQB/release buttons outside `<>` fragment) — benign at runtime, build passes
 
 ## Read first next session
