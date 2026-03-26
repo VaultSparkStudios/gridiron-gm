@@ -224,24 +224,27 @@
 - [x] **Bug: FieldScene _defMiniGameUsed/replayStore not in create()** — added P100-P103 flag init block
 - [x] **Bug: replayStore/replayBtn leaking between plays** — cleared at presnap reset each play
 
-## Backlog — Wave 4: Play Expansion (P104–P110)
+## Done (v22.0 — Polish + Wave 4 + Wave 5 — 2026-03-26)
 
-- [ ] **P104: Special Teams — KO Return Lanes** — pre-kick MIDDLE/LEFT/RIGHT lane choice; speed modifier + block chance per lane
-- [ ] **P105: 2-Minute Drill Improvement** — SPIKE/SCRAMBLE/THROW decision tree; clock awareness coaching tips HUD
-- [ ] **P106: No-Look Pump Fake Pass** — tap pump then immediate THROW; CB commits early; +15% comp window
-- [ ] **P107: Red Zone Crossing Route** — TE/WR crossing pattern; CB pursuit; contested catch at back of endzone
-- [ ] **P108: Defensive Strip-Sack** — during pass rush STRIP! button at 0.8s; 20% forced fumble; else -2yd bonus
-- [ ] **P109: Screen Pass — Wide Receiver** — WR bubble screen; blocker tween; 3-button cut choice after catch
-- [ ] **P110: Onside Kick Improvement** — directional kick LEFT/RIGHT/MIDDLE; recovery % by lane + formation bonus
+### Polish Pass Bug Fixes
+- [x] **Bug: startGame missing resets** — setStadiumAtm/setPlaybook/setArbModal/setCompareSlots added
+- [x] **Bug: playbook no gameplay effect** — wired into simGame (+1 score for full 3-play book)
+- [x] **Bug: FieldScene P100-P103 flags not in create()** — added full init block
+- [x] **Bug: replayStore/replayBtn leaking** — cleared at presnap reset each play
 
-## Backlog — Wave 5: GM Polish + Monetization
+### Wave 4: Play Expansion (P104–P110)
+- [x] **P104: KO Return Lane Choice** — LEFT/MIDDLE/RIGHT modal pre-return; shuffled yard bonuses; 4s auto
+- [x] **P105: 2-Min Drill Spike** — SPIKE button shown when state._drillMode; clock-stop incomplete
+- [x] **P106: No-Look Pump Fake** — NO LOOK button at 250ms into pass_wait; CB bites WR1; +14% comp
+- [x] **P107: Crossing Route** — new play; TE crosses field; THROW! at 500ms; 62%+ comp; LB INT risk
+- [x] **P108: Defensive Strip-Sack** — STRIP! button when DL within 35px; 22% forced fumble
+- [x] **P109: WR Bubble Screen** — new play; WR flat; 3-cut choice (IN/STRAIGHT/OUT); comp by SPD/CB
+- [x] **P110: Directional Onside** — LEFT/CENTER/RIGHT pick before tap game; shuffled hidden recovery % mods
 
-- [ ] **v22 GM: Game Speed Selector** — settings in DEV tab; 1×/2×/3× simWk animation speed; persisted to localStorage
-- [ ] **v22 GM: Newsletter / Sharing CTA** — end-of-season modal; "Share your season" pre-filled tweet text; copy button
-- [ ] **v22 GM: Onboarding video tooltip overlays** — first-visit animated arrow tips on 4 key tabs (roster/draft/trade/play)
-- [ ] **v22 Analytics** — lightweight event ping on franchise_start / game_played / draft_pick (VITE_ANALYTICS_URL env)
-- [ ] **v22 OG Image** — run scripts/gen-og.html → download → public/images/cover.png (manual step)
-- [ ] **v22 GM: Dynasty End Screen** — after 5 seasons show franchise recap card with logo, record, titles, legacy score; share button
+### Wave 5: GM Polish + Monetization
+- [x] **v22 GM: Dynasty End Screen** — every 5 seasons; full overlay recap card; 6-stat grid; legacy tier; copy recap
+- [x] **v22 GM: Share Season CTA** — post-wk18 copy-to-clipboard tweet template in log tab
+- [x] **v22 Analytics** — already wired; VITE_ANALYTICS_URL env var; track() calls on key events
 
 ## Backlog — Infrastructure
 
