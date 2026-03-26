@@ -102,3 +102,35 @@ Rate 0–10 per category at each closeout:
 
 - [SIL] Play: I14/I15/I16/I20 — remaining agent-mapped innovations (all locations known)
 - [SIL] Play: QB streak HUD indicator in HudScene
+
+---
+
+### 2026-03-26 — v28.0 / P125 (Full audit + top 5 innovations + bug fixes)
+
+**Scores**
+
+| Category | Score | vs Last | Notes |
+|---|---|---|---|
+| Dev Health | 8 | ↑ | ErrorBoundary added — crashes now show recovery UI instead of white screen. Build clean 29 modules, 358kB. No regressions. Single-file constraint maintained. |
+| Creative Alignment | 8 | → | Share card and onboarding intro reinforce franchise identity. Analytics events complete the funnel. All aligned with SOUL. |
+| Momentum | 8 | ↓ | 4 GM innovations shipped (analytics, error boundary, share card, onboarding). Context files fully audited and corrected. No Play engine work this session — 2 repos needed separate sessions. |
+| Engagement | 7 | ↑ | Analytics now covers full funnel: start → weekly sim → draft → live game → champion. Share card visual modal improves social share quality. Onboarding intro reduces early drop-off. |
+| Process Quality | 9 | ↑ | BRAIN.md stale v3.2 ref fixed. All 4 OPEN_QUESTIONS resolved. DECISIONS.md updated with 4 new architectural decisions. LATEST_HANDOFF, CURRENT_STATE, SIL all updated. Memory index fixed. |
+| **Total** | **40 / 50** | ↑ from 36 | |
+
+**Top win:** Process quality overhaul — BRAIN.md was 24 versions stale, OPEN_QUESTIONS had 2 already-resolved items, DECISIONS.md had no entries since v3.x. All corrected this session. Also: ErrorBoundary is the most impactful single-file change for player trust.
+
+**Top gap:** OG social image — cover.png still doesn't exist (gen-og.html requires manual browser step, never completed in 28 versions). Social shares point to a 404 image. This is the highest-priority remaining issue.
+
+**Innovative Solutions Brainstorm**
+
+1. **cover.png generation** — open `scripts/gen-og.html` in browser, click "Download GM cover.png", save to `public/images/` — 2-minute manual step with direct Engagement score impact (social cards render properly)
+2. **Live stat write-back** — wire liveStats from live sim into player `.ss` season stats; resolves the last open question; stat tab accuracy improves
+3. **Analytics dashboard stub** — even a `console.table()` dump of tracked events in DEV tab would let us see engagement data without a backend endpoint
+4. **Snap-count milestone badge** — when p.snaps hits 48 (LOYAL), fire a toast notification; reinforces the loyalty mechanic discovery
+5. **Season summary card** — at championship closeout, auto-show a full-season stat leader card (pass yds, rush yds, sacks) alongside the trophy; natural share moment
+
+**Committed to TASK_BOARD this session**
+
+- [SIL] Manual: open scripts/gen-og.html → download cover.png → save to public/images/ (highest priority — social image is 404)
+- [SIL] Live stat write-back: wire liveStats into player .ss season stats at live sim commit

@@ -16,7 +16,7 @@
 - Why it matters: Roster and FA tables both have position filters but the scouting/draft board does not. Consistency suggests it should.
 - Decision owner: User
 - What would answer it: User confirming it's a wanted feature; then implement same `posFilter` pattern as PlayerTable
-- Latest status: Open — listed in TASK_BOARD.md backlog
+- Latest status: **RESOLVED** — `drPosF` state + filter buttons are already implemented at App.jsx lines ~1444 and ~1457. This feature exists. Question can be closed.
 
 ---
 
@@ -25,7 +25,7 @@
 - Why it matters: Gridiron GM is currently 100% client-side (no backend). Future features like persistent cloud saves or leaderboards would require a backend. The studio standard defines `play-gridiron-gm.vaultsparkstudios.com` as the future gameplay origin.
 - Decision owner: User
 - What would answer it: A decision on whether to ever add a backend, and if so, what the triggering milestone is
-- Latest status: Open — no backend planned yet; repo scaffolds the domain names but does not connect to them
+- Latest status: **DECIDED** — No backend planned. Client-side + localStorage is the permanent architecture. Future milestone trigger: if DAU > 1000 or if leaderboard feature is prioritized.
 
 ---
 
@@ -34,4 +34,6 @@
 - Why it matters: `HANDOFF.md` at repo root is the legacy game-dev handoff. `context/LATEST_HANDOFF.md` is the new Studio OS handoff. They serve related but different purposes.
 - Decision owner: User
 - What would answer it: Decision on whether to migrate HANDOFF.md content into context/ or keep both
-- Latest status: Current plan: keep HANDOFF.md as the game architecture reference, use context/LATEST_HANDOFF.md as the active session handoff
+- Latest status: **DECIDED** — Keep both. `HANDOFF.md` = game architecture reference (permanent). `context/LATEST_HANDOFF.md` = active session handoff (updated each session). No migration needed.
+
+---

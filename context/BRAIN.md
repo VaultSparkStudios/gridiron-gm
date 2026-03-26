@@ -39,4 +39,4 @@ The UI is a data dashboard, not a game UI. Dense tables, small fonts, sortable c
 
 ## Current best understanding
 
-The codebase is in a good state (v3.2). All five major v3.2 features work. The main outstanding work is Studio OS compliance (docs, context, workflows) and potential new gameplay features.
+The codebase is in a strong state (v27.0 / P125). App.jsx is ~1878 lines with 125+ GM innovations implemented. The companion Phaser engine (gridiron-gm-play) is at P125 and wired via localStorage bridge. Both repos are clean and pushed. The main outstanding work is the OG social image (cover.png does not exist — only cover.svg), and potential new gameplay/polish features. Analytics, ErrorBoundary, Share Card, and Onboarding Intro were added in v28.0 this session.

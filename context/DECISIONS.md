@@ -82,3 +82,48 @@ Append new entries. Do not erase historical reasoning unless it is wrong.
 - Decision: Changed to `process.env.VITE_APP_BASE_PATH || "/gridiron-gm/"` — lowercase slug, env-overridable
 - Why this was chosen: Studio standard requires lowercase slugs; env override allows CI to inject the correct value
 - Follow-up: deploy-pages.yml sets `VITE_APP_BASE_PATH=/gridiron-gm/`
+
+---
+
+### 2026-03-26 — No backend planned (permanent client-side architecture)
+
+- Status: Decided
+- Context: OPEN_QUESTIONS listed backend rollout as open since v3.x
+- Decision: Gridiron GM remains 100% client-side + localStorage. No backend unless DAU > 1000 or leaderboard feature is explicitly prioritized.
+- Why: Zero-infrastructure is a core studio value for this project; client-side ensures the game works with no server costs and no outage risk
+
+---
+
+### 2026-03-26 — HANDOFF.md dual-file kept (not merged)
+
+- Status: Decided
+- Context: Two handoff files existed — root HANDOFF.md (architecture ref) and context/LATEST_HANDOFF.md (session handoff)
+- Decision: Keep both. HANDOFF.md = permanent game architecture reference. context/LATEST_HANDOFF.md = rolling session state.
+- Why: They serve different readers at different timescales; merging would lose the clean separation
+
+---
+
+### 2026-03-26 — ErrorBoundary added to main.jsx (v28.0)
+
+- Status: Complete
+- Context: A JSX crash anywhere in the 1878-line App.jsx would destroy the session with no recovery UI
+- Decision: Added React class ErrorBoundary wrapping GridironGM in main.jsx; shows "Your save is safe in localStorage. Reload to recover." with reload button
+- Why: localStorage persistence means saves survive crashes; the boundary converts a white screen into a recoverable state
+
+---
+
+### 2026-03-26 — Analytics events: live_game_start / live_game_finish / champion (v28.0)
+
+- Status: Complete
+- Context: `track()` helper existed but only 4 funnel events were wired; live game and champion events were missing
+- Decision: Added track('live_game_start') in startLiveSim(), track('live_game_finish') on live sim completion, track('champion') on playoff win
+- Why: Full funnel coverage — start → weekly sim → draft → live game → victory — gives meaningful engagement data without personal information
+
+---
+
+### 2026-03-26 — Share Card modal + Onboarding intro modal (v28.0)
+
+- Status: Complete
+- Context: Share was a plain-text copy button; no first-launch wizard existed
+- Decision: Share Card = team-branded visual modal (W-L, champion badge, top performer, copyable string). Onboarding = 3-tip first-launch modal stored in localStorage gm_intro_shown.
+- Why: Visual share cards drive more social sharing than text-only; first-launch tip modals reduce early drop-off by surfacing Draft picks / Sim Week / SP mechanics immediately

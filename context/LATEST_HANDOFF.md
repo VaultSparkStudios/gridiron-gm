@@ -1,71 +1,80 @@
 # Latest Handoff
 
-Last updated: 2026-03-26 (session — v27.0 / P125)
+Last updated: 2026-03-26 (session — v28.0 / P125)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v27.0 / P125)
+## What was completed this session (v28.0 / P125)
 
-### Backfill — lost audit items (I27/I33-I35/I37-I38/I42-I43/I45/I50)
+### Full project audit
 
-**Play Engine (gridiron-gm-play)** — commit `711ffdc` on `master`:
-- **I27**: Turnover celebration flash — gold "TURNOVER!" 800ms pulse on INT/fumble
-- **I33**: Pocket collapse tween — each OL dot tweens 25% toward QB when beaten (220ms)
-- **I34**: Blitz telegraph — first 2 pocket dots nudge 15px forward pre-snap on blitz call
-- **I35**: First-down conversion flash — bright green LOS line overlay 400ms on conversion
-- **I37**: AI red zone tendency — yardLine≥90: passCh -= 0.25 (forces ~65%+ run rate)
-- **I38**: Field position penalty — drives starting at yardLine≤10 get -4% compCh
+- Audited all context files, code, memory, build status
+- Produced full SIL brainstorm list (A-F) with scores and impact ratings
+- Identified 2 already-resolved open questions (draft position filter, HANDOFF consolidation)
+- Found BRAIN.md "Current best understanding" was 24 versions stale (v3.2 → fixed to v27.0)
 
-**GM App (gridiron-gm)** — commit `e2e96e9` on `main`:
-- **I42**: Trade value tag in player modal (TV = OVR×1.5 + (30-age)×2 + contract×5 - salary/3)
-- **I43**: Conference power index — AFC/NFC top 3 W-L cards in standings tab
-- **I45**: Bye week strategy panel — REST (fragile clears, injury risk -) or FOCUS (+1 OVR top player)
-- **I50**: Pre-draft rumor mill — 3 AI team position buzz cards generated at combine
+### Top 5 innovations implemented
 
-### New v27.0 innovations
+**I-A: Analytics funnel completion** (`src/App.jsx`):
+- `track('live_game_start')` in `startLiveSim()`
+- `track('live_game_finish')` after `setLiveDone(true)`
+- `track('champion')` in `simPR()` on playoff win
+- Now covers: app_start → week_simmed → draft_pick → live_game_start → live_game_finish → champion
 
-**GM App**:
-- **MLE signing**: Mid-Level Exception — once/season, FA OVR 72-79 max $6M/yr, LOYAL discount
-- **Player loyalty**: `p.snaps` tracked weekly; `p.loyal=true` at 48 snaps; LOYAL badge in table + modal; TV shows "LOYAL discount eligible"
-- **Snap count tracker**: `p.snaps` in player modal (⚡ X snaps)
-- **PS promotion race**: wk10 — top-2 PS players race; winner promoted free
-- **Post-game locker room speech modal**: 50% chance after user game; 3 choices (Inspire/Challenge/Calm) with morale/chem/fanSat effects
+**I-B: Share Card modal** (`src/App.jsx`):
+- `showShareCard` state; visual team-branded modal
+- Shows W-L, season year, champion badge, top performer, copyable share string
+- "Share Season" button replaces plain-text copy CTA in log tab
 
-**Play Engine**:
-- **P120**: Extended jump route — LATE JUMP 2nd window 300ms after first closes; +_coverageAssignMod -7 (vs +22 for first jump)
-- **P121**: Pocket shuffle step — ↔ SHUFFLE button during pass_wait; QB sidesteps ±8px; +8% comp once
-- **P122**: Personal foul — 8% chance on AI run >8yds; +15yds, auto 1st down; flag visual
-- **P123**: WR double move SHAKE! — button during pass_wait; +15% comp on next throw
-- **P124**: Fresh DL sub — once/half pre-snap button in def call panel; +12% AI run speed (= sack bonus)
-- **P125**: OT defeat card — overlay on overtime loss in GameOverScene; clears at 2.2s
+**I-C: Onboarding Intro modal** (`src/App.jsx`):
+- `showIntro` state; fires once per install (localStorage `gm_intro_shown`)
+- 3 tips: Draft picks are currency / Sim Week advances time / SP is your resource
+- "LET'S GO" dismisses; stored in localStorage permanently
 
-### Supporting work
-- `state._isOT = true` set on OT start for GameOverScene access
-- CURRENT_STATE.md updated to v27.0 / P125
+**I-D: ErrorBoundary** (`src/main.jsx`):
+- React class component wrapping entire app
+- On crash: shows recovery UI — "Your save is safe in localStorage. Reload to recover."
+- Reload button; `componentDidCatch` logs to console
 
-### Both repositories pushed
-- `gridiron-gm`: `e2e96e9` → `origin/main` ✅
-- `gridiron-gm-play`: `711ffdc` → `origin/master` ✅
+### Bug/context fixes
+
+- `context/BRAIN.md` — "Current best understanding" updated from v3.2 → v27.0
+- `context/OPEN_QUESTIONS.md` — all 4 questions resolved/closed
+- `context/DECISIONS.md` — 4 new architectural decisions appended (backend, HANDOFF dual-file, ErrorBoundary, analytics/share card)
+- `context/SELF_IMPROVEMENT_LOOP.md` — v28.0 entry added (40/50 score)
+- `context/CURRENT_STATE.md` — version bumped to v28.0; 4 new v28 innovations listed
+- `memory/MEMORY.md` — index corrected (was showing v4.5/P18)
+- Build verified clean: 29 modules, 358kB, 11s
+
+### What was NOT done (I-F OG Image)
+
+- `scripts/gen-og.html` exists and is fully functional
+- `public/images/cover.svg` exists (1200×630)
+- `public/images/cover.png` does NOT exist — `index.html` og:image tags reference a 404
+- The gen-og.html requires a manual browser step (no headless automation available)
+- **To fix:** Open `scripts/gen-og.html` in browser → click "Download GM cover.png" → save to `public/images/cover.png` → commit
 
 ---
 
 ## What is mid-flight
 
-Nothing. Both builds clean.
-- gridiron-gm: v27.0 — commit `e2e96e9`
-- gridiron-gm-play: v27.0 — commit `711ffdc`
+Nothing blocking. Build clean.
+
+- gridiron-gm: v28.0 — changes staged, not yet committed
+- gridiron-gm-play: P125 — no changes this session
 
 ---
 
 ## What to do next
 
-- **OG Image** — manual: open `scripts/gen-og.html` in browser → download → save as `public/images/cover.png`
-- **Analytics endpoint** — set `VITE_ANALYTICS_URL=<your endpoint>` in `.env.local` then `npm run build`
-- **Architecture pass** — GM: consider extracting modal helpers or custom hooks; Play: `_resetPlayFlags()` for cleaner per-play cleanup
-- **Remaining backlog** — I27/I33-I35/I37-I38/I42-I43/I45/I50 now completed ✅
+1. **IMMEDIATE — OG Image** (manual, 2 min): Open `scripts/gen-og.html` in browser → download cover.png → `public/images/cover.png` → commit → push
+2. **Live stat write-back** [SIL]: Wire `liveStats` into `p.ss` season stats at `useEffect([liveDone])`; resolves last persistent game stat inconsistency
+3. **Analytics endpoint**: Set `VITE_ANALYTICS_URL=<your endpoint>` in `.env.local` → `npm run build` → deploy; Engagement score currently unmeasurable without endpoint
+4. **Season summary card**: At championship closeout, auto-show full-season stat leader card (natural share moment)
+5. **Snap-count milestone toast**: When p.snaps hits 48 (LOYAL), fire a toast; reinforces mechanic discovery
 
 ---
 
 ## Session score
 
-**Productivity: 9/10** — Full v27.0 innovation batch (10 GM + 6 Play backfill + P120-P125 new features) implemented across both repos. Context compaction mid-session; recovered cleanly from handoff. Both builds verified, committed, and pushed. No blockers remaining.
+**Productivity: 8/10** — Full audit executed; 4 innovations shipped (analytics, error boundary, share card, onboarding); all context files corrected and current. Build clean. I-F (OG image) remains as manual-only step. SIL score 40/50 (+4 from prior session 36/50).

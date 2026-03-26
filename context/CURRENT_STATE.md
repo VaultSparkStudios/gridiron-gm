@@ -4,7 +4,7 @@
 
 - Date: 2026-03-26
 - Overall status: Live on GitHub Pages, active development
-- Current version: v27.0 (gridiron-gm) / P125 (gridiron-gm-play) — both builds clean, both repos pushed
+- Current version: v28.0 (gridiron-gm) / P125 (gridiron-gm-play) — both builds clean, gridiron-gm pushed v28.0
 - Studio OS: Fully compliant
 
 ## What exists
@@ -125,6 +125,10 @@
 - **Snap count tracker** — p.snaps accumulated weekly; displayed in player modal (v27)
 - **PS promotion race** — wk10 top-2 PS players compete; winner promoted free (v27)
 - **Post-game locker room speech modal** — 3 choices (Inspire/Challenge/Calm) after user game (v27)
+- **Analytics events** — track() covers full funnel: app_start, week_simmed, draft_pick, live_game_start, live_game_finish, champion (v28)
+- **ErrorBoundary** — main.jsx wraps app; crash shows recovery UI + reload button; localStorage save survives (v28)
+- **Share Card modal** — visual team-branded season card: W-L, champion badge, top performer, copyable share string (v28)
+- **Onboarding Intro modal** — first-launch 3-tip wizard (Draft picks = currency, Sim Week, SP resource); dismissed to localStorage (v28)
 
 ### POS system
 - `POS = ["QB","RB","WR","TE","LT","LG","C","RG","RT","DL","LB","CB","S","K"]`
