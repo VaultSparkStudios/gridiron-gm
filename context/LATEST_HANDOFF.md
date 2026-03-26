@@ -1,33 +1,50 @@
 # Latest Handoff
 
-Last updated: 2026-03-26 (session — v22.0 / P110)
+Last updated: 2026-03-26 (session — v23.0 / P116)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v19.0–v22.0 / P100–P110)
+## What was completed this session (v23.0 / P111–P116)
 
-### Priority Fixes (v19.0)
-- Onboarding Checklist, Auto-Save Indicator, Mobile Scroll, Text Play-by-Play Log, Season History Browser, Consequence Memory Press Conf
+### GM Bug Fixes
+- **P5**: `hasStats` gate now includes `tkl`/`defInts`/`grade` — defender stats no longer silently dropped on import
+- **P6**: Save version bumped `v:2 → v:3` for state compatibility
+- **P7**: `newSeason()` resets all v11–v23 state (simGameLog, socialFeed, draftTicker, holdoutNeg, ownerArc, etc.)
+- **Inline comment TDZ**: Two `//` comments from a prior session were commenting out `if(hasStats){` and `yr,wk,...` in saveGame — both fixed
 
-### Wave 2 GM (v20.0) — 8 features
-Player Comparison Modal (⚖), Franchise Legacy Score (0-1000), Draft Night Live Ticker, Social Media Feed, Player Backstory Generator, Salary Arbitration Panel, Owner Personality (patient/demanding/meddling), Franchise Share Code
+### GM Innovations (I1–I10) — all in App.jsx
+- **I1**: AI GM personality opener in incoming trade offers (8 rotating persona lines)
+- **I2**: Injury comeback arc — broadcast banner when IR players return
+- **I3**: Draft Buzz Feed — prospect intel panel in combine/draft tab (populated in `goToCombine`)
+- **I4**: Owner Arc quest progress panel in schedule tab (startYr, label, type, met/failed)
+- **I5**: Live Ticker panel — other team scores + comeback events in schedule tab
+- **I6**: HOF Ballot panel — induct/skip retired stars in log tab
+- **I7**: Rival Trash Talk — GM/HC quotes on the rivalry week banner
+- **I8**: Holdout Negotiation Mini-Game — counter/accept/stonewall modal (triggered when any OVR≥75 player holdout fires)
+- **I9**: Franchise Documentary Card — modal every 5th season after yr 1
+- **I10**: Cap Arbitrage Window — undervalued FA panel (salary < 65% of market rate)
 
-### Wave 3 GM + Play (v21.0) — 8 features
-GM: Playbook Designer, 3-Way Trade Desk, Stadium Atmosphere meter, AI GM Voice on trade offers
-Play: P100 Defensive Mini-Game (Man/Zone/Blitz/Prevent), P101 Timeout Mgmt, P102 Replay Engine, P103 Injury Flash
+### Play Engine Bug Fixes (gridiron-gm-play)
+- **P1**: `_hurryPenalty` TDZ — moved `const` declaration above first use (was causing ReferenceError in strict mode)
+- **P2**: `_nlPumpEls` ghost UI — added cleanup in `_throwTo()` checkdown early-return path
+- **P3**: `_showNoHuddleOption()` auto-dismiss now correctly destroys all elements (bg + text + both mkBtn returns)
+- **P8**: Added centralized `_resetPlayFlags()` — called from `_resetFormation()` instead of 20+ scattered flag resets
 
-### Polish Pass + Wave 4 + Wave 5 (v22.0 / P104-P110)
-**Bug fixes:** startGame missing resets (stadiumAtm/playbook/arbModal/compareSlots), playbook wired into simGame (+1 score), FieldScene P100-P103 flags init, replay store cleared each play
-**Wave 4 Play (P104-P110):** KO return lane choice, 2-min drill spike, no-look pump fake, crossing route, strip-sack button, WR bubble screen, directional onside kick
-**Wave 5 GM:** Dynasty End Screen (every 5yr), Share Season CTA (copy tweet), analytics already live via VITE_ANALYTICS_URL
+### Play Engine Innovations
+- **I11**: Star player designation (OVR≥85) on big gains — `⭐` prefix + `🔥` on 20+ yard plays
+- **I12**: QB hot/cold streak system — 3 consec completions = 🔥 HOT (+8% compCh); 2 incompletions = ❄️ COLD (-5%)
+- **I13**: Disguise Coverage toggle in defensive play call — AI reads a random coverage instead of real call
+- **I17**: AI personality adaptation — desperate (down 10+ Q3/4) goes hurry-up/pass-heavy; conservative (up 10+) bleeds clock
+- **I18**: Post-game grade distribution summary (`A+×2 B×1 C×3`) before export notice in GameOverScene
+- **I19**: Contextual victory screen headers — RIVALRY WIN / CLUTCH VICTORY / SO CLOSE + weather/rival badges
 
 ---
 
 ## What is mid-flight
 
 Nothing. Both builds clean.
-- gridiron-gm: v22.0 — commit `9426f99`
-- gridiron-gm-play: P110 — commit `fc38a01`
+- gridiron-gm: v23.0 — commit `a4b91ed`
+- gridiron-gm-play: P116 — commit `d599afb`
 
 ---
 
@@ -35,20 +52,12 @@ Nothing. Both builds clean.
 
 - **OG Image** — manual: open `scripts/gen-og.html` in browser → download → save as `public/images/cover.png`
 - **Analytics endpoint** — set `VITE_ANALYTICS_URL=<your endpoint>` in `.env.local` then `npm run build`
-- **Wave 6 brainstorm** — run another audit pass or tackle the remaining backlog (see TASK_BOARD.md)
+- **Remaining agent-identified innovations** — agent mapped I14 (play-clock pressure escalation), I15 (trick play consequence memory), I16 (comeback tracking overlay), I20 (weather escalation in second half) — all locations identified, ready to implement
+- **Architecture pass** — GM scored 62/100; consider extracting modal helpers or custom hooks in a future refactor session
+- **Performance pass** — Play scored 65/100; looping timers (183 `addEvent` calls) not all stored; `_resetPlayFlags()` now centralizes UI cleanup which helps
 
 ---
 
-## Constraints
+## Session score
 
-- ALL changes ADDITIVE; single-file React; compact style; no external deps
-- Bridge keys `gm_roster_export` / `gm_game_result` locked
-- New state vars (v20-v22): `compareSlots, socialFeed, draftTicker, arbModal, ownerPersonality, playbook, stadiumAtm, tradeDeskOpen, dynastyEndOpen, shareModalOpen, shareText`
-- New FieldScene flags (P104-P110): `_returnLaneMod, _nlPumpBonus, _nlPumpEls, _stripBtnShown, _stripBtnEl, _rlTimer, _odTimer`
-- New PlayCallScene plays: `crossing_route`, `wr_bubble`
-
-## Read first next session
-
-1. `context/CURRENT_STATE.md`
-2. `context/TASK_BOARD.md`
-3. `context/LATEST_HANDOFF.md` (this file)
+**Productivity: 9/10** — Full audit response implemented: 10 GM innovations, 4 critical Play bugs fixed, 6 Play innovations. Both builds clean, all committed.
