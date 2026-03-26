@@ -217,6 +217,32 @@
 - [x] **v21 Play: Replay Engine (P102)** — REPLAY button after plays; ball tween from origin to result
 - [x] **v21 Play: Injury Flash (P103)** — red screen flash + cart tween on player injury
 
+## Done (Polish Pass — 2026-03-26)
+
+- [x] **Bug: startGame missing state resets** — added setStadiumAtm(50)/setPlaybook([])/setArbModal(null)/setCompareSlots([])
+- [x] **Bug: playbook had zero gameplay effect** — wired into simGame via _uPlan; +1 score for full 3-play book
+- [x] **Bug: FieldScene _defMiniGameUsed/replayStore not in create()** — added P100-P103 flag init block
+- [x] **Bug: replayStore/replayBtn leaking between plays** — cleared at presnap reset each play
+
+## Backlog — Wave 4: Play Expansion (P104–P110)
+
+- [ ] **P104: Special Teams — KO Return Lanes** — pre-kick MIDDLE/LEFT/RIGHT lane choice; speed modifier + block chance per lane
+- [ ] **P105: 2-Minute Drill Improvement** — SPIKE/SCRAMBLE/THROW decision tree; clock awareness coaching tips HUD
+- [ ] **P106: No-Look Pump Fake Pass** — tap pump then immediate THROW; CB commits early; +15% comp window
+- [ ] **P107: Red Zone Crossing Route** — TE/WR crossing pattern; CB pursuit; contested catch at back of endzone
+- [ ] **P108: Defensive Strip-Sack** — during pass rush STRIP! button at 0.8s; 20% forced fumble; else -2yd bonus
+- [ ] **P109: Screen Pass — Wide Receiver** — WR bubble screen; blocker tween; 3-button cut choice after catch
+- [ ] **P110: Onside Kick Improvement** — directional kick LEFT/RIGHT/MIDDLE; recovery % by lane + formation bonus
+
+## Backlog — Wave 5: GM Polish + Monetization
+
+- [ ] **v22 GM: Game Speed Selector** — settings in DEV tab; 1×/2×/3× simWk animation speed; persisted to localStorage
+- [ ] **v22 GM: Newsletter / Sharing CTA** — end-of-season modal; "Share your season" pre-filled tweet text; copy button
+- [ ] **v22 GM: Onboarding video tooltip overlays** — first-visit animated arrow tips on 4 key tabs (roster/draft/trade/play)
+- [ ] **v22 Analytics** — lightweight event ping on franchise_start / game_played / draft_pick (VITE_ANALYTICS_URL env)
+- [ ] **v22 OG Image** — run scripts/gen-og.html → download → public/images/cover.png (manual step)
+- [ ] **v22 GM: Dynasty End Screen** — after 5 seasons show franchise recap card with logo, record, titles, legacy score; share button
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local
