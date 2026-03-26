@@ -28,6 +28,24 @@
 
 - (none)
 
+## Done (v17.0 / P91-P95 — 2026-03-26)
+
+- [x] **v17 GM: Weekly Injury Report** — 🩺 button in game plan → modal (Out/Q/Probable)
+- [x] **v17 GM: Player Season Grade Dashboard** — `glGrade()` helper; shown in Stats tab + player modal
+- [x] **v17 GM: Young Core BUILD badge** — age≤24 && OVR≥75 → BUILD badge in PlayerTable
+- [x] **v17 GM: Scheme Transition Cost** — change OC/DC scheme costs 2SP + `_schemeTransWks=2` = −3 teamStr
+- [x] **v17 GM: Coordinator Poaching Risk** — 15% chance in newSeason (coord RTG≥80); retain 2SP or let go
+- [x] **v17 GM: Draft Trade Machine** — trade-up/trade-down buttons when user is on the clock
+- [x] **v17 GM: Clutch Performance Index** — clutch/trait players show ⚡ CLUTCH INDEX in player modal
+- [x] **v17 GM: Position Market Rate** — POS_MARKET const; shown in FA tab as rate table
+- [x] **v17 GM: Game Week Weather Preview** — nextGameWx set after simWk; shown in game plan
+- [x] **v17 GM: League Trade Activity** — enriched trade history (YOU / NEW badges, color-coded)
+- [x] **P91: Pass Rush Counter Move** — COUNTER button 700ms into pass rush; 55% break chance
+- [x] **P92: Read-Option Play** — KEEP vs PITCH choice at snap; added to PlayCallScene
+- [x] **P93: Second Read Toggle** — 👁 2ND READ button during pass; swaps WR1/WR2 targets
+- [x] **P94: Drive Summary Card** — 2-sec overlay on drive end: plays/yards/result
+- [x] **P95: Field Goal Ice** — 8% chance opponent ices kicker; 2.2s delay + re-kick
+
 - [x] **v6.1 GM: Fan Satisfaction Meter** — `fanSat` 0-100; SP rate modifier; color bar in standings/schedule
 - [x] **v6.1 GM: Trade Deadline AI Buy/Sell Mode** — wk 10-11 buyer/seller; banner + tags in trade tab
 - [x] **v6.1 GM: Scouting Budget Allocation** — 5SP across speed/scheme/injury/combine; accuracy multipliers
