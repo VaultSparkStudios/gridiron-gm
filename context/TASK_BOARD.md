@@ -325,7 +325,47 @@
 - [x] **I77** — Veteran farewell event — special card for OVR 80+ retirees + fanSat boost for OVR 85+
 - [x] **I80** — Draft scouting report cards — top 5 prospect visual card strip in draft tab
 
+## Done (v27.0 — 2026-03-26 — Backfill + New Wave)
+
+- [x] **I27** — Turnover celebration flash — gold "TURNOVER!" 800ms pulse on INT/fumble
+- [x] **I33** — Pocket collapse tween — each OL dot tweens 25% toward QB when beaten (220ms)
+- [x] **I34** — Blitz telegraph — first 2 pocket dots nudge 15px forward pre-snap on blitz call
+- [x] **I35** — First-down conversion flash — bright green LOS line overlay 400ms on conversion
+- [x] **I37** — AI red zone tendency — yardLine≥90: passCh -= 0.25 (forces ~65%+ run rate)
+- [x] **I38** — Field position penalty — drives starting at yardLine≤10 get -4% compCh
+- [x] **I42** — Trade value tag (TV formula) in player modal
+- [x] **I43** — Conference power index (AFC/NFC top 3) in standings
+- [x] **I45** — Bye week strategy panel (REST/FOCUS)
+- [x] **I50** — Pre-draft rumor mill (3 AI team position buzz cards)
+- [x] **MLE signing** — Mid-Level Exception FA once/season, max $6M/yr, LOYAL discount
+- [x] **Player loyalty** — p.snaps tracked weekly; LOYAL badge after 48 snaps; TV discount
+- [x] **Snap count tracker** — p.snaps displayed in player modal (⚡ X snaps)
+- [x] **PS promotion race** — wk10 top-2 PS players compete; winner promoted free
+- [x] **Post-game locker room speech modal** — 3 choices (Inspire/Challenge/Calm) after user game
+- [x] **P120** — Extended jump route — LATE JUMP 2nd window 300ms after first closes
+- [x] **P121** — Pocket shuffle step — ↔ SHUFFLE button during pass_wait; QB sidesteps ±8px
+- [x] **P122** — Personal foul — 8% chance on AI run >8yds; +15yds auto 1st down; flag visual
+- [x] **P123** — WR double move SHAKE! — button during pass_wait; +15% comp on next throw
+- [x] **P124** — Fresh DL sub — once/half pre-snap button; +12% AI run speed
+- [x] **P125** — OT defeat card — overlay on overtime loss in GameOverScene
+
+## Done (v28.0 — 2026-03-26 — Audit + Engagement Polish)
+
+- [x] **I-A: Analytics funnel** — live_game_start / live_game_finish / champion events wired
+- [x] **I-B: Share Card modal** — visual team-branded W-L + champion badge + copyable share string
+- [x] **I-C: Onboarding Intro modal** — 3-tip first-launch wizard (localStorage gm_intro_shown)
+- [x] **I-D: ErrorBoundary** — main.jsx crash recovery UI; localStorage save survives
+- [x] **BRAIN.md** — stale v3.2 reference corrected to v27.0/v28.0
+- [x] **OPEN_QUESTIONS** — all 4 questions resolved and closed
+- [x] **DECISIONS.md** — 4 new architectural decisions appended
+
 ## Backlog — Infrastructure
 
-- [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local
-- [ ] Generate PNG OG image — open scripts/gen-og.html → download → public/images/cover.png
+- [ ] **[SIL] Generate PNG OG image** — open scripts/gen-og.html in browser → download cover.png → save to public/images/ → commit *(HIGHEST PRIORITY — social cards are 404)*
+- [ ] **[SIL] Live stat write-back** — wire liveStats from live sim into p.ss season stats at useEffect([liveDone])
+- [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local → deploy
+
+## Backlog — Gameplay
+
+- [ ] Season summary card — at championship closeout, auto-show full-season stat leaders (natural share moment)
+- [ ] Snap-count milestone toast — toast when p.snaps hits 48 (LOYAL); reinforces mechanic discovery
