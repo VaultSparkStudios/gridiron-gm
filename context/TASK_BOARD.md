@@ -186,6 +186,37 @@
 - [x] **P89: Blitz Package** — defensive 🚀 BLITZ btn; +15% INT chance on AI pass; _blitzPackage flag
 - [x] **PlayCallScene layout** — panelH 310→380, btnH 46→38, gap 5→3; fits 14 plays (6 run, 8 pass)
 
+## Done (v19.0 — 2026-03-26) — Audit Priority Fixes
+
+- [x] **v19 GM: Onboarding Checklist** — preseason wk0 panel; 4 steps auto-detect; dismiss button
+- [x] **v19 GM: Auto-Save Indicator** — 💾 saves to localStorage autosave key + `lastSaved` timestamp shown
+- [x] **v19 GM: Mobile Scroll** — `overflow-y:auto` on body + flexWrap tabs + min-height on #root
+- [x] **v19 GM: Text Play-by-Play Log** — drive log generated per simWk user game; `simGameLog{}` state; 📋 Log button in schedule
+- [x] **v19 GM: Season History Browser** — `seasonHistory[]` state archived in newSeason; shown in log tab as Season Archive
+- [x] **v19 GM: Consequence Memory Press Conf** — `ownerPromises[]` state; Q7 references prior promises + winning/losing context
+
+## Backlog — Wave 2 (from Audit Innovation List)
+
+- [ ] **v20 GM: Player Comparison Tool** — side-by-side 2-player stat modal from PlayerTable; any two players
+- [ ] **v20 GM: Franchise Legacy Score** — single 0-1000 score from wins/champs/playoff apps/gmRep; shown in log tab
+- [ ] **v20 GM: Draft Night Live Ticker** — scrolling AI picks ticker at bottom of draft tab during draft
+- [ ] **v20 GM: Social Media Feed (Mock)** — 8-10 generated fan/media posts per week in log tab
+- [ ] **v20 GM: Player Backstory Generator** — 2-sentence auto-bio on draft prospects using city/trait arrays
+- [ ] **v20 GM: Salary Arbitration Panel** — 3-round contract dispute when mid-season extension declined; mediator splits
+- [ ] **v20 GM: Ownership Pressure Personality** — owner gets personality (patient/demanding/meddling) at game start; impacts hiring/firing
+- [ ] **v20 GM: Franchise Share Code** — 6-char base64 encode of dynasty stats; decode/display on splash screen
+
+## Backlog — Wave 3 (Big Swings)
+
+- [ ] **v21 GM: Playbook Designer** — pick 3 route combos in coaching tab; becomes live Phaser play call options
+- [ ] **v21 GM: Multi-Team Trade Desk** — 3-way trade UI; pending offer queue; AI logic
+- [ ] **v21 GM: Fan Cam / Stadium Atmosphere** — separate `stadiumAtmosphere` 0-100 affecting FA willingness
+- [ ] **v21 GM: AI GM Personality Voice** — each AI team's GM has name + message style on trade offers
+- [ ] **v21 Play: Defensive Mini-Game** — user calls Man/Zone/Blitz/Prevent before AI offensive drives
+- [ ] **v21 Play: Timeout Management** — explicit TIMEOUT button (3/half); stops clock; triggers 4th-down modal
+- [ ] **v21 Play: Replay Engine** — REPLAY button after big plays; re-animates last 3s via stored trail pts
+- [ ] **v21 Play: Injury Replay** — red flash + cart animation when player injured in live game
+
 ## Backlog — Infrastructure
 
 - [ ] Wire analytics endpoint — set VITE_ANALYTICS_URL in .env.local
