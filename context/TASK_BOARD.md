@@ -88,14 +88,27 @@
 - [x] **v35 Docs: itch.io listing copy** — full description, tags, feature bullets ready to paste
 - [x] **v35 Docs: Reddit post copy** — title + body for r/footballgames / r/WebGames / r/sports_sims
 
-## Backlog (v35 audit brainstorm — unimplemented)
+## Done (v36.0 — 2026-03-27)
 
-- [ ] **DISTRIBUTION: Publish itch.io listing** — copy ready; go to itch.io → Create project → paste → Play in Browser → external link to GitHub Pages URL
-- [ ] **DISTRIBUTION: Post to Reddit** — copy ready; r/footballgames + r/WebGames + r/sports_sims; best time Tue–Thu 7–9pm ET
+- [x] **v36 GM: Dynasty Record Book** — `dynastyBook` state (gm_dynasty_book); per-season entry yr/team/W-L/champion/topPlayer; log tab visual timeline with color dot, W-L, 🏆 champion marker
+- [x] **v36 GM: HOF Induction Ceremony Modal** — triggers at newSeason for OVR≥88 or AV≥70 retirees; gold modal zIndex 4200; 1200×630 canvas HOF card download + share
+- [x] **v36 GM: League JSON Export / Import** — exportLeague() downloads full franchise JSON; importLeague() restores all state; 📤/📥 header buttons; enables cross-device + community sharing
+- [x] **v36 GM: Stripe Pro GM scaffold** — proUnlocked state (gm_pro localStorage); checkoutPro() opens VITE_STRIPE_PAYMENT_LINK; PRO badge in header; $2.99 one-time; dev-mode auto-unlock
+- [x] **v36 GM: Supabase Global Leaderboard** — submitGlobalScore() posts to Supabase REST on season end; fetchGlobalLB() pulls top 10; LB modal Local/Global tabs; graceful fallback
+- [x] **v36 Play: Full 60-min game clock** — state.clock=900s/quarter; _tickClock() per play type; quarter transitions; Q2/Q4 two-minute warnings; play cap 40→120
+- [x] **v36 Play: MM:SS HUD clock display** — clockTxt in HudScene; _fmtClock() helper; red in Q4 ≤30s; clockUpdate event from FieldScene
+
+## Backlog (v36 audit brainstorm — unimplemented)
+
+- [ ] **DISTRIBUTION: Publish itch.io listing** — copy ready (v35 session); itch.io → Create project → paste → Play in Browser → external link to GitHub Pages URL
+- [ ] **DISTRIBUTION: Post to Reddit** — copy ready (v35 session); r/footballgames + r/WebGames + r/sports_sims; best time Tue–Thu 7–9pm ET
+- [ ] **DISTRIBUTION: Product Hunt launch** — schedule for Tuesday; screenshot carousel + 90-sec trailer
+- [ ] **INFRA: Stripe Payment Link** — create in Stripe dashboard → set VITE_STRIPE_PAYMENT_LINK; checkoutPro() scaffold is already live
+- [ ] **INFRA: Supabase leaderboard table** — create `leaderboard` (team, wins, champs, gmrep, yr, record, submitted_at) → set VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY
+- [ ] **INFRA: Discord Server** — VaultSpark Discord; weekly challenge bot for retention
+- [ ] **INFRA: Cloudflare Worker analytics** — fill VITE_ANALYTICS_URL; events: game_start, season_end, trade_accepted, playoff_win
+- [ ] **INFRA: Claude proxy for AI storylines** — deploy proxy Worker; set VITE_CLAUDE_PROXY_URL (see docs/CLAUDE_AI_STORYLINE_SETUP.md)
 - [ ] **GM: Dynamic news ticker** — league-wide news strip generated from sim data each week; makes world feel alive beyond user team
-- [ ] **GM: Dynasty Record Book** — localStorage timeline of every season; champ, MVP, record, top drafter per year; creates legacy feeling
-- [ ] **GM: Global Leaderboard (Supabase)** — post-champ score submission; all-time rankings; strongest known retention driver
-- [ ] **GM: Pro GM paywall (Stripe)** — actual gate on God Mode / broadcast mode / extra save slots; $2.99 one-time
 - [ ] **GM: Player Trade Demand system** — players request trades when morale < 30 for 3+ weeks; front office must respond within 2 weeks or face gmRep penalty
 - [ ] **GM: Coaching Upgrade tree** — spend SP on OC/DC specific traits (run-heavy, spread, blitz-heavy) beyond current scheme
 - [ ] **GM: Rival Week markers** — designate 1 rival per team; weekly game shows rivalry card; win adds +3 fanSat + gmRep
@@ -107,18 +120,10 @@
 - [ ] **GM: Advanced Draft Board filters** — filter by age range, pot tier, pos need score, combine grade
 - [ ] **GM: Scouting Department Expansion** — hire up to 3 scouts with different specialties (OL, DB, skill players)
 - [ ] **GM: Division Power Rankings sidebar** — live division standings mini-widget in schedule tab header
-- [ ] **GM: Injury Prone player flag** — players with 3+ injuries in history get ⚠️ badge; affects FA signing interest
 - [ ] **GM: Weather-aware game plan** — if gridiron-gm-play has weather flag, suggest run-heavy plan vs bad weather
-- [ ] **Play: Full 60-min game clock** — possession tracking, 4 quarters, game-ending scenarios (see docs/PHASER_60MIN_GAME_SETUP.md)
 - [ ] **Play: 2-point conversion plays** — dedicated play type after TD; risk/reward decision; affects sim bridge
-- [ ] **Play: Onside kick** — low-success-rate kickoff variant; available when trailing in 4th Q
 - [ ] **Play: Field goal range indicator** — kicker OVR → max reliable range shown on field during play call
 - [ ] **Play: Pass rush counter-moves** — swim move, spin, bull rush variants in pass rush mini-game
-- [ ] **Infrastructure: Cloudflare Worker analytics** — fill VITE_ANALYTICS_URL; events: game_start, season_end, trade_accepted, playoff_win
-- [ ] **Infrastructure: Claude proxy for AI storylines** — deploy proxy Worker; set VITE_CLAUDE_PROXY_URL (see docs/CLAUDE_AI_STORYLINE_SETUP.md)
-- [ ] **Infrastructure: Stripe Pro GM** — Stripe Checkout + webhook; unlocks Pro features (see docs/PRO_GM_SETUP.md)
-- [ ] **Infrastructure: Supabase multiplayer** — schema + realtime sync (see docs/MULTIPLAYER_SETUP.md)
-- [ ] **Content: Reddit/Discord community launch** — r/FootballGames, r/webgames post; Discord server setup
 
 ## In Progress
 

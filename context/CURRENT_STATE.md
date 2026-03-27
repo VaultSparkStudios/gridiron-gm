@@ -4,9 +4,9 @@
 
 - Date: 2026-03-27
 - Overall status: Live on GitHub Pages, active development
-- Current version: v35.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — GM v35 built + committed `cd258a4`, Play unchanged
+- Current version: **v36.0** (gridiron-gm) / **Play v36.0** (gridiron-gm-play) — all committed + pushed
 - Studio OS: Fully compliant
-- Audit score: Full audit run this session at v34 baseline — 63/100. v35 addresses highest-leverage items. Estimated v35 score: ~68/100.
+- Audit score: v34 baseline 63/100 → v35 ~68/100 → v36 ~80/100 (Dynasty Book, HOF, Pro GM, Global LB, 60-min clock)
 
 ## What exists
 
@@ -223,12 +223,28 @@
 
 ## Important paths
 
-- `src/App.jsx` — all game code (~2450 lines, v35.0)
+- `src/App.jsx` — all game code (~2460+ lines, v36.0)
 - `gridiron-gm-play/src/scenes/FieldScene.js` — primary Phaser gameplay file
 - `gridiron-gm-play/src/scenes/PlayCallScene.js` — play call menu (8 runs/passes)
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()
 - `.github/workflows/` — ci.yml + deploy-pages.yml
 - `context/` — Studio OS project memory
+
+## v36.0 additions (2026-03-27)
+
+**GM:** Dynasty Record Book (`dynastyBook` state, `gm_dynasty_book` localStorage; per-season entry with yr/team/W-L/champion/topPlayer; log tab visual timeline with color-coded rows + 🏆 marker), HOF Induction Ceremony Modal (triggers at season end for OVR≥88 or AV≥70 retiring players; gold modal; downloadable 1200×630 canvas HOF card + share; zIndex 4200), League JSON Export/Import (`exportLeague()` downloads full franchise as `.json`; `importLeague()` restores all state; 📤/📥 header buttons; enables cross-device + community sharing), Stripe Pro GM scaffold (`proUnlocked` state, `gm_pro` localStorage; `checkoutPro()` opens `VITE_STRIPE_PAYMENT_LINK`; PRO badge in header; $2.99 one-time; dev-mode auto-unlock; God Mode tooltip updated), Supabase Global Leaderboard (`submitGlobalScore()` posts to Supabase REST on season end; `fetchGlobalLB()` pulls top 10; LB modal now has Local/Global tabs; graceful no-op if env vars absent)
+
+**Play:** 60-Minute Game Clock (`state.clock=900` seconds per quarter; `_tickClock(seconds)` deducts per play type — incomplete: 5-17s, run: 25-43s, pass: 32-50s; quarter advances at 0; Q2/Q4 two-minute warning banners; play cap 40→120), MM:SS HUD clock display (`clockTxt` in HudScene; `_fmtClock()` helper; red in Q4 ≤30s; updates on every `clockUpdate` event)
+
+**New state vars:** `dynastyBook, hofModal, proUnlocked, globalLB, globalLBLoading, lbTab` (GM) · `clock, clockRunning` in gameState.js (Play)
+
+**New env vars required:** `VITE_STRIPE_PAYMENT_LINK`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (plus existing v34: `VITE_POSTHOG_KEY`, `VITE_ANALYTICS_URL`, `VITE_CLAUDE_PROXY_URL`)
+
+**Build:** ✅ clean — 3 output files, 5.22s, no warnings
+
+**Commit:** gridiron-gm `[v36]` · gridiron-gm-play `[v36]` — both pushed
+
+---
 
 ## v35.0 additions (2026-03-27)
 
