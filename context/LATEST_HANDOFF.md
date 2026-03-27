@@ -1,10 +1,20 @@
 # Latest Handoff
 
-Last updated: 2026-03-27 (session — v36.0)
+Last updated: 2026-03-27 (session — v37.1)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v35.0 → v36.0)
+## What was completed this session (v37.0 → v37.1)
+
+### Bug fix: New game stuck after selecting team
+
+`startGame` was missing 13 state resets. When a user played a game, exited to menu (via fire modal "Exit to Menu"), and started a new game in the same session, stale state from the prior game leaked in. Most visibly: `showSeasonSummary` / `paradeOpen` (championship modals) and `dynastyShareOpen` (v37 toast) could remain `true`, covering the screen. `draftIdx` was never reset, which would corrupt the next draft.
+
+**Fixed:** Added to `startGame` — `setDraftIdx(0)`, `setDraftActive(false)`, `setDraftPaused(false)`, `setDraftTimer(120)`, `setDraftClockActive(false)`, `setPb(null)`, `setChamps([])`, `setSeasonHistory([])`, `setShowSeasonSummary(false)`, `setParadeOpen(false)`, `setDynastyShareOpen(false)`, `setDraftAnalyst(null)`, `setDraftAnalystLoading(false)`, `setAchievements([])`.
+
+---
+
+## What was completed last session (v35.0 → v36.0)
 
 ### Full Audit at v34 Baseline + Implement All High-Leverage + High-Ceiling Items
 

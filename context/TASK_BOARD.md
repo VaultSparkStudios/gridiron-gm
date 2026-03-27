@@ -15,6 +15,11 @@
 - [ ] **Real Roster JSON completion** [MANUAL/DATA] — fill 32 teams × 15 key players in public/rosters/nfl-2025.json; score +3pts real rosters
 - [ ] **Supabase Global LB setup** [MANUAL] — create leaderboard table, set env vars; score +2pts engagement
 
+### SIL Commitments (from self-improvement loop)
+
+- [ ] **[SIL] startGame reset manifest** — add comment block in startGame listing every state that must be reset; prevents future leaks; effort: 15min
+- [ ] **[SIL] New-game smoke test** — Playwright or manual checklist: load → NEW GAME → pick team → assert phase=main, no blocking modal; effort: 1hr
+
 ### Backlog (scored — ordered by ROI)
 
 - [ ] **Dynamic League News Ticker** — real-time league events generated from state each wk sim; score +2pts UX; effort: 3hr
@@ -44,6 +49,8 @@
 ---
 
 ## Done (recent)
+
+- [x] **v37.1 bug fix: new game stuck after team select** ✅ 2026-03-27 — added 13 missing state resets to startGame; stale draftIdx/showSeasonSummary/paradeOpen/dynastyShareOpen leaked from prior session
 
 - [x] v3.2–v5.6: Full franchise sim + Phaser P1–P27, all core systems
 - [x] GM: Player morale events, injury severity tiers

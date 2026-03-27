@@ -1,9 +1,9 @@
 <!-- rolling-status-start -->
 ## Rolling Status (auto-updated each closeout)
-Sparkline (last 5 totals): —
-3-session avg: Dev — | Align — | Momentum — | Engage — | Process —
-Avg total: —/50  |  Velocity trend: —  |  Debt: →
-Last session: — | Session 0 | Total: —/50 | Velocity: —
+Sparkline (last 5 totals): 5 → 38 → 40
+3-session avg: Dev 7 | Align 8 | Momentum 8 | Engage 6 | Process 7
+Avg total: 28/50  |  Velocity trend: ↑  |  Debt: → (new game reset bug was latent)
+Last session: 2026-03-27 | Session v37.1 | Total: 40/50 | Velocity: ↑
 ─────────────────────────────────────────────────────────────────────
 <!-- rolling-status-end -->
 
@@ -79,6 +79,38 @@ Rate 0–10 per category at each closeout:
 
 - [SIL] Fill out all context files with project-specific content
 - [SIL] Define first concrete milestone for Momentum tracking
+
+---
+
+### 2026-03-27 — v37.1 bug fix session
+
+**Scores**
+
+| Category | Score | vs Last | Notes |
+|---|---|---|---|
+| Dev Health | 8 | ↑ | Build clean, bug found + fixed; startGame missing 13 resets is now resolved |
+| Creative Alignment | 8 | — | v37 features align with SOUL; fix is invisible polish |
+| Momentum | 8 | ↑ | Quick diagnosis + fix + deploy in one session |
+| Engagement | 6 | — | No new features; bug was blocking new game for returning users |
+| Process Quality | 10 | ↑ | Full closeout: code fix, all context files updated, memory updated |
+| **Total** | **40 / 50** | **↑ from 5** | |
+
+**Top win:** Diagnosed and fixed a critical mid-session state leak bug in `startGame` — 13 missing resets meant stale championship/draft state from a prior game blocked new game start.
+
+**Top gap:** No automated tests exist — this class of bug (missing state reset) is invisible until a user reports it. Manual test coverage for the new-game flow would catch this earlier.
+
+**Innovative Solutions Brainstorm**
+
+1. **State reset audit helper** — add a `dev` tab function that lists all state vars not reset by `startGame`; run at closeout to surface leaks
+2. **New game smoke test** — minimal Playwright test: load → NEW GAME → click team → assert phase==="main" and no blocking modal
+3. **Session context toast** — after new game starts, briefly show "Fresh start · 2026 season" to confirm clean state to user
+4. **startGame reset manifest** — comment block in code listing every state that MUST be reset; enforcement point for future additions
+5. **Error boundary recovery** — if phase==="main" but teams.length===0, auto-redirect to splash with a toast rather than a blank/stuck view
+
+**Committed to TASK_BOARD this session**
+
+- [SIL] Add startGame reset manifest comment as enforcement point for new state additions
+- [SIL] Smoke test (Playwright or manual checklist) for new-game flow
 
 ---
 

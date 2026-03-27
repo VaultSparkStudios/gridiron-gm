@@ -4,9 +4,9 @@
 
 - Date: 2026-03-27
 - Overall status: Live on GitHub Pages, active development
-- Current version: **v37.0** (gridiron-gm) / **Play v37.0** (gridiron-gm-play) — all committed + pushed
+- Current version: **v37.1** (gridiron-gm) / **Play v37.0** (gridiron-gm-play) — all committed + pushed
 - Studio OS: Fully compliant
-- Audit score: v34 baseline 63/100 → v36 ~80/100 → v37 ~86/100 (PostHog funnel, Dynasty Share, Season Pass, AI Draft Partner, Formations)
+- Audit score: v34 baseline 63/100 → v36 ~80/100 → v37 ~86/100 → v37.1 ~87/100 (new game bug fix)
 
 ## What exists
 
