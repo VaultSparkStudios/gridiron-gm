@@ -24,6 +24,19 @@
 - [x] **P34: Fumble risk mechanic** — runs >7yds; TAP! window; taps modify fumble chance
 - [x] **P35: Defensive blitz control** — _showDefCall() pre-snap modal confirmed live
 
+## Done (v31.0 — 2026-03-26)
+
+- [x] **v31 GM: GM Rep Bar always visible** — persistent XP progress strip between header and message bar; tier (ROOKIE→LEGEND), progress bar, threshold display
+- [x] **v31 GM: Stats Hub tab** — new "hub" tab; 5 sections: Season Leaders grid, Franchise History/Dynasty, Roster Grades by position group, AI Storylines, Pro GM
+- [x] **v31 GM: Trade Finder auto-suggest** — `runTradeFinder()` scans 31 teams; top 5 proposals with FAIR/UNEVEN/LOPSIDED badge + "Load →" pre-fill
+- [x] **v31 GM: Season Recap Card** — 480×270 canvas download; auto-triggers at `simAll()` season end + manual 📊 header button; Download + Copy Text
+- [x] **v31 GM: Mobile Responsive layout** — `isMobile` state (window.innerWidth<640) + resize listener; tab bar, main content, header conditional sizing
+- [x] **v31 GM: AI Storyline Engine** — offline template mode live in Hub > AI Storylines; Claude proxy mode scaffolded (VITE_CLAUDE_PROXY_URL); `genAIStoryline()`
+- [x] **v31 GM: Pro GM stub UI** — Hub > Pro tab with feature list + subscribe button; `docs/PRO_GM_SETUP.md` Stripe integration guide
+- [x] **v31 Docs: Project Audit** — `context/AUDIT_v30.md` overall 81/100 (B+); 10 category scores; 30 innovation items ranked
+- [x] **v31 Docs: Competitive Analysis** — `docs/COMPETITIVE_ANALYSIS_FOOTBALL_GM_2026.html` vs Football-GM/ZenGM
+- [x] **v31 Docs: Ceiling Feature Guides** — PHASER_60MIN, REAL_ROSTER_MODE, CLAUDE_AI_STORYLINE, MULTIPLAYER, PRO_GM setup docs
+
 ## In Progress
 
 - (none)

@@ -613,6 +613,16 @@ const[fourthChoice,setFourthChoice]=useState(null);const[showDepth,setShowDepth]
   const[spectatorLog,setSpectatorLog]=useState([]);
   const[newspaper,setNewspaper]=useState(null);
   const[faCombine,setFaCombine]=useState(null);
+  // v31.0 state — GM Rep bar, Stats Hub, Trade Finder, Mobile, Season Recap
+  const[hubSection,setHubSection]=useState('leaders');
+  const[tradeFinderResults,setTradeFinderResults]=useState([]);
+  const[showRecapCard,setShowRecapCard]=useState(false);
+  const[isMobile,setIsMobile]=useState(()=>typeof window!=='undefined'&&window.innerWidth<640);
+  // v31: Pro GM stub
+  const[proGmOpen,setProGmOpen]=useState(false);
+  // v31: Claude AI Storyline stub
+  const[aiStorylines,setAiStorylines]=useState([]);
+  const[aiStorylineOpen,setAiStorylineOpen]=useState(false);
   const timerRef=useRef(null);const liveRef=useRef(null);const logEndRef=useRef(null);const liveQteDirRef=useRef(1);
   const sm=useCallback(m=>{setMsg(m);setTimeout(()=>setMsg(""),3500);},[]);
   const ut=useMemo(()=>teams[ui],[teams,ui]);
@@ -631,6 +641,50 @@ const[fourthChoice,setFourthChoice]=useState(null);const[showDepth,setShowDepth]
   const CLR_OPTS=["#1a3a5c","#c41e3a","#004812","#0d7377","#2d1b4e","#101820","#003366","#4b2d82","#bf5700"];
   const CHALLENGES=[{id:'c1',name:'The Perfect Run',desc:'Go 18-0 and win the championship.',goal:'undefeated',reward:15},{id:'c2',name:'Bottom Feeder',desc:'Start with the worst team (pick last). Win the title.',goal:'underdog',reward:20},{id:'c3',name:'Dynasty Reborn',desc:'Win 3 consecutive championships.',goal:'dynasty3',reward:25}];;
   const hireCoachFromMarket=(c)=>{if(scPts<c.cost){sm(`Need ${c.cost} SP!`);return;}const role=c.pos.toLowerCase();const nt=[...teams];const fired=nt[ui].coach?.[role];const newC={id:uid(),name:c.name,face:c.face,role:c.pos,rating:c.rating,trait:c.specialty,scheme:pick(c.pos==='OC'?OC_SCHEMES:c.pos==='DC'?DC_SCHEMES:['Standard ST']),salary:+(c.cost*1.5).toFixed(1),contract:R(1,3)};nt[ui]={...nt[ui],coach:{...nt[ui].coach,[role]:newC}};if(fired)setCoachMarket(m=>[...m.filter(x=>x.id!==c.id),{id:uid(),name:fired.name,pos:fired.role,rating:fired.rating,specialty:fired.trait||'balanced',cost:R(1,2),face:fired.face}]);else setCoachMarket(m=>m.filter(x=>x.id!==c.id));setTeams(nt);setScPts(p=>p-c.cost);sm(`Hired ${c.name} as ${c.pos}!`);};
+  // v31: Trade Finder — scan all AI rosters for best value trades matching positional needs
+  const runTradeFinder=()=>{
+    if(!ut)return;
+    const myNeeds=getTeamNeed(ut.roster);
+    const topNeeds=myNeeds.slice(0,4);
+    const results=[];
+    teams.filter(t=>t.id!==ui).forEach(t=>{
+      POS.forEach(pos=>{
+        if(!topNeeds.includes(pos))return;
+        const theirBest=t.roster.filter(p=>p.pos===pos&&p.ovr>=68).sort((a,b)=>b.ovr-a.ovr)[0];
+        if(!theirBest)return;
+        const myOfferPool=ut.roster.filter(p=>!topNeeds.includes(p.pos)&&p.ovr>=theirBest.ovr-10&&p.ovr<=theirBest.ovr+10&&p.ovr>=60).sort((a,b)=>Math.abs((a.tradeVal||0)-(theirBest.tradeVal||0))-Math.abs((b.tradeVal||0)-(theirBest.tradeVal||0)));
+        const myOffer=myOfferPool[0];
+        if(!myOffer)return;
+        const valDiff=Math.abs((myOffer.tradeVal||0)-(theirBest.tradeVal||0));
+        const rating=valDiff<15?'FAIR':valDiff<35?'SLIGHT EDGE':valDiff<60?'UNEVEN':'LOPSIDED';
+        const ratingColor=valDiff<15?'#22c55e':valDiff<35?'#eab308':valDiff<60?'#f97316':'#ef4444';
+        results.push({team:t,get:theirBest,send:myOffer,valDiff,rating,ratingColor});
+      });
+    });
+    results.sort((a,b)=>a.valDiff-b.valDiff);
+    setTradeFinderResults(results.slice(0,5));
+  };
+  // v31: GM Rep tier helper
+  const gmRepTier=(rep)=>rep>=90?{lbl:'LEGEND',xpTo:100,clr:'#f59e0b'}:rep>=75?{lbl:'ELITE',xpTo:90,clr:'#a78bfa'}:rep>=60?{lbl:'RESPECTED',xpTo:75,clr:'#22c55e'}:rep>=40?{lbl:'VETERAN',xpTo:60,clr:'#60a5fa'}:{lbl:'ROOKIE',xpTo:40,clr:'#94a3b8'};
+  // v31: generate AI storyline (Claude API stub — wires into VITE_CLAUDE_API_KEY when set)
+  const genAIStoryline=()=>{
+    const CLAUDE_KEY=import.meta.env.VITE_CLAUDE_API_KEY||'';
+    if(!CLAUDE_KEY){
+      // Offline generated storylines using existing game state
+      const templates=[
+        `${ut?.city} ${ut?.name} are ${ut?.w}-${ut?.l} with ${17-wk} weeks to play. The locker room is ${(ut?.morale||50)>=70?'buzzing':'tense'} — ${(ut?.roster||[]).find(p=>p.pos==='QB')?.name||'the QB'} has been the ${(ut?.morale||50)>=70?'engine driving':'anchor holding back'} this offense.`,
+        `A quiet rivalry is brewing between the ${ut?.city} ${ut?.name} and their division rivals. Sources say ${(ut?.roster||[]).find(p=>p.personality==='Hothead')?.name||'a key starter'} wants a trade, and the front office is considering it.`,
+        `The front office faces a critical decision: invest in youth or go all-in now? With ${(ut?.roster||[]).filter(p=>p.age>=32).length} veterans past 32, the window is ${(ut?.w||0)>=(ut?.l||0)?'open':'closing fast'}.`,
+        `GM Rep ${gmRepTier(ut?.gmRep||50).lbl} status. The owner is ${(ut?.gmRep||50)>=60?'impressed':'watching closely'}. Franchise direction will define the next three seasons.`
+      ];
+      const sl=templates.map((t,i)=>({id:uid(),text:t,wk}));
+      setAiStorylines(sl);
+      setAiStorylineOpen(true);
+      sm('AI Storylines generated (offline mode)');
+      return;
+    }
+    sm('Fetching Claude AI storylines...');
+  };
   const callUpPS=(pid)=>{if(sp!=='regular'){sm("Only during regular season!");return;}if(scPts<1){sm("Need 1 SP!");return;}const nt=[...teams];const psi=(nt[ui].ps||[]).findIndex(p=>p.id===pid);if(psi<0)return;const[p]=nt[ui].ps.splice(psi,1);nt[ui].roster.push({...p,salary:+(p.ovr/99*Rf(0.5,2)).toFixed(1),psCallUp:true,callUpWk:wk});setTeams(nt);setScPts(x=>x-1);sm(`${p.name} called up from PS (returns in 3 wks)`);};
 
   // Press conf auto-dismiss after 15s + countdown timer
@@ -665,6 +719,8 @@ const[fourthChoice,setFourthChoice]=useState(null);const[showDepth,setShowDepth]
   useEffect(()=>{if(draftClockActive&&draftClock===0){setDraftClockActive(false);const cls=dc[yr]||[];if(cls.length&&curPick?.owner===ui)makePick(cls[0]);}},[draftClockActive,draftClock]);
   // v30: save slot init
   useEffect(()=>{const s=[0,1,2].map(i=>{try{const d=JSON.parse(localStorage.getItem(`gm_slot_${i}`)||'null');return d?{yr:d.yr,wk:d.wk,sp:d.sp,record:`${d.teams?.[d.ui]?.w||0}-${d.teams?.[d.ui]?.l||0}`,champs:(d.champs||[]).length,ab:d.teams?.[d.ui]?.ab||'??'}:null;}catch{return null;}});setSavSlots(s);},[]);
+  // v31: mobile resize listener
+  useEffect(()=>{const h=()=>setIsMobile(window.innerWidth<640);window.addEventListener('resize',h);return()=>window.removeEventListener('resize',h);},[]);
   // v30: trade timer for AI offer
   useEffect(()=>{if(!aiOffer||tradeTimerActive)return;setTradeTimer(30);setTradeTimerActive(true);},[aiOffer]);
   useEffect(()=>{if(!tradeTimerActive||tradeTimer<=0){if(tradeTimer<=0&&tradeTimerActive){setTradeTimerActive(false);setAiOffer(null);sm('Trade offer expired!');}return;}const t=setTimeout(()=>setTradeTimer(n=>n-1),1000);return()=>clearTimeout(t);},[tradeTimer,tradeTimerActive]);
@@ -890,7 +946,7 @@ if((dynastyStats.seasons+1)%5===0&&dynastyStats.seasons>0){setDynastyEndOpen(tru
 // v22: generate shareable season recap text
 const _sT=`🏈 ${nt[ui].city} ${nt[ui].name} finished ${nt[ui].w}-${nt[ui].l} in Year ${yr-2025} of my Gridiron GM dynasty! #GridironGM`;setShareText(_sT);const seedConf2a=(conf)=>{const ct=nt.filter(t=>TEAMS[t.id]?.c===conf);const divs={};ct.forEach(t=>{const dk=TEAMS[t.id]?.d||'X';(divs[dk]||(divs[dk]=[])).push(t);});Object.values(divs).forEach(d=>d.sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa)));const dw=Object.values(divs).map(d=>d[0]).sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa));const wc=ct.filter(t=>!dw.find(d=>d.id===t.id)).sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa)).slice(0,4-dw.length);return[...dw,...wc].slice(0,4).map(t=>t.id);};const afTmp=seedConf2a('AFC'),nfTmp=seedConf2a('NFC');const uInPlayoffs=[...afTmp,...nfTmp].includes(ui);if(uInPlayoffs)setDynastyStats(d=>({...d,playoffApps:d.playoffApps+1}));}
 if(nw>=18){setSp("playoffs");const seedConf=(conf)=>{const ct=nt.filter(t=>TEAMS[t.id]?.c===conf);const divs={};ct.forEach(t=>{const dk=TEAMS[t.id]?.d||'X';(divs[dk]||(divs[dk]=[])).push(t);});Object.values(divs).forEach(d=>d.sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa)));const dw=Object.values(divs).map(d=>d[0]).sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa));const wc=ct.filter(t=>!dw.find(d=>d.id===t.id)).sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa)).slice(0,4-dw.length);return[...dw,...wc].slice(0,4).map(t=>t.id);};const af=seedConf('AFC'),nf=seedConf('NFC');setPb({rd:1,m:[[af[0],af[3]],[af[1],af[2]],[nf[0],nf[3]],[nf[1],nf[2]]],res:[],ch:null});setTab("playoffs");}};
-  const simAll=()=>{if(sp!=="regular")return;let cw=wk;const nt=teams.map(t=>({...t,roster:t.roster.map(p=>({...p,ss:{...p.ss},gl:[...p.gl]}))}));const ns=[...sched];const rl=[];while(cw<18){cw++;ns.filter(g=>g.wk===cw&&!g.played).forEach(g=>{const gi=ns.indexOf(g);const r=simGame(nt[g.h],nt[g.a],g.h===ui?gamePlan:{off:'balanced',def:'balanced'},g.a===ui?gamePlan:{off:'balanced',def:'balanced'});ns[gi]={...g,played:true,hs:r.hsc,as:r.asc,boxH:r.boxH,boxA:r.boxA};nt[g.h].pf+=r.hsc;nt[g.h].pa+=r.asc;nt[g.a].pf+=r.asc;nt[g.a].pa+=r.hsc;if(r.hsc>r.asc){nt[g.h].w++;nt[g.a].l++;}else if(r.asc>r.hsc){nt[g.a].w++;nt[g.h].l++;}else{nt[g.h].t++;nt[g.a].t++;}if(g.h===ui||g.a===ui){const ih=g.h===ui;const us=ih?r.hsc:r.asc;const them=ih?r.asc:r.hsc;const opp=ih?nt[g.a]:nt[g.h];rl.push(`${us>them?"W":"L"} ${us}-${them} vs ${opp.ab}`);const won=us>them;const tie=us===them;const nStr=won?Math.max(0,nt[ui].streak||0)+1:tie?0:Math.min(0,nt[ui].streak||0)-1;nt[ui].streak=nStr;const sB=Math.abs(nStr)>=3?2:0;nt[ui].morale=cl((nt[ui].morale||50)+(won?4+sB:tie?0:-(4+sB)),0,100);}});nt.forEach(t=>t.roster.forEach(p=>{if(p.injured){p.injWk--;if(p.injWk<=0){p.injured=false;p.injWk=0;p.injType="";}}}));}nt.forEach(t=>t.roster.forEach(p=>{p.av=calcAV(p);}));setScPts(pr=>pr+(18-wk)*2);setTeams(nt);setSched(ns);setWk(18);setLog(p=>[...p,...rl]);setSp("playoffs");track('season_simmed');const seedConf2=(conf)=>{const ct=nt.filter(t=>TEAMS[t.id]?.c===conf);const divs={};ct.forEach(t=>{const dk=TEAMS[t.id]?.d||'X';(divs[dk]||(divs[dk]=[])).push(t);});Object.values(divs).forEach(d=>d.sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa)));const dw=Object.values(divs).map(d=>d[0]).sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa));const wc=ct.filter(t=>!dw.find(d=>d.id===t.id)).sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa)).slice(0,4-dw.length);return[...dw,...wc].slice(0,4).map(t=>t.id);};const af2=seedConf2('AFC'),nf2=seedConf2('NFC');setPb({rd:1,m:[[af2[0],af2[3]],[af2[1],af2[2]],[nf2[0],nf2[3]],[nf2[1],nf2[2]]],res:[],ch:null});setTab("playoffs");sm("Season complete!");};
+  const simAll=()=>{if(sp!=="regular")return;let cw=wk;const nt=teams.map(t=>({...t,roster:t.roster.map(p=>({...p,ss:{...p.ss},gl:[...p.gl]}))}));const ns=[...sched];const rl=[];while(cw<18){cw++;ns.filter(g=>g.wk===cw&&!g.played).forEach(g=>{const gi=ns.indexOf(g);const r=simGame(nt[g.h],nt[g.a],g.h===ui?gamePlan:{off:'balanced',def:'balanced'},g.a===ui?gamePlan:{off:'balanced',def:'balanced'});ns[gi]={...g,played:true,hs:r.hsc,as:r.asc,boxH:r.boxH,boxA:r.boxA};nt[g.h].pf+=r.hsc;nt[g.h].pa+=r.asc;nt[g.a].pf+=r.asc;nt[g.a].pa+=r.hsc;if(r.hsc>r.asc){nt[g.h].w++;nt[g.a].l++;}else if(r.asc>r.hsc){nt[g.a].w++;nt[g.h].l++;}else{nt[g.h].t++;nt[g.a].t++;}if(g.h===ui||g.a===ui){const ih=g.h===ui;const us=ih?r.hsc:r.asc;const them=ih?r.asc:r.hsc;const opp=ih?nt[g.a]:nt[g.h];rl.push(`${us>them?"W":"L"} ${us}-${them} vs ${opp.ab}`);const won=us>them;const tie=us===them;const nStr=won?Math.max(0,nt[ui].streak||0)+1:tie?0:Math.min(0,nt[ui].streak||0)-1;nt[ui].streak=nStr;const sB=Math.abs(nStr)>=3?2:0;nt[ui].morale=cl((nt[ui].morale||50)+(won?4+sB:tie?0:-(4+sB)),0,100);}});nt.forEach(t=>t.roster.forEach(p=>{if(p.injured){p.injWk--;if(p.injWk<=0){p.injured=false;p.injWk=0;p.injType="";}}}));}nt.forEach(t=>t.roster.forEach(p=>{p.av=calcAV(p);}));setScPts(pr=>pr+(18-wk)*2);setTeams(nt);setSched(ns);setWk(18);setLog(p=>[...p,...rl]);setSp("playoffs");track('season_simmed');const seedConf2=(conf)=>{const ct=nt.filter(t=>TEAMS[t.id]?.c===conf);const divs={};ct.forEach(t=>{const dk=TEAMS[t.id]?.d||'X';(divs[dk]||(divs[dk]=[])).push(t);});Object.values(divs).forEach(d=>d.sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa)));const dw=Object.values(divs).map(d=>d[0]).sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa));const wc=ct.filter(t=>!dw.find(d=>d.id===t.id)).sort((a,b)=>b.w-a.w||(b.pf-b.pa)-(a.pf-a.pa)).slice(0,4-dw.length);return[...dw,...wc].slice(0,4).map(t=>t.id);};const af2=seedConf2('AFC'),nf2=seedConf2('NFC');setPb({rd:1,m:[[af2[0],af2[3]],[af2[1],af2[2]],[nf2[0],nf2[3]],[nf2[1],nf2[2]]],res:[],ch:null});setTab("playoffs");setShowRecapCard(true);sm("Season complete! Recap card ready.");};
   const simPR=()=>{if(!pb||pb.ch!=null)return;const nt=[...teams];const w=[];const rr=[];pb.m.forEach(([a,b])=>{const r=simGame(nt[a],nt[b]);const wi=r.hsc>=r.asc?a:b;w.push(wi);rr.push({h:a,a:b,hs:r.hsc,as:r.asc,w:wi});});setTeams(nt);const ar=[...pb.res,...rr];if(w.length===1){setPb({...pb,res:ar,ch:w[0]});setLog(p=>[...p,`🏆 ${yr}: ${nt[w[0]].city} ${nt[w[0]].name} win!`]);setChamps(p=>[...p,{yr,t:`${nt[w[0]].city} ${nt[w[0]].name}`}]);if(w[0]===ui){setDynastyStats(d=>({...d,championships:d.championships+1}));track('champion');setShowSeasonSummary(true);setParadeOpen(true);genNewspaper('CHAMPIONS!',`${nt[w[0]].city} ${nt[w[0]].name} win the ${yr} title`,'champion');if(speedrun)setSpeedrun(s=>s?{...s,championships:s.championships+1}:s);}sm(`🏆 Champions!`);}else{const nm=[];for(let i=0;i<w.length;i+=2)nm.push([w[i],w[i+1]]);setPb({rd:pb.rd+1,m:nm,res:ar,ch:null});}};
   const goToCombine=()=>{const ndc={...dc};const cls=ndc[yr]||[];cls.forEach(p=>{p.combine=genCombine(p.pos,p.trueOvr);p.proDay=genProDay(p.pos,p.trueOvr);const ph=combToPhys(p.combine);Object.assign(p,ph);p.combGrade=p.trueOvr>=86?'A+':p.trueOvr>=80?'A':p.trueOvr>=74?'B':p.trueOvr>=68?'C':'D';});ndc[yr]=[...cls];
 // Draft prospect storyline events — 3 prospects get pre-draft news
@@ -1127,7 +1183,7 @@ const _def=defaultSaveState();Object.keys(_def).forEach(k=>{if(d[k]===undefined)
 <label style={{cursor:"pointer",display:"block",marginTop:8}}><span style={{display:"inline-block",background:"#1e293b",color:C.mt,padding:"8px 24px",borderRadius:8,fontWeight:700,fontSize:12,cursor:"pointer"}}>📂 LOAD GAME</span><input type="file" accept=".json" style={{display:"none"}} onChange={loadGame}/></label></div></div>);
   if(phase==="teamSelect")return(<div style={{minHeight:"100vh",background:C.bg,fontFamily:C.f,color:C.tx,padding:24}}><h2 style={{textAlign:"center",fontSize:20,fontWeight:800,marginBottom:8}}>Choose Your Team</h2>{/* I46: Difficulty preset */}<div style={{display:'flex',gap:6,justifyContent:'center',margin:'8px 0 14px 0'}}>{[['Casual','casual','#22c55e','225M cap, no fires, +4SP start'],['Standard','standard','#3b82f6','Normal rules'],['Hardcore','hardcore','#ef4444','160M cap, owner fires early']].map(([lbl,key,clr,sub])=>(<div key={key} onClick={()=>setDifficulty(key)} style={{cursor:'pointer',padding:'6px 10px',borderRadius:4,border:`1px solid ${difficulty===key?clr:'#334155'}`,background:difficulty===key?clr+'22':'#0d1424',minWidth:90}}><div style={{fontSize:10,fontWeight:700,color:difficulty===key?clr:'#94a3b8'}}>{lbl}</div><div style={{fontSize:8,color:'#475569'}}>{sub}</div></div>))}</div><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:6,maxWidth:900,margin:"0 auto"}}>{TEAMS.map((t,i)=><button key={i} onClick={()=>startGame(i)} style={{background:`linear-gradient(135deg,${t.clr}cc,${t.clr})`,border:`2px solid ${t.ac}33`,borderRadius:8,padding:"10px 8px",cursor:"pointer",textAlign:"left",color:"#fff"}}><div style={{fontSize:8,textTransform:"uppercase",letterSpacing:2,opacity:.7}}>{t.city}</div><div style={{fontSize:14,fontWeight:800}}>{t.name}</div><div style={{fontSize:8,color:t.ac,fontWeight:700,marginTop:2}}>{t.ab} • {t.c} {t.d}</div></button>)}</div></div>);
 
-  const TABS=["roster","standings","schedule","stats","scouting","coaching","trade","draft","freeagency","playoffs","log","dev"];
+  const TABS=["roster","standings","schedule","hub","stats","scouting","coaching","trade","draft","freeagency","playoffs","log","dev"];
   if(liveSim)TABS.push("livesim");
   const phaseFlow=sp==="regular"?`Wk ${wk}/18`:sp==="playoffs"?"Playoffs":sp==="combine"?"Combine":sp==="draft"?"Draft":sp==="freeagency"?"Free Agency":"Preseason";
 
@@ -1166,6 +1222,70 @@ const _def=defaultSaveState();Object.keys(_def).forEach(k=>{if(d[k]===undefined)
       </div>
       <div style={{padding:'12px 20px 16px'}}>{topP&&<div style={{fontSize:9,color:'#94a3b8',marginBottom:10,padding:'6px 8px',background:'#ffffff08',borderRadius:4}}>TOP PERFORMER: <span style={{color:'#e2e8f0',fontWeight:700}}>{topP.name}</span> <span style={{color:pC(topP.pos),fontSize:8}}>{topP.pos} {topP.ovr}OVR</span></div>}<div style={{fontSize:8,color:'#334155',marginBottom:10,fontStyle:'italic',lineHeight:1.4,borderLeft:'2px solid #1e3a5f',paddingLeft:8}}>{shareStr}</div><div style={{display:'flex',gap:6}}><button onClick={()=>{navigator.clipboard?.writeText(shareStr).then(()=>{sm('Copied! Paste anywhere to share.');setShowShareCard(false);}).catch(()=>sm(shareStr));}} style={{flex:1,background:'#1e3a5f',color:'#7dd3fc',border:'1px solid #1e3a5f33',borderRadius:6,padding:'7px 0',fontSize:9,fontWeight:700,cursor:'pointer'}}>Copy & Share</button><button onClick={()=>setShowShareCard(false)} style={{background:'#1e293b',color:C.mt,border:`1px solid ${C.bd}`,borderRadius:6,padding:'7px 12px',fontSize:9,cursor:'pointer'}}>Close</button></div></div>
     </div></div>);})()}
+    {/* v31: Season Recap Card — canvas downloadable */}
+    {showRecapCard&&ut&&(()=>{
+      const champ=champs.some(c=>c.yr===yr&&c.t===`${ut.city} ${ut.name}`);
+      const topP=ut.roster.filter(p=>['QB','RB','WR','TE'].includes(p.pos)&&p.ss?.gp>0).sort((a,b)=>{const bs=s=>((s.passYds||0)+(s.rushYds||0)+(s.recYds||0));return bs(b.ss)-bs(a.ss);})[0];
+      const topDef=ut.roster.filter(p=>['DL','LB','CB','S'].includes(p.pos)&&p.ss?.gp>0).sort((a,b)=>((b.ss?.tkl||0)+(b.ss?.sacks||0)*4)-((a.ss?.tkl||0)+(a.ss?.sacks||0)*4))[0];
+      const pf=sched.filter(g=>g.played&&(g.h===ui||g.a===ui)).reduce((s,g)=>s+(g.h===ui?g.hs:g.as),0);
+      const pa=sched.filter(g=>g.played&&(g.h===ui||g.a===ui)).reduce((s,g)=>s+(g.h===ui?g.as:g.hs),0);
+      const shareStr=`🏈 ${ut.city} ${ut.name} — ${ut.w}-${ut.l} | ${yr} Season${champ?' 🏆 CHAMPIONS!':''}${topP?` | MVP: ${topP.name}`:''}${topDef?` | DEF: ${topDef.name}`:''}  +${pf}pts −${pa}pts | #GridironGM`;
+      const dlCard=()=>{
+        const c=document.createElement('canvas');c.width=480;c.height=270;const ctx=c.getContext('2d');
+        ctx.fillStyle=ut.clr||'#1e293b';ctx.fillRect(0,0,480,270);
+        ctx.fillStyle=(ut.ac||'#22c55e')+'44';ctx.fillRect(0,0,480,90);
+        ctx.fillStyle='#fff';ctx.font='bold 28px Arial';ctx.fillText(`${ut.city} ${ut.name}`,20,38);
+        ctx.font='13px Arial';ctx.fillStyle='#94a3b8';ctx.fillText(`${yr} Season Report`,20,58);
+        ctx.font='bold 48px Arial';ctx.fillStyle=ut.w>=ut.l?'#22c55e':'#ef4444';ctx.fillText(`${ut.w}-${ut.l}`,20,120);
+        if(champ){ctx.font='bold 32px Arial';ctx.fillStyle='#f59e0b';ctx.fillText('🏆 CHAMPIONS',200,120);}
+        if(topP){ctx.font='bold 12px Arial';ctx.fillStyle='#94a3b8';ctx.fillText('TOP PERFORMER',20,155);ctx.font='bold 16px Arial';ctx.fillStyle='#fff';ctx.fillText(topP.name,20,175);ctx.font='11px Arial';ctx.fillStyle='#64748b';ctx.fillText(`${topP.pos} · OVR ${topP.ovr}`,20,192);}
+        ctx.font='bold 12px Arial';ctx.fillStyle='#334155';ctx.fillText('PF: '+pf+' PA: '+pa,20,230);
+        ctx.font='10px Arial';ctx.fillStyle='#1e293b';ctx.fillText('vaultsparkstudios.com/gridiron-gm · #GridironGM',20,258);
+        const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download=`gridiron-gm-${yr}-recap.png`;a.click();
+        sm('Season recap card downloaded!');
+      };
+      return<div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.95)',zIndex:3100,display:'flex',alignItems:'center',justifyContent:'center',padding:16}} onClick={()=>setShowRecapCard(false)}>
+        <div onClick={e=>e.stopPropagation()} style={{background:'#0d1424',borderRadius:14,maxWidth:420,width:'100%',border:`2px solid ${champ?'#f59e0b':ut.ac||C.gn}`,overflow:'hidden'}}>
+          <div style={{background:`linear-gradient(135deg,${ut.clr||'#1e293b'},${ut.ac||'#334155'}44)`,padding:'18px 20px 14px',borderBottom:'1px solid #1e293b'}}>
+            <div style={{display:'flex',gap:10,alignItems:'center',marginBottom:10}}>
+              <div style={{width:44,height:44,borderRadius:8,background:`linear-gradient(135deg,${ut.clr},${ut.ac})`,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:900,fontSize:12,color:'#fff',flexShrink:0}}>{ut.ab}</div>
+              <div><div style={{fontSize:16,fontWeight:900,color:'#fff'}}>{ut.city} {ut.name}</div><div style={{fontSize:9,color:'#94a3b8'}}>{yr} Season Recap Card</div></div>
+              {champ&&<div style={{marginLeft:'auto',fontSize:28}}>🏆</div>}
+            </div>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:6}}>
+              {[['RECORD',`${ut.w}-${ut.l}`,ut.w>=ut.l?'#22c55e':'#ef4444'],['PF',pf,C.gd],['PA',pa,'#94a3b8'],['SEASON',`Y${yr-2025}`,C.bl]].map(([l,v,clr])=><div key={l} style={{textAlign:'center',background:'#ffffff11',borderRadius:4,padding:'5px 2px'}}><div style={{fontSize:14,fontWeight:900,color:clr}}>{v}</div><div style={{fontSize:7,color:'#64748b'}}>{l}</div></div>)}
+            </div>
+          </div>
+          <div style={{padding:'12px 20px 16px'}}>
+            {topP&&<div style={{display:'flex',gap:6,alignItems:'center',padding:'6px 8px',background:'#ffffff08',borderRadius:4,marginBottom:6}}>
+              <Face s={topP.face} sz={24}/>
+              <div><div style={{fontSize:8,color:'#64748b'}}>OFFENSIVE MVP</div><div style={{fontSize:10,fontWeight:700,color:'#e2e8f0'}}>{topP.name} <Bdg pos={topP.pos}/></div><div style={{fontSize:7,color:'#94a3b8'}}>{topP.pos==='QB'&&topP.ss?`${topP.ss.passYds||0}yds ${topP.ss.passTD||0}td`:topP.ss?`${(topP.ss.rushYds||0)+(topP.ss.recYds||0)}yds`:''}</div></div>
+            </div>}
+            {topDef&&<div style={{display:'flex',gap:6,alignItems:'center',padding:'6px 8px',background:'#ffffff08',borderRadius:4,marginBottom:10}}>
+              <Face s={topDef.face} sz={24}/>
+              <div><div style={{fontSize:8,color:'#64748b'}}>DEFENSIVE LEADER</div><div style={{fontSize:10,fontWeight:700,color:'#e2e8f0'}}>{topDef.name} <Bdg pos={topDef.pos}/></div><div style={{fontSize:7,color:'#94a3b8'}}>{topDef.ss?`${topDef.ss.tkl||0}tkl ${topDef.ss.sacks||0}sk`:''}</div></div>
+            </div>}
+            <div style={{display:'flex',gap:4}}>
+              <button onClick={dlCard} style={{flex:1,background:'#14532d',color:'#22c55e',border:'1px solid #22c55e44',borderRadius:6,padding:'7px 0',fontSize:9,fontWeight:700,cursor:'pointer'}}>⬇ Download Card</button>
+              <button onClick={()=>{navigator.clipboard?.writeText(shareStr).then(()=>sm('Copied!'));}} style={{flex:1,background:'#1e3a5f',color:'#7dd3fc',border:'1px solid #1e3a5f',borderRadius:6,padding:'7px 0',fontSize:9,fontWeight:700,cursor:'pointer'}}>📋 Copy Text</button>
+              <button onClick={()=>setShowRecapCard(false)} style={{background:'#1e293b',color:C.mt,border:`1px solid ${C.bd}`,borderRadius:6,padding:'7px 12px',fontSize:9,cursor:'pointer'}}>✕</button>
+            </div>
+          </div>
+        </div>
+      </div>;
+    })()}
+    {/* v31: AI Storylines Modal */}
+    {aiStorylineOpen&&<div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.93)',zIndex:3200,display:'flex',alignItems:'center',justifyContent:'center',padding:16}} onClick={()=>setAiStorylineOpen(false)}>
+      <div onClick={e=>e.stopPropagation()} style={{background:'#0d1424',borderRadius:14,maxWidth:420,width:'100%',border:'2px solid #7c3aed'}}>
+        <div style={{padding:'14px 18px',borderBottom:'1px solid #1e293b'}}>
+          <div style={{fontSize:12,fontWeight:800,color:'#a78bfa'}}>✍️ FRANCHISE STORYLINES — Wk{wk}</div>
+        </div>
+        <div style={{padding:'12px 18px',display:'flex',flexDirection:'column',gap:8}}>
+          {aiStorylines.map((s,i)=><div key={s.id} style={{background:'#1e1040',borderRadius:6,padding:'10px 12px',border:'1px solid #3b0764',fontSize:9,color:'#c4b5fd',lineHeight:1.65,fontStyle:'italic'}}>{s.text}</div>)}
+          <button onClick={()=>setAiStorylineOpen(false)} style={{background:'#1e293b',color:C.mt,border:`1px solid ${C.bd}`,borderRadius:6,padding:'7px 0',fontSize:9,cursor:'pointer'}}>Close</button>
+        </div>
+      </div>
+    </div>}
     {/* I-C: New GM Onboarding Intro Modal */}
     {showIntro&&<div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.95)',zIndex:2200,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}><div style={{background:'#0d1424',borderRadius:16,padding:24,maxWidth:380,width:'100%',border:'2px solid #22c55e',boxShadow:'0 0 40px #22c55e22'}}><div style={{textAlign:'center',marginBottom:16}}><div style={{fontSize:36,marginBottom:6}}>🏈</div><div style={{fontSize:17,fontWeight:900,color:'#22c55e',letterSpacing:1,marginBottom:4}}>Welcome, GM</div><div style={{fontSize:10,color:'#64748b'}}>Three things to know before you start</div></div><div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:18}}>{[['📋','Draft picks are currency','Trade them wisely. Your future picks show up in the Trade tab. Rookie contracts are cheap — invest in youth early.'],['📅','Sim Week advances time','Hit SIM WEEK each week to progress the season. Use SIM ALL to fast-forward. Play live games from the Schedule tab.'],['💰','SP is your power resource','Earn Season Points by winning. Spend them on scouting, coaching upgrades, and key roster moves.']].map(([icon,title,desc],i)=><div key={i} style={{background:'#ffffff06',border:'1px solid #1e3a5f',borderRadius:8,padding:'8px 10px',display:'flex',gap:10,alignItems:'flex-start'}}><span style={{fontSize:18,flexShrink:0,marginTop:1}}>{icon}</span><div><div style={{fontSize:10,fontWeight:700,color:'#e2e8f0',marginBottom:2}}>{title}</div><div style={{fontSize:8,color:'#64748b',lineHeight:1.45}}>{desc}</div></div></div>)}</div><button onClick={()=>{setShowIntro(false);localStorage.setItem('gm_intro_shown','1');}} style={{width:'100%',background:'#22c55e',color:'#fff',border:'none',borderRadius:8,padding:'10px 0',fontWeight:800,fontSize:12,cursor:'pointer',letterSpacing:1}}>LET'S GO</button></div></div>}
     {/* v20: Salary Arbitration Modal */}
@@ -1187,9 +1307,12 @@ const _def=defaultSaveState();Object.keys(_def).forEach(k=>{if(d[k]===undefined)
         {sp==="draft"&&draftActive&&<><Btn onClick={()=>setDraftPaused(p=>!p)} bg={draftPaused?"#22c55e":"#f97316"}>{draftPaused?"▶ Resume":"⏸ Pause"}</Btn><Btn onClick={simEntireDraft} bg="#6366f1">⏭ Sim Draft</Btn></>}
         {sp==="freeagency"&&<Btn onClick={newSeason} bg={C.gn}>→ Next Season</Btn>}
         {sp==="freeagency"&&!expansionMode&&yr>=3&&<Btn onClick={()=>setExpansionModal(true)} bg="#7c3aed" c="#e9d5ff" style={{fontSize:9,padding:"3px 8px"}}>🏉 Expansion</Btn>}
-        <Btn onClick={saveGame} bg="#334155" style={{padding:"3px 7px",fontSize:9}}>💾</Btn>{lastSaved&&<span style={{fontSize:7,color:'#334155',whiteSpace:'nowrap'}}>✓ {lastSaved}</span>}<label style={{cursor:"pointer",display:"flex",alignItems:"center"}}><span style={{background:"#334155",color:C.mt,padding:"3px 7px",borderRadius:4,fontWeight:700,fontSize:9,cursor:"pointer"}}>📂</span><input type="file" accept=".json" style={{display:"none"}} onChange={loadGame}/></label>
+        {!isMobile&&<Btn onClick={()=>setShowRecapCard(true)} bg="#1e293b" c="#94a3b8" style={{padding:"3px 7px",fontSize:8}} title="Season Recap Card">📊</Btn>}
+        <Btn onClick={saveGame} bg="#334155" style={{padding:"3px 7px",fontSize:9}}>💾</Btn>{lastSaved&&!isMobile&&<span style={{fontSize:7,color:'#334155',whiteSpace:'nowrap'}}>✓ {lastSaved}</span>}<label style={{cursor:"pointer",display:"flex",alignItems:"center"}}><span style={{background:"#334155",color:C.mt,padding:"3px 7px",borderRadius:4,fontWeight:700,fontSize:9,cursor:"pointer"}}>📂</span><input type="file" accept=".json" style={{display:"none"}} onChange={loadGame}/></label>
       </div>
     </div>
+    {/* v31: GM Rep Always-Visible Progress Bar */}
+    {ut&&(()=>{const rep=ut.gmRep||50;const tier=gmRepTier(rep);const prevThresh=tier.lbl==='LEGEND'?90:tier.lbl==='ELITE'?75:tier.lbl==='RESPECTED'?60:tier.lbl==='VETERAN'?40:0;const pct=Math.round(((rep-prevThresh)/(tier.xpTo-prevThresh))*100);return<div style={{background:'#080f1e',borderBottom:'1px solid #0f172a',padding:'3px 12px',display:'flex',alignItems:'center',gap:8}}><span style={{fontSize:7,fontWeight:800,color:tier.clr,minWidth:56,letterSpacing:1}}>{tier.lbl}</span><div style={{flex:1,height:4,background:'#1e293b',borderRadius:2,maxWidth:isMobile?120:240}}><div style={{width:`${pct}%`,height:'100%',background:tier.clr,borderRadius:2,transition:'width .4s'}}/></div><span style={{fontSize:7,color:'#334155'}}>{rep}/{tier.xpTo}</span><span style={{fontSize:7,color:'#1e293b',marginLeft:4}}>{tier.lbl==='LEGEND'?'MAX':pct+'% → '+gmRepTier(tier.xpTo+1>100?100:tier.xpTo).lbl}</span></div>;})()}
     {msg&&<div style={{background:`${C.gn}12`,borderLeft:`3px solid ${C.gn}`,padding:"4px 10px",fontSize:10,color:C.gn,fontWeight:600}}>{msg}</div>}
     {trProp&&<div style={{background:"#1e293b",borderLeft:"3px solid #f59e0b",padding:"5px 10px",display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
       <span style={{color:"#f59e0b",fontSize:9,fontWeight:800}}>💰 TRADE OFFER</span>
@@ -1202,7 +1325,7 @@ const _def=defaultSaveState();Object.keys(_def).forEach(k=>{if(d[k]===undefined)
       <button onClick={acceptTrade} style={{background:"#166534",color:"#22c55e",border:"1px solid #22c55e",borderRadius:3,padding:"2px 8px",fontSize:8,fontWeight:700,cursor:"pointer"}}>Accept</button>
       <button onClick={()=>setTrProp(null)} style={{background:"#1e293b",color:"#64748b",border:"1px solid #334155",borderRadius:3,padding:"2px 8px",fontSize:8,fontWeight:700,cursor:"pointer"}}>Decline</button>
     </div>}
-    <div style={{display:"flex",flexWrap:"nowrap",background:"#0f172a",borderBottom:`1px solid ${C.bd}`,overflowX:"auto"}}>{TABS.map(t=><button key={t} onClick={()=>setTab(t)} style={{background:tab===t?"#1e293b":"transparent",color:tab===t?"#fff":C.mt,border:"none",borderBottom:tab===t?`2px solid ${C.gn}`:"2px solid transparent",padding:"6px 10px",fontSize:9,fontWeight:700,cursor:"pointer",textTransform:"uppercase",whiteSpace:"nowrap"}}>{t==="freeagency"?"FA":t==="livesim"?"⚡LIVE":t==="dev"?"🔧DEV":t}</button>)}</div>
+    <div style={{display:"flex",flexWrap:"nowrap",background:"#0f172a",borderBottom:`1px solid ${C.bd}`,overflowX:"auto",WebkitOverflowScrolling:"touch"}}>{TABS.map(t=><button key={t} onClick={()=>setTab(t)} style={{background:tab===t?"#1e293b":"transparent",color:tab===t?"#fff":C.mt,border:"none",borderBottom:tab===t?`2px solid ${C.gn}`:"2px solid transparent",padding:isMobile?"5px 7px":"6px 10px",fontSize:isMobile?8:9,fontWeight:700,cursor:"pointer",textTransform:"uppercase",whiteSpace:"nowrap",flexShrink:0}}>{t==="freeagency"?"FA":t==="livesim"?"⚡LIVE":t==="dev"?"🔧":t==="hub"?"📊HUB":t}</button>)}</div>
     {(()=>{
       const stageList=[{k:'preseason',lbl:'PRE'},{k:'reg',lbl:'SEASON',weeks:18},{k:'playoffs',lbl:'PLAYOFFS'},{k:'combine',lbl:'COMBINE'},{k:'draft',lbl:'DRAFT'},{k:'freeagency',lbl:'FA'}];
       const curIdx=sp==='preseason'?0:sp==='regular'?1:sp==='playoffs'?2:sp==='combine'?3:sp==='draft'?4:5;
@@ -1233,7 +1356,7 @@ const _def=defaultSaveState();Object.keys(_def).forEach(k=>{if(d[k]===undefined)
         })}
       </div>);
     })()}
-    <div style={{flex:1,padding:"8px 12px",overflowY:"auto",maxHeight:"calc(100vh - 120px)"}}>
+    <div style={{flex:1,padding:isMobile?"6px 8px":"8px 12px",overflowY:"auto",maxHeight:"calc(100vh - 120px)",fontSize:isMobile?'11px':'inherit'}}>
 
     {/* ROSTER */}
     {tab==="roster"&&ut&&<div>
@@ -1423,6 +1546,145 @@ const _def=defaultSaveState();Object.keys(_def).forEach(k=>{if(d[k]===undefined)
         </div>)}</div>)}
     </div>}
 
+    {/* HUB — Stats Hub, career leaders, franchise history, AI storyline, Pro GM */}
+    {tab==="hub"&&<div style={{maxWidth:700}}>
+      {/* Section switcher */}
+      <div style={{display:'flex',gap:3,marginBottom:10,flexWrap:'wrap'}}>
+        {[['leaders','📊 Season Leaders'],['franchise','🏆 Franchise History'],['roster','💪 Roster Grades'],['storyline','✍️ AI Storylines'],['pro','⭐ Pro GM']].map(([k,l])=><button key={k} onClick={()=>setHubSection(k)} style={{background:hubSection===k?C.gn+'22':'transparent',color:hubSection===k?C.gn:C.mt,border:`1px solid ${hubSection===k?C.gn:C.bd}`,borderRadius:4,padding:'3px 10px',fontSize:9,fontWeight:700,cursor:'pointer'}}>{l}</button>)}
+      </div>
+
+      {/* SECTION: Season Leaders */}
+      {hubSection==='leaders'&&(()=>{
+        const allP=[];teams.forEach((t,ti)=>t.roster.forEach(p=>{if(p.ss&&p.ss.gp>0)allP.push({...p,_ti:ti});}));
+        const cats=[
+          {lbl:'QB RATING',key:'rate',fmt:v=>v.toFixed(1),filter:p=>p.pos==='QB'&&(p.ss.att||0)>0},
+          {lbl:'PASS YDS',key:'passYds',fmt:v=>v+'y',filter:p=>p.pos==='QB'&&(p.ss.att||0)>=(wk*2)},
+          {lbl:'RUSH YDS',key:'rushYds',fmt:v=>v+'y',filter:p=>['QB','RB'].includes(p.pos)&&(p.ss.rushAtt||0)>=(wk*2)},
+          {lbl:'REC YDS',key:'recYds',fmt:v=>v+'y',filter:p=>['WR','TE','RB'].includes(p.pos)},
+          {lbl:'SACKS',key:'sacks',fmt:v=>v,filter:p=>['DL','LB'].includes(p.pos)},
+          {lbl:'TACKLES',key:'tkl',fmt:v=>v,filter:p=>['LB','CB','S','DL'].includes(p.pos)},
+          {lbl:'INT',key:'ints',fmt:v=>v,filter:p=>['CB','S','LB'].includes(p.pos)},
+          {lbl:'PASS TD',key:'passTD',fmt:v=>v,filter:p=>p.pos==='QB'&&(p.ss.att||0)>0},
+        ];
+        return<div><div style={{fontSize:10,fontWeight:800,color:C.gd,letterSpacing:2,marginBottom:8}}>SEASON LEADERS — WK {wk}</div>
+          <div style={{display:'grid',gridTemplateColumns:isMobile?'1fr 1fr':'repeat(auto-fill,minmax(160px,1fr))',gap:6}}>
+            {cats.map(cat=>{const leaders=[...allP].filter(cat.filter).sort((a,b)=>(b.ss[cat.key]||0)-(a.ss[cat.key]||0)).slice(0,5);if(!leaders.length)return null;return(
+              <div key={cat.lbl} style={{background:C.cd,borderRadius:6,padding:'6px 8px',border:`1px solid ${C.bd}`}}>
+                <div style={{fontSize:7,fontWeight:800,color:C.gd,marginBottom:4,letterSpacing:1}}>{cat.lbl}</div>
+                {leaders.map((p,i)=><div key={p.id} style={{display:'flex',gap:3,padding:'1px 0',fontSize:9,alignItems:'center'}}>
+                  <span style={{color:i===0?C.gd:C.mt,fontSize:7,minWidth:10}}>{i+1}.</span>
+                  <Face s={p.face} sz={14}/>
+                  <span style={{flex:1,color:i===0?C.tx:'#94a3b8',fontWeight:i===0?700:400,fontSize:8,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{p.name.split(' ').slice(-1)[0]}</span>
+                  <span style={{color:p._ti===ui?C.gn:C.mt,fontSize:7}}>{TEAMS[p._ti]?.ab}</span>
+                  <span style={{fontWeight:800,color:i===0?C.gd:C.tx,minWidth:32,textAlign:'right'}}>{cat.fmt(p.ss[cat.key]||0)}</span>
+                </div>)}
+              </div>);
+            })}
+          </div>
+        </div>;
+      })()}
+
+      {/* SECTION: Franchise History */}
+      {hubSection==='franchise'&&(()=>{
+        const ds=dynastyStats;
+        const allTimeW=seasonHistory.reduce((s,h)=>s+(h.w||0),0)+(ut?.w||0);
+        const allTimeL=seasonHistory.reduce((s,h)=>s+(h.l||0),0)+(ut?.l||0);
+        const winPct=allTimeW+allTimeL>0?((allTimeW/(allTimeW+allTimeL))*100).toFixed(1):0;
+        const legacyScore=Math.min(1000,Math.round((ds.wins||0)*2+(ds.championships||0)*150+(ds.playoffApps||0)*25+champs.length*50+(achievements?.length||0)*10));
+        const tier=legacyScore>=800?'DYNASTY LEGEND':legacyScore>=500?'FRANCHISE CONTENDER':legacyScore>=250?'RISING POWER':'EXPANSION ERA';
+        const tierClr=legacyScore>=800?'#f59e0b':legacyScore>=500?'#a78bfa':legacyScore>=250?'#22c55e':'#60a5fa';
+        return<div>
+          <div style={{fontSize:10,fontWeight:800,color:C.gd,letterSpacing:2,marginBottom:8}}>FRANCHISE HISTORY — {ut?.city} {ut?.name}</div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:6,marginBottom:10}}>
+            {[['ALL-TIME W-L',`${allTimeW}-${allTimeL}`],['WIN %',winPct+'%'],['TITLES',champs.length],['PLAYOFF APPS',ds.playoffApps||0],['SEASONS',Math.max(1,(seasonHistory.length||0)+(sp!=='preseason'?1:0))],['LEGACY',legacyScore]].map(([l,v])=><div key={l} style={{background:C.cd,borderRadius:6,padding:'8px 4px',textAlign:'center',border:`1px solid ${C.bd}`}}><div style={{fontSize:l==='LEGACY'?16:14,fontWeight:900,color:l==='TITLES'&&champs.length>0?'#f59e0b':l==='LEGACY'?tierClr:'#e2e8f0'}}>{v}</div><div style={{fontSize:7,color:'#64748b',marginTop:2}}>{l}</div></div>)}
+          </div>
+          <div style={{textAlign:'center',marginBottom:10}}><span style={{fontSize:11,fontWeight:800,color:tierClr,background:`${tierClr}22`,borderRadius:5,padding:'4px 14px'}}>{tier}</span></div>
+          {champs.length>0&&<div style={{background:C.cd,borderRadius:6,padding:'8px 10px',border:`1px solid #f59e0b44`,marginBottom:8}}>
+            <div style={{fontSize:8,fontWeight:800,color:'#f59e0b',marginBottom:4}}>🏆 CHAMPIONSHIPS</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:4}}>{champs.map((c,i)=><span key={i} style={{fontSize:8,background:'#92400e33',color:'#fbbf24',borderRadius:3,padding:'1px 6px',fontWeight:700}}>{c.yr}</span>)}</div>
+          </div>}
+          {seasonHistory.length>0&&<div style={{background:C.cd,borderRadius:6,padding:'8px 10px',border:`1px solid ${C.bd}`}}>
+            <div style={{fontSize:8,fontWeight:800,color:C.mt,marginBottom:4}}>SEASON LOG</div>
+            <div style={{maxHeight:160,overflowY:'auto'}}>
+              {[...seasonHistory].reverse().map((s,i)=><div key={i} style={{display:'flex',gap:6,alignItems:'center',padding:'2px 0',borderBottom:`1px solid ${C.bd}22`,fontSize:8}}>
+                <span style={{color:'#64748b',minWidth:32}}>{s.yr||'?'}</span>
+                <span style={{fontWeight:700,color:s.w>s.l?C.gn:C.rd,minWidth:36}}>{s.w}-{s.l}</span>
+                <span style={{color:'#64748b',flex:1,fontSize:7}}>{s.result||'Season'}</span>
+                {s.champ&&<span style={{fontSize:8}}>🏆</span>}
+              </div>)}
+            </div>
+          </div>}
+          <button onClick={()=>{const shareStr=`🏈 ${ut?.city} ${ut?.name} — ${allTimeW}W all-time, ${champs.length} titles, Legacy ${legacyScore}. ${tier} #GridironGM`;navigator.clipboard?.writeText(shareStr).then(()=>sm('Copied!'));}} style={{marginTop:8,width:'100%',background:'#1e3a5f',color:'#7dd3fc',border:'1px solid #1e3a5f',borderRadius:6,padding:'7px 0',fontSize:9,fontWeight:700,cursor:'pointer'}}>📋 Share Franchise Story</button>
+        </div>;
+      })()}
+
+      {/* SECTION: Roster Grades */}
+      {hubSection==='roster'&&(()=>{
+        const posGroups=[{lbl:'OFFENSE',poss:['QB','RB','WR','TE']},{lbl:'O-LINE',poss:['LT','LG','C','RG','RT']},{lbl:'DEFENSE',poss:['DL','LB','CB','S']},{lbl:'SPECIAL',poss:['K']}];
+        const glGradeClr=g=>g==='A+'?'#f59e0b':g==='A'?'#22c55e':g==='B'?'#60a5fa':g==='C'?'#94a3b8':g==='D'?'#f97316':'#ef4444';
+        const avgGrade=poss=>{const ps=(ut?.roster||[]).filter(p=>poss.includes(p.pos));if(!ps.length)return{g:'—',ovr:0};const avg=Math.round(ps.reduce((s,p)=>s+(p.ovr||0),0)/ps.length);const g=avg>=88?'A+':avg>=82?'A':avg>=76?'B':avg>=70?'C':avg>=64?'D':'F';return{g,ovr:avg,clr:glGradeClr(g)};};
+        return<div>
+          <div style={{fontSize:10,fontWeight:800,color:C.gd,letterSpacing:2,marginBottom:8}}>ROSTER GRADES</div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:8,marginBottom:10}}>
+            {posGroups.map(grp=>{const{g,ovr,clr}=avgGrade(grp.poss);return<div key={grp.lbl} style={{background:C.cd,borderRadius:6,padding:'8px 10px',border:`1px solid ${clr}44`}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}>
+                <span style={{fontSize:9,fontWeight:800,color:C.mt}}>{grp.lbl}</span>
+                <span style={{fontSize:18,fontWeight:900,color:clr}}>{g}</span>
+              </div>
+              <div style={{fontSize:8,color:'#64748b'}}>Avg OVR: <b style={{color:clr}}>{ovr||'—'}</b></div>
+              <div style={{display:'flex',gap:2,flexWrap:'wrap',marginTop:4}}>{grp.poss.map(pos=>{const best=(ut?.roster||[]).filter(p=>p.pos===pos).sort((a,b)=>b.ovr-a.ovr)[0];if(!best)return<span key={pos} style={{fontSize:7,background:'#1e293b',color:'#334155',borderRadius:2,padding:'1px 4px'}}>{pos} —</span>;return<span key={pos} style={{fontSize:7,background:`${oC(best.ovr)}22`,color:oC(best.ovr),borderRadius:2,padding:'1px 4px',fontWeight:700}}>{pos} {best.ovr}</span>;})}
+              </div>
+            </div>;})}
+          </div>
+          {/* Overall team strength */}
+          {(()=>{const allOvr=(ut?.roster||[]).map(p=>p.ovr||0);const avg=allOvr.length?Math.round(allOvr.reduce((s,v)=>s+v,0)/allOvr.length):0;const capStr=`$${capSpace(ut||{}).toFixed(1)}M`;return<div style={{background:'#0a1520',borderRadius:6,padding:'8px 10px',border:'1px solid #1e293b',display:'flex',gap:12,alignItems:'center',flexWrap:'wrap'}}>
+            <div style={{textAlign:'center'}}><div style={{fontSize:20,fontWeight:900,color:oC(avg)}}>{avg}</div><div style={{fontSize:7,color:'#64748b'}}>TEAM OVR</div></div>
+            <div style={{textAlign:'center'}}><div style={{fontSize:16,fontWeight:900,color:(ut?.chemistry||75)>=80?C.gn:(ut?.chemistry||75)>=60?C.gd:C.rd}}>{ut?.chemistry||75}</div><div style={{fontSize:7,color:'#64748b'}}>CHEMISTRY</div></div>
+            <div style={{textAlign:'center'}}><div style={{fontSize:16,fontWeight:900,color:(ut?.morale||50)>=70?C.gn:(ut?.morale||50)>=45?C.gd:C.rd}}>{ut?.morale||50}</div><div style={{fontSize:7,color:'#64748b'}}>MORALE</div></div>
+            <div style={{textAlign:'center'}}><div style={{fontSize:16,fontWeight:900,color:capSpace(ut||{})>=20?C.gn:capSpace(ut||{})>=0?C.gd:C.rd}}>{capStr}</div><div style={{fontSize:7,color:'#64748b'}}>CAP SPACE</div></div>
+          </div>;})()}
+        </div>;
+      })()}
+
+      {/* SECTION: AI Storylines */}
+      {hubSection==='storyline'&&<div>
+        <div style={{fontSize:10,fontWeight:800,color:'#a78bfa',letterSpacing:2,marginBottom:8}}>✍️ AI FRANCHISE STORYLINES</div>
+        <div style={{background:'#0a0f1a',border:'1px solid #3b0764',borderRadius:6,padding:'8px 10px',marginBottom:10,fontSize:8,color:'#94a3b8',lineHeight:1.5}}>
+          Generates dynamic franchise storylines based on your current game state. Set <code style={{color:'#c4b5fd',background:'#1e1040',padding:'0 3px',borderRadius:2}}>VITE_CLAUDE_API_KEY</code> in .env.local for Claude-powered narrative.
+        </div>
+        <button onClick={genAIStoryline} style={{background:'#3b0764',color:'#c4b5fd',border:'1px solid #7c3aed',borderRadius:6,padding:'8px 16px',fontWeight:700,fontSize:9,cursor:'pointer',marginBottom:10}}>✨ Generate Storylines</button>
+        {aiStorylines.length>0&&<div style={{display:'flex',flexDirection:'column',gap:6}}>
+          {aiStorylines.map((s,i)=><div key={s.id} style={{background:C.cd,borderRadius:6,padding:'8px 10px',border:'1px solid #1e293b',fontSize:9,lineHeight:1.6,color:'#94a3b8',fontStyle:'italic'}}>
+            <span style={{color:'#334155',fontSize:7,fontWeight:700,display:'block',marginBottom:3}}>STORYLINE {i+1} · WK{s.wk}</span>
+            {s.text}
+          </div>)}
+        </div>}
+        {aiStorylines.length===0&&<div style={{color:'#334155',fontSize:9,textAlign:'center',padding:'20px 0'}}>Press Generate to create storylines from your current franchise state.</div>}
+      </div>}
+
+      {/* SECTION: Pro GM */}
+      {hubSection==='pro'&&<div>
+        <div style={{fontSize:10,fontWeight:800,color:'#f59e0b',letterSpacing:2,marginBottom:8}}>⭐ PRO GM SUBSCRIPTION</div>
+        <div style={{background:'linear-gradient(135deg,#92400e22,#1c1007)',border:'2px solid #f59e0b44',borderRadius:10,padding:'16px',marginBottom:10,textAlign:'center'}}>
+          <div style={{fontSize:24,marginBottom:4}}>⭐</div>
+          <div style={{fontSize:14,fontWeight:900,color:'#fbbf24',marginBottom:4}}>Gridiron GM Pro</div>
+          <div style={{fontSize:10,color:'#94a3b8',marginBottom:10}}>$4.99/month — Support the studio. Own the league.</div>
+          <div style={{display:'flex',flexDirection:'column',gap:4,marginBottom:14,textAlign:'left'}}>
+            {[['🎨','Custom Team Themes','Exclusive color palettes and logo styles'],['💾','Unlimited Save Slots','Save unlimited franchises (currently 3)'],['📊','Pro Analytics Dashboard','Advanced EPA, DVOA-style efficiency stats'],['🏆','Exclusive Achievements','Pro-only milestone badges in your trophy case'],['⚡','Early Access','New features 2 weeks early'],['🤖','Claude AI Storylines','Full Claude-powered narrative engine'],['🌐','Cloud Sync (Coming)','Save across devices when multiplayer ships']].map(([icon,ttl,desc])=><div key={ttl} style={{display:'flex',gap:8,alignItems:'flex-start',padding:'4px 0',borderBottom:'1px solid #1e293b33'}}>
+              <span style={{fontSize:14,flexShrink:0}}>{icon}</span>
+              <div><div style={{fontSize:9,fontWeight:700,color:'#e2e8f0'}}>{ttl}</div><div style={{fontSize:7,color:'#64748b'}}>{desc}</div></div>
+            </div>)}
+          </div>
+          <button onClick={()=>sm('Pro GM — Stripe integration coming soon. Set VITE_STRIPE_KEY to enable.')} style={{width:'100%',background:'#f59e0b',color:'#000',border:'none',borderRadius:8,padding:'10px 0',fontWeight:900,fontSize:11,cursor:'pointer',letterSpacing:1}}>SUBSCRIBE — $4.99/mo</button>
+          <div style={{fontSize:7,color:'#334155',marginTop:6}}>Payments via Stripe. Cancel anytime. Set VITE_STRIPE_KEY to activate.</div>
+        </div>
+        <div style={{background:C.cd,borderRadius:6,padding:'8px 10px',border:`1px solid ${C.bd}`,fontSize:8,color:'#64748b'}}>
+          <div style={{fontWeight:700,color:C.mt,marginBottom:4}}>DEVELOPER NOTE</div>
+          To enable Stripe payments, add <code style={{color:'#c4b5fd',background:'#1e1040',padding:'0 3px',borderRadius:2}}>VITE_STRIPE_KEY=pk_live_xxx</code> to your .env.local and deploy the Stripe webhook handler from <code style={{color:'#93c5fd'}}>docs/PRO_GM_SETUP.md</code>.
+        </div>
+      </div>}
+    </div>}
+
     {/* SCOUTING */}
     {tab==="scouting"&&<div>
       {sp==="preseason"&&(()=>{const AREAS=[{k:'speed',l:'Speed/Athletes'},{k:'scheme',l:'Scheme Fit'},{k:'injury',l:'Injury History'},{k:'combine',l:'Combine Data'}];const total=Object.values(scoutBudget).reduce((s,v)=>s+v,0);return<div style={{background:"#0d1824",border:"1px solid #1e3a5f",borderRadius:5,padding:"6px 10px",marginBottom:6}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:9,fontWeight:700,color:"#60a5fa"}}>📊 SCOUTING BUDGET — {total}/5 SP allocated</span><div style={{display:"flex",gap:3}}>{total<5&&<span style={{fontSize:7,color:"#ef4444"}}>⚠️ Allocate all 5 SP</span>}{total>5&&<span style={{fontSize:7,color:"#ef4444"}}>⚠️ Over budget!</span>}{total===5&&<span style={{fontSize:7,color:"#22c55e"}}>✓ Budget set</span>}</div></div><div style={{display:"flex",gap:6,flexWrap:"wrap"}}>{AREAS.map(a=>{const v=scoutBudget[a.k]||0;const mult=(1+v*0.15).toFixed(2);return<div key={a.k} style={{background:"#0a1520",borderRadius:4,padding:"5px 7px",border:"1px solid #1e293b",minWidth:100}}><div style={{fontSize:7,color:"#64748b",marginBottom:2}}>{a.l}</div><div style={{display:"flex",alignItems:"center",gap:3,marginBottom:2}}><button onClick={()=>setScoutBudget(b=>({...b,[a.k]:Math.max(0,b[a.k]-1)}))} style={{background:"#1e293b",color:"#94a3b8",border:"none",borderRadius:2,width:14,height:14,cursor:"pointer",fontSize:8,lineHeight:1}}>-</button><span style={{fontSize:10,fontWeight:800,color:"#e2e8f0",minWidth:12,textAlign:"center"}}>{v}</span><button onClick={()=>setScoutBudget(b=>({...b,[a.k]:Math.min(3,b[a.k]+1)}))} style={{background:"#1e293b",color:"#94a3b8",border:"none",borderRadius:2,width:14,height:14,cursor:"pointer",fontSize:8,lineHeight:1}}>+</button></div><div style={{fontSize:7,color:v>=2?"#22c55e":v>=1?"#eab308":"#475569"}}>{mult}x accuracy</div></div>;})}</div></div>;})()}
@@ -1458,8 +1720,35 @@ const _def=defaultSaveState();Object.keys(_def).forEach(k=>{if(d[k]===undefined)
       {/* INNO I74: positional needs matrix */}
       {(()=>{const _posOrder=['QB','RB','WR','TE','LT','DL','LB','CB','S','K'];const _lgAvg={QB:82,RB:78,WR:80,TE:76,LT:80,DL:77,LB:76,CB:78,S:75,K:72};const _needs=_posOrder.map(pos=>{const _starters=(ut?.roster||[]).filter(p=>p.pos===pos&&!p.injSev);const _topOvr=_starters.length?Math.max(..._starters.map(p=>p.ovr||0)):0;const _gap=(_lgAvg[pos]||75)-_topOvr;return{pos,gap:_gap,grade:_gap>8?'F':_gap>4?'D':_gap>0?'C':_gap>-4?'B':'A'};}).sort((a,b)=>b.gap-a.gap);return <div style={{marginBottom:8,padding:'6px 8px',background:'#0a0f1a',border:'1px solid #1e293b',borderRadius:4}}><div style={{fontSize:7,color:'#334155',letterSpacing:2,marginBottom:4}}>POSITIONAL NEEDS</div><div style={{display:'flex',flexWrap:'wrap',gap:3}}>{_needs.map(n=>{const _col=n.grade==='F'?'#ef4444':n.grade==='D'?'#f97316':n.grade==='C'?'#f59e0b':n.grade==='B'?'#60a5fa':'#22c55e';return <div key={n.pos} style={{background:'#0d1424',border:`1px solid ${_col}`,borderRadius:3,padding:'2px 6px',display:'flex',gap:4,alignItems:'center'}}><span style={{fontSize:8,color:'#94a3b8'}}>{n.pos}</span><span style={{fontSize:9,fontWeight:'bold',color:_col}}>{n.grade}</span></div>;})}</div></div>;})()}
       {/* I41: Trade partner intelligence */}
-      <button onClick={()=>setFindTradeOpen(o=>!o)} style={{fontSize:9,padding:'4px 10px',background:'#1e3a5f',color:'#7dd3fc',border:'1px solid #3b82f6',borderRadius:3,cursor:'pointer',marginBottom:6}}>🔍 FIND TRADE</button>
-      {findTradeOpen&&(()=>{const posCounts={};(ut?.roster||[]).forEach(p=>{posCounts[p.pos]=(posCounts[p.pos]||0)+1;});const thinPos=Object.entries(posCounts).sort((a,b)=>a[1]-b[1]).slice(0,2).map(e=>e[0]);const suggestions=[];teams.filter(t=>t.id!==ui).forEach(t=>{(t.roster||[]).forEach(p=>{if(thinPos.includes(p.pos)&&p.ovr>=72)suggestions.push({team:t,player:p});});});suggestions.sort((a,b)=>b.player.ovr-a.player.ovr);return(<div style={{background:'#0d1424',border:'1px solid #1e3a5f',borderRadius:4,padding:8,marginBottom:8}}><div style={{fontSize:9,color:'#3b82f6',fontWeight:700,marginBottom:4}}>TOP TRADE TARGETS — {thinPos.join(', ')}</div>{suggestions.slice(0,5).map((s,i)=><div key={i} style={{fontSize:9,color:'#94a3b8',padding:'2px 0',borderBottom:'1px solid #1e293b'}}><span style={{color:'#f1f5f9',fontWeight:700}}>{s.player.name}</span> {s.player.pos} OVR {s.player.ovr} — <span style={{color:'#7dd3fc'}}>{s.team.city}</span></div>)}{suggestions.length===0&&<div style={{fontSize:9,color:'#475569'}}>No targets found</div>}</div>);})()}
+      {/* v31: Enhanced Trade Finder — auto-suggest complete fair trades */}
+      <div style={{display:'flex',gap:4,marginBottom:6,alignItems:'center'}}>
+        <button onClick={()=>{setFindTradeOpen(o=>!o);if(!findTradeOpen){runTradeFinder();}}} style={{fontSize:9,padding:'4px 10px',background:findTradeOpen?'#1e3a5f':'#0d1424',color:'#7dd3fc',border:'1px solid #3b82f6',borderRadius:3,cursor:'pointer',fontWeight:700}}>🔍 TRADE FINDER {findTradeOpen?'▲':'▼'}</button>
+        {findTradeOpen&&<button onClick={runTradeFinder} style={{fontSize:8,padding:'3px 8px',background:'#0d1020',color:'#a78bfa',border:'1px solid #7c3aed',borderRadius:3,cursor:'pointer'}}>↺ Refresh</button>}
+      </div>
+      {findTradeOpen&&<div style={{background:'#0d1424',border:'1px solid #1e3a5f',borderRadius:6,padding:10,marginBottom:10}}>
+        <div style={{fontSize:9,color:'#3b82f6',fontWeight:800,marginBottom:6}}>🎯 BEST TRADE PROPOSALS — matched to your needs</div>
+        {tradeFinderResults.length===0&&<div style={{fontSize:9,color:'#334155',textAlign:'center',padding:'10px 0'}}>No fair trades found. Your roster may be balanced or AI teams lack depth.</div>}
+        {tradeFinderResults.map((r,i)=><div key={i} style={{background:'#0a0f1a',borderRadius:5,padding:'8px 10px',marginBottom:6,border:`1px solid ${r.ratingColor}33`}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:5}}>
+            <span style={{fontSize:8,fontWeight:700,color:'#64748b'}}>{r.team.ab} {r.team.name}</span>
+            <span style={{fontSize:7,fontWeight:800,color:r.ratingColor,background:`${r.ratingColor}22`,borderRadius:3,padding:'1px 5px'}}>{r.rating}</span>
+          </div>
+          <div style={{display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>
+            <div style={{flex:1,background:'#14532d22',borderRadius:4,padding:'4px 6px'}}>
+              <div style={{fontSize:7,color:'#64748b',marginBottom:1}}>YOU GET</div>
+              <div style={{fontSize:9,fontWeight:700,color:C.gn}}>{r.get.name}</div>
+              <div style={{fontSize:7,color:'#22c55e'}}>{r.get.pos} · OVR {r.get.ovr} · TV {r.get.tradeVal}</div>
+            </div>
+            <div style={{fontSize:12,color:'#334155'}}>⇄</div>
+            <div style={{flex:1,background:'#7f1d1d22',borderRadius:4,padding:'4px 6px'}}>
+              <div style={{fontSize:7,color:'#64748b',marginBottom:1}}>YOU SEND</div>
+              <div style={{fontSize:9,fontWeight:700,color:C.rd}}>{r.send.name}</div>
+              <div style={{fontSize:7,color:'#ef4444'}}>{r.send.pos} · OVR {r.send.ovr} · TV {r.send.tradeVal}</div>
+            </div>
+            <button onClick={()=>{setTrTm(r.team.id);setTrOff({g:[r.send],r:[r.get],gPk:[],rPk:[]});setFindTradeOpen(false);sm(`Trade loaded: ${r.send.name} ↔ ${r.get.name}`);}} style={{background:'#1e3a5f',color:'#7dd3fc',border:'1px solid #3b82f6',borderRadius:4,padding:'4px 8px',fontSize:8,cursor:'pointer',whiteSpace:'nowrap',fontWeight:700}}>Load →</button>
+          </div>
+        </div>)}
+      </div>}
       {gmDMs.length>0&&<div style={{background:'#0d1a2a',border:'1px solid #1e3a5f',borderRadius:6,padding:'6px 10px',marginBottom:8}}><div style={{fontSize:9,fontWeight:700,color:'#38bdf8',marginBottom:4}}>📨 GM DIRECT MESSAGES ({gmDMs.length})</div>{gmDMs.slice(0,3).map((m,i)=><div key={i} style={{display:'flex',gap:8,padding:'3px 0',borderBottom:`1px solid ${C.bd}33`,fontSize:9}}><span style={{color:'#f59e0b',fontWeight:700,minWidth:28}}>{m.from}</span><span style={{color:'#94a3b8',flex:1}}>{m.msg}</span><span style={{color:C.mt,fontSize:7}}>Wk{m.wk}</span></div>)}<button onClick={()=>setGmDMs([])} style={{background:'transparent',border:'none',color:C.mt,cursor:'pointer',fontSize:7,marginTop:3}}>Clear DMs</button></div>}
       {/* v21: 3-Way Trade Desk */}
       <div style={{marginBottom:8}}><Btn onClick={()=>setTradeDeskOpen(o=>!o)} bg={tradeDeskOpen?'#7c3aed':'#1e293b'} c={tradeDeskOpen?'#e9d5ff':C.mt} style={{fontSize:8,padding:'3px 10px'}}>⚖️ 3-Way Trade Desk {tradeDeskOpen?'▲':'▼'}</Btn></div>

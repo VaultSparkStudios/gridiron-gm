@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gridiron GM vs Football-GM — Competitive Analysis 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', serif;
+    font-size: 12pt;
+    color: #1a1a1a;
+    background: #fff;
+    line-height: 1.6;
+    padding: 0;
+  }
+  .page {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 60px 72px;
+  }
+
+  /* Cover */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 4px solid #0a0a0a;
+    page-break-after: always;
+  }
+  .cover-eyebrow {
+    font-family: 'Arial', sans-serif;
+    font-size: 9pt;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 24px;
+  }
+  .cover-title {
+    font-size: 32pt;
+    font-weight: bold;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .cover-subtitle {
+    font-size: 16pt;
+    color: #444;
+    margin-bottom: 48px;
+  }
+  .cover-meta {
+    font-family: 'Arial', sans-serif;
+    font-size: 10pt;
+    color: #666;
+    border-top: 1px solid #ddd;
+    padding-top: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .cover-meta span { display: block; }
+  .cover-meta strong { color: #1a1a1a; }
+
+  /* Section */
+  h1 {
+    font-size: 20pt;
+    border-bottom: 3px solid #1a1a1a;
+    padding-bottom: 8px;
+    margin: 48px 0 24px;
+    page-break-after: avoid;
+  }
+  h2 {
+    font-size: 14pt;
+    color: #1a1a1a;
+    margin: 32px 0 12px;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 11pt;
+    font-family: 'Arial', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #444;
+    margin: 24px 0 8px;
+    page-break-after: avoid;
+  }
+  p { margin-bottom: 12px; }
+  ul, ol { margin: 0 0 12px 24px; }
+  li { margin-bottom: 4px; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 10pt;
+    font-family: 'Arial', sans-serif;
+    page-break-inside: avoid;
+  }
+  th {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 9pt;
+    letter-spacing: 0.05em;
+  }
+  td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #e8e8e8;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f8f8; }
+  tr:last-child td { border-bottom: 2px solid #1a1a1a; }
+
+  /* Verdict box */
+  .verdict {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 24px 28px;
+    margin: 24px 0;
+    border-radius: 2px;
+    page-break-inside: avoid;
+  }
+  .verdict .label {
+    font-family: 'Arial', sans-serif;
+    font-size: 8pt;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 8px;
+  }
+  .verdict .text { font-size: 13pt; line-height: 1.5; }
+
+  /* Callout */
+  .callout {
+    border-left: 4px solid #1a1a1a;
+    padding: 12px 16px;
+    margin: 16px 0;
+    background: #f5f5f5;
+    page-break-inside: avoid;
+  }
+  .callout.green { border-color: #2d7a2d; }
+  .callout.red { border-color: #b02020; }
+  .callout.amber { border-color: #c47b00; }
+
+  /* Score badge */
+  .score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .score-card {
+    border: 1px solid #ddd;
+    padding: 12px 16px;
+    page-break-inside: avoid;
+  }
+  .score-card .dim { font-size: 9pt; font-family: Arial, sans-serif; color: #666; }
+  .score-card .val { font-size: 20pt; font-weight: bold; font-family: Arial, sans-serif; line-height: 1; margin: 4px 0 2px; }
+  .score-card .grade { font-size: 10pt; font-family: Arial, sans-serif; }
+  .grade-a { color: #2d7a2d; }
+  .grade-b { color: #1a5c8f; }
+  .grade-c { color: #c47b00; }
+  .grade-d { color: #b02020; }
+
+  /* Moat table */
+  .moat-item {
+    border-bottom: 1px solid #e8e8e8;
+    padding: 10px 0;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 12px;
+    font-size: 10pt;
+    font-family: Arial, sans-serif;
+    align-items: center;
+    page-break-inside: avoid;
+  }
+  .moat-header {
+    font-weight: bold;
+    font-size: 9pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 6px 0;
+    border-bottom: 2px solid #1a1a1a;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 12px;
+  }
+  .has { color: #2d7a2d; font-weight: bold; }
+  .lacks { color: #b02020; font-weight: bold; }
+  .partial { color: #c47b00; font-weight: bold; }
+
+  /* Page break helpers */
+  .pb { page-break-before: always; }
+  .pba { page-break-after: always; }
+
+  /* Footer */
+  .report-footer {
+    margin-top: 60px;
+    padding-top: 16px;
+    border-top: 1px solid #ddd;
+    font-family: Arial, sans-serif;
+    font-size: 9pt;
+    color: #888;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .report-footer .right { text-align: right; }
+
+  @media print {
+    body { font-size: 11pt; }
+    .page { padding: 48px 60px; }
+    .cover { min-height: auto; padding-bottom: 60px; }
+    h1 { margin-top: 36px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-eyebrow">VaultSpark Studios — Confidential Report</div>
+  <div class="cover-title">Gridiron GM vs.<br>Football-GM (ZenGM)</div>
+  <div class="cover-subtitle">Full Competitive Analysis & Strategic Positioning Report</div>
+  <div class="cover-meta">
+    <div>
+      <span><strong>Subject:</strong> football-gm.com & ZenGM offshoots</span>
+      <span><strong>Our Product:</strong> vaultsparkstudios.com/gridiron-gm</span>
+      <span><strong>Version Audited:</strong> Gridiron GM v30.0</span>
+    </div>
+    <div>
+      <span><strong>Date:</strong> March 26, 2026</span>
+      <span><strong>Classification:</strong> Studio Confidential</span>
+      <span><strong>Prepared by:</strong> VaultSpark Studio OS</span>
+    </div>
+  </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<h1>Executive Summary</h1>
+
+<div class="verdict">
+  <div class="label">Strategic Verdict</div>
+  <div class="text">Gridiron GM is not playing the same game as Football-GM. Football-GM is a spreadsheet sim — deep, free, and stat-obsessed. Gridiron GM is a franchise experience — live gameplay, narrative arcs, emotional moments. The correct strategic posture is not to out-simulate Football-GM. It is to make Football-GM players feel like something is missing when they return to it.</div>
+</div>
+
+<p>Football-GM (ZenGM) is the dominant free browser football franchise simulation game, with 1.46 million annual sessions, 2.97 million seasons simulated, and 95 years of cumulative play time in 2025. It is technically solid, actively developed by a solo developer, and has a loyal community of simulation purists who have been playing for 7+ years.</p>
+
+<p>Gridiron GM at v30.0 is a newer, smaller, and more ambitious product. It matches Football-GM on franchise simulation depth, exceeds it significantly on narrative and emotional design, and has a genuine structural moat in one area Football-GM cannot enter: <strong>real-time interactive gameplay via the Phaser 3 engine.</strong></p>
+
+<p>The risk is not competitive feature parity. The risk is discoverability, mobile experience, and monetization — three areas where Football-GM's 7-year head start is most visible.</p>
+
+---
+
+<!-- COMPETITOR PROFILE -->
+<h1>Competitor Profile: Football-GM (ZenGM)</h1>
+
+<h2>Company & Developer Overview</h2>
+
+<p>Football-GM is part of the <strong>ZenGM platform</strong>, which includes Basketball-GM (flagship), Football-GM, Baseball-GM, and Hockey-GM. All four games share a monorepo codebase and are maintained by a single developer: <strong>Jeremy ("dumbmatter")</strong>, who left his day job in 2021 to develop ZenGM full-time.</p>
+
+<ul>
+  <li><strong>Platform launch:</strong> Basketball-GM (~2012), Football-GM (~2019)</li>
+  <li><strong>Technology stack:</strong> TypeScript, React, Bootstrap, IndexedDB (client-side storage)</li>
+  <li><strong>Revenue model:</strong> Freestar ad network + Patreon (all games permanently free)</li>
+  <li><strong>GitHub:</strong> Public monorepo, 17,932 commits, 37 contributors, 428 stars</li>
+  <li><strong>Build cadence:</strong> Daily build artifacts (version format: v2026.03.26.NNNN)</li>
+</ul>
+
+<h2>Platform Scale (2025 Data)</h2>
+
+<table>
+  <thead>
+    <tr><th>Game</th><th>Sessions/Year</th><th>Seasons Simulated</th><th>Play Time (Years)</th><th>YoY Growth</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Basketball-GM</td><td>5.03M</td><td>20.9M</td><td>344 years</td><td>+9%</td></tr>
+    <tr><td>Football-GM</td><td>1.46M</td><td>2.97M</td><td>95 years</td><td>+26%</td></tr>
+    <tr><td>Baseball-GM</td><td>432K</td><td>—</td><td>—</td><td>+26%</td></tr>
+    <tr><td>Hockey-GM</td><td>170K</td><td>—</td><td>—</td><td>+17%</td></tr>
+    <tr><td><strong>Total ZenGM</strong></td><td><strong>7.1M</strong></td><td><strong>25.3M</strong></td><td><strong>482 years</strong></td><td><strong>+13%</strong></td></tr>
+  </tbody>
+</table>
+
+<div class="callout amber">
+  <strong>Key signal:</strong> Football-GM is growing at 26% YoY — faster than Basketball-GM — but from a much smaller base. It is Football-GM's moment of rising. Gridiron GM's window to establish differentiation is now.
+</div>
+
+<h2>Feature Set Overview</h2>
+
+<h3>What Football-GM does well</h3>
+<ul>
+  <li><strong>Zero-friction acquisition:</strong> Play in 10 seconds, no account, no install, no onboarding required</li>
+  <li><strong>God Mode sandbox:</strong> Edit any player, any setting, rig outcomes — unmatched customization power</li>
+  <li><strong>Unlimited concurrent leagues:</strong> Create and manage as many franchises as you want simultaneously</li>
+  <li><strong>Advanced stats depth:</strong> OL metrics (PBWR/RBWR/Sacks Allowed, added Mar 2026), graphable historical data, AV scoring, advanced team efficiency</li>
+  <li><strong>Custom league file JSON import/export:</strong> Full league state portability — enables modding and community sharing</li>
+  <li><strong>Cross-device persistence:</strong> IndexedDB — close the tab, come back weeks later, nothing is lost</li>
+  <li><strong>Anti-tanking draft systems:</strong> Detailed lottery mechanics including the new COLA (Carry-Over Lottery Allocation) system (Feb 2026)</li>
+  <li><strong>Active community:</strong> Reddit, Discord, GitHub issues — developer responds personally and ships community-requested features within weeks</li>
+  <li><strong>TypeScript codebase:</strong> Compile-time type safety, fewer runtime bugs, easier contributions</li>
+  <li><strong>Schedule editor (Oct 2025):</strong> Manual per-season schedule tweaking</li>
+</ul>
+
+<h3>Recent Football-GM Releases (2025–2026)</h3>
+<table>
+  <thead>
+    <tr><th>Date</th><th>Feature</th><th>Category</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Mar 2026</td><td>OL stats (PBWR/RBWR/Sacks Allowed), OPOY award, award formula refinements</td><td>Sim depth, awards</td></tr>
+    <tr><td>Feb 2026</td><td>COLA anti-tanking draft lottery system</td><td>Draft</td></tr>
+    <tr><td>Jan 2026</td><td>Bulk player actions (release, trade, watch, compare, God Mode heal/delete)</td><td>UX, roster mgmt</td></tr>
+    <tr><td>Oct 2025</td><td>Schedule editor</td><td>Customization</td></tr>
+    <tr><td>Ongoing 2025</td><td>Trading block filters (position, skills, asset type)</td><td>Trade UX</td></tr>
+  </tbody>
+</table>
+
+---
+
+<h1 class="pb">Competitive Weaknesses: Football-GM</h1>
+
+<p>These are not speculative gaps — they are structural limitations of the product's design philosophy and solo developer model.</p>
+
+<h2>1. No Interactive Gameplay — Structural Limitation</h2>
+<p>Football-GM simulates. You watch numbers change. There is no play-calling, no real-time control, no player agency during the game. The "play-by-play" is a text log. This is a <strong>permanent competitive gap</strong> — adding a real-time Phaser engine would require a complete platform rebuild.</p>
+
+<h2>2. Zero Narrative or Emotional Layer</h2>
+<p>Football-GM has no story. No beat reporter, no press conference, no locker room speech, no parade, no GM reputation arc, no player personality archetypes driving drama. Players are ratings, not characters. Sessions end when you're done looking at numbers. There is no "moment" that makes you call your friend and say "you won't believe what just happened in my franchise."</p>
+
+<h2>3. Visual Presentation is Purely Utilitarian</h2>
+<p>The UI is React/Bootstrap — functional, readable, and completely emotionally flat. No animations. No celebration sequences. Draft picks are processed with no ceremony. Championships produce no visual moment. The game is a spreadsheet dressed in a web frame.</p>
+
+<h2>4. Solo Developer — Single Point of Failure</h2>
+<p>Jeremy's second son was born January 1, 2026. Update frequency measurably slowed. A newborn, an illness, or burnout creates a hard stop for the entire platform. No team, no roadmap, no sprint velocity. Football-GM cannot commit to features the way a studio can.</p>
+
+<h2>5. Football is the #2 Priority</h2>
+<p>Basketball-GM drives 3.4x the sessions of Football-GM and has 18 years of development depth. Football-GM inherits shared infrastructure improvements but football-specific features consistently lag. OPOY (Offensive Player of the Year) was only added in March 2026 — six years after Football-GM launched. This is the speed of a secondary product.</p>
+
+<h2>6. No Mobile Native App</h2>
+<p>Responsive web, no App Store / Google Play. PWA installation is available but not marketed. No push notifications. No offline-first design. Mobile users get a functional but suboptimal experience with no upgrade path.</p>
+
+<h2>7. AI Trade Logic Is Gameable</h2>
+<p>The developer himself acknowledged that the AI's trade valuation system is predictable. Power users know how to fleece it. The community asks for better AI, not better UI filters — but this requires significant sim engine work that hasn't shipped.</p>
+
+<h2>8. No Multiplayer of Any Kind</h2>
+<p>Single-player only. No online leagues, no commissioner tools, no head-to-head, no async multiplayer draft. This is an explicit non-goal for the product. The community has asked for it repeatedly. It will not come from Football-GM.</p>
+
+<h2>9. Monetization Ceiling Is Capped</h2>
+<p>All games are permanently free. Ad + Patreon covers one developer's salary. This means Football-GM cannot hire a team, cannot build a mobile app, cannot add a multiplayer backend. The revenue model is structurally incompatible with growth beyond a solo product.</p>
+
+---
+
+<h1>Head-to-Head Feature Comparison</h1>
+
+<div class="moat-header">
+  <span>Feature</span>
+  <span>Football-GM</span>
+  <span>Gridiron GM</span>
+</div>
+
+<div class="moat-item">
+  <span><strong>Real-time interactive gameplay</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ Phaser 3 engine</span>
+</div>
+<div class="moat-item">
+  <span><strong>Narrative / story moments</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ 15+ narrative systems</span>
+</div>
+<div class="moat-item">
+  <span><strong>GM Reputation arc & progression</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ ROOKIE→LEGEND</span>
+</div>
+<div class="moat-item">
+  <span><strong>Player personality archetypes</strong></span>
+  <span class="lacks">✗ Ratings only</span>
+  <span class="has">✓ Leader/Hothead/Grinder/Loner</span>
+</div>
+<div class="moat-item">
+  <span><strong>Coaching specialization system</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ OC/DC/ST with scheme fit</span>
+</div>
+<div class="moat-item">
+  <span><strong>Beat reporters / newspaper modal</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ v30.0</span>
+</div>
+<div class="moat-item">
+  <span><strong>Dynamic Difficulty Adjustment (DDA)</strong></span>
+  <span class="lacks">✗ Manual settings only</span>
+  <span class="has">✓ ±0.06 adaptive</span>
+</div>
+<div class="moat-item">
+  <span><strong>Web Speech API commentary</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ Spoken play-by-play</span>
+</div>
+<div class="moat-item">
+  <span><strong>FA Combine Showcase</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ v30.0</span>
+</div>
+<div class="moat-item">
+  <span><strong>Shareable highlight card download</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ Canvas 400×225</span>
+</div>
+<div class="moat-item">
+  <span><strong>Franchise Sale mechanic</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ v30.0</span>
+</div>
+<div class="moat-item">
+  <span><strong>Speedrun Mode</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ v30.0</span>
+</div>
+<div class="moat-item">
+  <span><strong>Cap restructuring</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ 30% relief + dead cap</span>
+</div>
+<div class="moat-item">
+  <span><strong>Chemistry system affecting gameplay</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="has">✓ &lt;50 = fumble multiplier</span>
+</div>
+<div class="moat-item">
+  <span><strong>God Mode / full sandbox editing</strong></span>
+  <span class="has">✓ Full</span>
+  <span class="lacks">✗ None yet</span>
+</div>
+<div class="moat-item">
+  <span><strong>Unlimited concurrent leagues</strong></span>
+  <span class="has">✓ Unlimited</span>
+  <span class="lacks">✗ 3 save slots</span>
+</div>
+<div class="moat-item">
+  <span><strong>JSON league file import/export</strong></span>
+  <span class="has">✓ Full export/import</span>
+  <span class="lacks">✗ None</span>
+</div>
+<div class="moat-item">
+  <span><strong>OL stat tracking (PBWR/RBWR)</strong></span>
+  <span class="has">✓ Mar 2026</span>
+  <span class="lacks">✗ Not tracked</span>
+</div>
+<div class="moat-item">
+  <span><strong>Graphable historical data</strong></span>
+  <span class="has">✓ Any stat</span>
+  <span class="lacks">✗ None</span>
+</div>
+<div class="moat-item">
+  <span><strong>Custom league settings / difficulty</strong></span>
+  <span class="has">✓ Extensive</span>
+  <span class="partial">~ Presets only</span>
+</div>
+<div class="moat-item">
+  <span><strong>Anti-tanking draft lottery (COLA)</strong></span>
+  <span class="has">✓ Feb 2026</span>
+  <span class="lacks">✗ Standard snake</span>
+</div>
+<div class="moat-item">
+  <span><strong>PWA installable</strong></span>
+  <span class="has">✓ Both</span>
+  <span class="has">✓ Both</span>
+</div>
+<div class="moat-item">
+  <span><strong>Mobile responsive</strong></span>
+  <span class="has">✓ Full responsive</span>
+  <span class="lacks">✗ Tables break</span>
+</div>
+<div class="moat-item">
+  <span><strong>Multiplayer / online leagues</strong></span>
+  <span class="lacks">✗ None</span>
+  <span class="lacks">✗ None</span>
+</div>
+<div class="moat-item">
+  <span><strong>TypeScript codebase</strong></span>
+  <span class="has">✓ Full TypeScript</span>
+  <span class="lacks">✗ JavaScript only</span>
+</div>
+<div class="moat-item">
+  <span><strong>Active analytics / session data</strong></span>
+  <span class="has">✓ Active</span>
+  <span class="lacks">✗ URL placeholder</span>
+</div>
+<div class="moat-item">
+  <span><strong>Community (Reddit/Discord)</strong></span>
+  <span class="has">✓ Active subreddits</span>
+  <span class="lacks">✗ None yet</span>
+</div>
+<div class="moat-item">
+  <span><strong>7-round NFL draft (224 picks)</strong></span>
+  <span class="has">✓ Yes</span>
+  <span class="has">✓ Yes</span>
+</div>
+<div class="moat-item">
+  <span><strong>Scouting system</strong></span>
+  <span class="partial">~ Basic</span>
+  <span class="has">✓ 3-tier scouts, decay, combine</span>
+</div>
+<div class="moat-item">
+  <span><strong>Injury system with IR/PUP/NFI</strong></span>
+  <span class="partial">~ Basic tiers</span>
+  <span class="has">✓ Full severity + designations</span>
+</div>
+
+---
+
+<h1 class="pb">Scoring: Where Gridiron GM Stands</h1>
+
+<p>Scored across 10 competitive dimensions, 0–100:</p>
+
+<div class="score-grid">
+  <div class="score-card">
+    <div class="dim">Simulation Depth & Realism</div>
+    <div class="val grade-a">89</div>
+    <div class="grade grade-a">A — Leads Football-GM on injury, scouting, coaching, DDA</div>
+  </div>
+  <div class="score-card">
+    <div class="dim">Feature Volume & Innovation</div>
+    <div class="val grade-a">93</div>
+    <div class="grade grade-a">A+ — 35 innovations in v30, widest feature set in class</div>
+  </div>
+  <div class="score-card">
+    <div class="dim">Competitive Differentiation</div>
+    <div class="val grade-a">85</div>
+    <div class="grade grade-a">A — Live gameplay + narrative = structural moat</div>
+  </div>
+  <div class="score-card">
+    <div class="dim">Engagement & Retention</div>
+    <div class="val grade-b">76</div>
+    <div class="grade grade-b">B+ — No social loop yet limits long-term stickiness</div>
+  </div>
+  <div class="score-card">
+    <div class="dim">UI / UX & Visual Presentation</div>
+    <div class="val grade-b">71</div>
+    <div class="grade grade-b">B— — Functional, consistent, lacks WOW moments</div>
+  </div>
+  <div class="score-card">
+    <div class="dim">Code Architecture</div>
+    <div class="val grade-c">68</div>
+    <div class="grade grade-c">C+ — Solid logic, monolith risk, no TypeScript</div>
+  </div>
+  <div class="score-card">
+    <div class="dim">Technical Infrastructure</div>
+    <div class="val grade-b">74</div>
+    <div class="grade grade-b">B — CI/CD, PWA — no cloud, no live analytics</div>
+  </div>
+  <div class="score-card">
+    <div class="dim">Mobile & Accessibility</div>
+    <div class="val grade-d">52</div>
+    <div class="grade grade-d">D+ — Tables break on small screens, no touch UX</div>
+  </div>
+  <div class="score-card">
+    <div class="dim">Monetization & Growth</div>
+    <div class="val grade-d">48</div>
+    <div class="grade grade-d">D+ — No revenue model active</div>
+  </div>
+  <div class="score-card">
+    <div class="dim">Community & Discoverability</div>
+    <div class="val grade-d">38</div>
+    <div class="grade grade-d">D — No subreddit, no Discord, no social presence</div>
+  </div>
+</div>
+
+<h2>Overall Competitive Score: 81/100</h2>
+
+<div class="callout green">
+  <strong>What this score means:</strong> Gridiron GM is a superior <em>product</em> to Football-GM in feature design and player experience. It is an inferior <em>platform</em> in community, discoverability, and mobile reach. The score gap between current (81) and potential (95+) is almost entirely in the platform dimensions — not the game itself.
+</div>
+
+---
+
+<h1>Target Audience Mapping</h1>
+
+<h2>Football-GM's Core Audience</h2>
+<ul>
+  <li><strong>Simulation purists:</strong> Want deep stat tracking, AV scores, historical data — don't need "fun," need accuracy</li>
+  <li><strong>Modders & power users:</strong> God Mode enthusiasts who want total control; import/export league files</li>
+  <li><strong>Stat-obsessed fans:</strong> Cross-reference their franchise stats with real NFL numbers; want graphable historical data</li>
+  <li><strong>Casual browsers:</strong> Land via Google, play one session, may not return — low acquisition friction drives volume</li>
+</ul>
+
+<h2>Gridiron GM's Natural Audience</h2>
+<ul>
+  <li><strong>Experience-seekers:</strong> Want to feel the franchise, not just manage a spreadsheet — narrative, moments, personality</li>
+  <li><strong>Active game players:</strong> Want to actually call plays and control outcomes in live games</li>
+  <li><strong>Story builders:</strong> Dynasty builders who want their franchise to have an arc, a voice, a history with texture</li>
+  <li><strong>Mobile-first casual GMs:</strong> Want a great GM experience on their phone — currently underserved by both products</li>
+  <li><strong>Football-GM alumni:</strong> Players who've mastered Football-GM and want more depth, more story, more game</li>
+</ul>
+
+<h2>Conversion Opportunity</h2>
+
+<div class="callout">
+  The highest-value target for Gridiron GM is the <strong>Football-GM power user who is bored</strong>. They've built three dynasties, they know the AI trade logic inside out, they want something that makes the franchise feel alive. This player will convert if: (1) they hear about Gridiron GM, (2) the first session has a moment Football-GM can never give them, and (3) their progress is preserved when they come back.
+</div>
+
+---
+
+<h1 class="pb">Strategic Recommendations</h1>
+
+<h2>Priority 1: Neutralize the Friction Gap</h2>
+<p>Football-GM's biggest weapon is zero friction — play in 10 seconds. Gridiron GM's onboarding is better than most games but the landing page needs an instant-play mode: "Start with a random team, skip setup." The first 60 seconds of Gridiron GM should contain a moment that Football-GM cannot replicate.</p>
+
+<h2>Priority 2: Mobile is the Market</h2>
+<p>Football-GM is responsive. Gridiron GM's tables break on mobile. This is the single highest-leverage technical fix available — not because mobile users spend more, but because mobile is where discovery happens. A YouTube short of a live Phaser play watched on a phone leads to a Google search on a phone leads to a broken table = lost player. Fix the tables, add bottom nav, and the conversion funnel closes.</p>
+
+<h2>Priority 3: Enable Analytics Immediately</h2>
+<p>The VITE_ANALYTICS_URL is a placeholder. Every session played right now is invisible. Deploy Plausible or Umami (both privacy-safe, one-hour deploy) and immediately gain session counts, retention curves, funnel drop-offs, and feature usage heatmaps. Every future decision becomes data-driven.</p>
+
+<h2>Priority 4: Build One Community Anchor</h2>
+<p>Football-GM has years of Reddit community inertia. Gridiron GM needs one anchor: a subreddit or Discord where players share dynasty stories, draft grades, and highlight cards. The Shareable Season Recap Card (already buildable) is the viral hook — players share, community forms around shares, community creates more players.</p>
+
+<h2>Priority 5: One Revenue Line</h2>
+<p>Football-GM is permanently free and will never charge. This is their constraint and Gridiron GM's opportunity. A "Pro GM" tier at $4.99/month — cosmetic team themes, extra save slots, exclusive stat dashboards — signals premium quality and enables studio investment. The product is polished enough to charge for extras today.</p>
+
+<h2>Priority 6: Close the Stats Depth Gap</h2>
+<p>Football-GM's power users want data. OL stats (PBWR/RBWR), graphable historical charts, career leaderboards, EPA-style metrics — these features signal seriousness to simulation purists. A Stats Hub tab using already-tracked data would take one session to build and dramatically improve retention for the audience most likely to pay.</p>
+
+---
+
+<h1>Conclusion</h1>
+
+<div class="verdict">
+  <div class="label">Final Assessment</div>
+  <div class="text">Gridiron GM is not behind Football-GM. It is ahead in the dimensions that matter most for the next decade of sports gaming: interactivity, narrative, and emotional engagement. Football-GM is the past — a masterclass in the spreadsheet-sim genre. Gridiron GM is the category that comes after it. The work now is not building more features. It is making Gridiron GM findable, playable on any device, and financially self-sustaining so the studio can keep building.</div>
+</div>
+
+<p>The 30-feature v30.0 ship represents feature completion for the "manage AND play" prototype. The next phase is platform — community, mobile, monetization, and discoverability. Football-GM's 7-year head start in community cannot be closed with features. It can only be bypassed by building a different community around a different kind of game.</p>
+
+<p>Gridiron GM is that different kind of game. The opportunity is to make the world know it.</p>
+
+<div class="report-footer">
+  <div>Gridiron GM Competitive Analysis — v30.0</div>
+  <div class="right">VaultSpark Studios — March 2026 — Studio Confidential</div>
+</div>
+
+</div>
+</body>
+</html>
