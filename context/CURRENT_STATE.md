@@ -4,7 +4,7 @@
 
 - Date: 2026-03-26
 - Overall status: Live on GitHub Pages, active development
-- Current version: v28.0 (gridiron-gm) / P125 (gridiron-gm-play) — both builds clean, gridiron-gm pushed v28.0
+- Current version: v30.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — both builds clean, both repos pushed
 - Studio OS: Fully compliant
 
 ## What exists
@@ -222,12 +222,18 @@
 
 ## Important paths
 
-- `src/App.jsx` — all game code (~1880+ lines, v27.0)
+- `src/App.jsx` — all game code (1993 lines, v30.0)
 - `gridiron-gm-play/src/scenes/FieldScene.js` — primary Phaser gameplay file
 - `gridiron-gm-play/src/scenes/PlayCallScene.js` — play call menu (8 runs/passes)
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()
 - `.github/workflows/` — ci.yml + deploy-pages.yml
 - `context/` — Studio OS project memory
+
+## v30.0 additions (2026-03-26)
+
+**GM:** Beat Reporter, Save Slots, Legacy Records, DDA (window._gmDDA), Parade Screen, Draft Day Animation, Cap Restructuring, AI GM DMs, Player Arc System, Speedrun Mode, Coaching Specialization, Trade War Room Timer, Custom Team Creator, Injury Rehab Decisions, Power Rankings Broadcast, Historical Challenges, Chemistry Graph, Media Week Pressure, Franchise Sale, SIL Score Badge, Newspaper Modal, FA Combine Showcase, AI Spectator Mode, PWA manifest
+
+**Play:** Web Speech commentary (_speak + toggle), game plan bridge (gm_roster_export.gamePlan → window._gmGamePlan → ±0.12 passCh), downloadable highlight card (GameOverScene 400×225 canvas)
 
 ## In progress
 
@@ -235,4 +241,11 @@
 
 ## Next session task board
 
-See context/TASK_BOARD.md — backlog cleared (v27.0 / P125)
+See context/TASK_BOARD.md — backlog cleared (v30.0)
+
+## Pending user actions (MANUAL — cannot be automated)
+
+1. **VITE_ANALYTICS_URL** — fill in both `.env.local` files with your endpoint URL, then redeploy
+2. **I-2 Pro GM Subscription** — requires Stripe + auth backend (skipped — external infra)
+3. **I-24 Multiplayer Draft Room** — requires WebRTC or SSE server (skipped — external infra)
+4. **I-26 Cloud Sync** — requires auth backend (skipped — external infra)
