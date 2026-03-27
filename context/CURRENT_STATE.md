@@ -4,7 +4,7 @@
 
 - Date: 2026-03-26
 - Overall status: Live on GitHub Pages, active development
-- Current version: v30.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — both builds clean, both repos pushed
+- Current version: v31.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — GM built clean and pushed (`8d91fce`), Play unchanged
 - Studio OS: Fully compliant
 
 ## What exists
@@ -222,12 +222,16 @@
 
 ## Important paths
 
-- `src/App.jsx` — all game code (1993 lines, v30.0)
+- `src/App.jsx` — all game code (~2300+ lines, v31.0)
 - `gridiron-gm-play/src/scenes/FieldScene.js` — primary Phaser gameplay file
 - `gridiron-gm-play/src/scenes/PlayCallScene.js` — play call menu (8 runs/passes)
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()
 - `.github/workflows/` — ci.yml + deploy-pages.yml
 - `context/` — Studio OS project memory
+
+## v31.0 additions (2026-03-26)
+
+**GM:** GM Rep persistent bar (tier/XP/progress strip), Stats Hub tab (5 sections: leaders/franchise/roster/storylines/pro), Trade Finder auto-suggest (`runTradeFinder()` — 5 proposals with FAIR/UNEVEN/LOPSIDED badge + Load→), Season Recap Card (480×270 canvas download, auto at season end + manual 📊), Mobile Responsive (`isMobile` state + resize listener, conditional sizing throughout), AI Storyline Engine (offline template mode live + Claude proxy stub), Pro GM stub UI in Hub, Project Audit (`context/AUDIT_v30.md` — 81/100 B+), Competitive Analysis (`docs/COMPETITIVE_ANALYSIS_FOOTBALL_GM_2026.html`), 5 ceiling feature setup docs (Phaser 60min, Real Roster, Claude AI, Multiplayer, Pro GM Stripe)
 
 ## v30.0 additions (2026-03-26)
 
@@ -241,11 +245,13 @@
 
 ## Next session task board
 
-See context/TASK_BOARD.md — backlog cleared (v30.0)
+See context/TASK_BOARD.md — backlog cleared (v31.0). Options: P126+ plays, analytics endpoint, Stripe/Supabase integration, real roster community file.
 
 ## Pending user actions (MANUAL — cannot be automated)
 
 1. **VITE_ANALYTICS_URL** — fill in both `.env.local` files with your endpoint URL, then redeploy
-2. **I-2 Pro GM Subscription** — requires Stripe + auth backend (skipped — external infra)
-3. **I-24 Multiplayer Draft Room** — requires WebRTC or SSE server (skipped — external infra)
-4. **I-26 Cloud Sync** — requires auth backend (skipped — external infra)
+2. **VITE_CLAUDE_PROXY_URL** — deploy Cloudflare Worker (see `docs/CLAUDE_AI_STORYLINE_SETUP.md`) to unlock full Claude AI Storylines
+3. **Pro GM Stripe** — wire up Stripe checkout per `docs/PRO_GM_SETUP.md`
+4. **Multiplayer backend** — deploy Supabase schema per `docs/MULTIPLAYER_SETUP.md`
+5. **Real Roster file** — create `public/rosters/nfl-2025.json` per `docs/REAL_ROSTER_MODE_SETUP.md`
+6. **Phaser full game** — implement clock/drive/possession system in gridiron-gm-play per `docs/PHASER_60MIN_GAME_SETUP.md`
