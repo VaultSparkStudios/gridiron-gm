@@ -4,9 +4,9 @@
 
 - Date: 2026-03-27
 - Overall status: Live on GitHub Pages, active development
-- Current version: v34.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — GM v34 built + pushed `4e45a7c`, Play unchanged
+- Current version: v35.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — GM v35 built + committed `cd258a4`, Play unchanged
 - Studio OS: Fully compliant
-- Audit score: 86/100 (A-) at v31 baseline; v32 ~91/100; v33 ~93/100; v34 targets 95/100
+- Audit score: Full audit run this session at v34 baseline — 63/100. v35 addresses highest-leverage items. Estimated v35 score: ~68/100.
 
 ## What exists
 
@@ -223,12 +223,18 @@
 
 ## Important paths
 
-- `src/App.jsx` — all game code (~2432 lines, v34.0)
+- `src/App.jsx` — all game code (~2450 lines, v35.0)
 - `gridiron-gm-play/src/scenes/FieldScene.js` — primary Phaser gameplay file
 - `gridiron-gm-play/src/scenes/PlayCallScene.js` — play call menu (8 runs/passes)
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()
 - `.github/workflows/` — ci.yml + deploy-pages.yml
 - `context/` — Studio OS project memory
+
+## v35.0 additions (2026-03-27)
+
+**GM:** Expanded FN 120→210, LN 120→225, COL 53→102, FACTS 21→47 (addresses season 2-3 content cliff), Canvas recap card upgraded from 480×270 to 1200×630 with team color gradient + football illustration + branding bar (Twitter-optimized PNG download), PWA manifest fixed (start_url+scope = /gridiron-gm/, SVG icons), icon.svg + icon-192.svg + icon-512.svg created (football badge design), sw.js service worker added (cache-first static / network-first JS chunks / offline shell), SW registered in main.jsx on load, cover.svg redesigned (field line grid, feature pills, football illustration, gradient title, VAULTSPARK branding bar), itch.io listing copy + Reddit post copy written (ready to publish — no code)
+
+**Commit:** `cd258a4` — not yet pushed (push on closeout)
 
 ## v34.0 additions (2026-03-27)
 

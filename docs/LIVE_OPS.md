@@ -5,8 +5,9 @@
 - Deployment: GitHub Pages, direct from `VaultSparkStudios/Gridiron-GM` repo
 - Frontend URL: `https://vaultsparkstudios.com/gridiron-gm/`
 - Backend: None — 100% client-side, browser-local state only
-- Persistence: Browser session only (no save/load yet)
-- Analytics: None configured
+- Persistence: `gm_autosave` localStorage key (auto-save on every week/phase advance)
+- Analytics: PostHog (requires `VITE_POSTHOG_KEY` in .env.local to activate)
+- PWA: manifest.json + sw.js service worker — installable on mobile + desktop
 
 ## Deployment workflow
 
@@ -20,12 +21,28 @@
 
 - No automated monitoring configured
 - Manual check: visit `https://vaultsparkstudios.com/gridiron-gm/` after deploy
+- PostHog dashboard: check after `VITE_POSTHOG_KEY` is configured
+
+## PWA / Service Worker
+
+- `public/sw.js` — registered from `src/main.jsx` on window load
+- Caches: `/gridiron-gm/`, `/gridiron-gm/index.html`, manifest, cover.png, icon.svg
+- Strategy: cache-first for HTML/static; network-first for `/assets/` JS/CSS chunks
+- Activate: clears old caches automatically on SW update
+- Icon files: `public/images/icon.svg`, `icon-192.svg`, `icon-512.svg`
+- Manifest: `public/manifest.json` — `start_url: /gridiron-gm/`, `scope: /gridiron-gm/`
 
 ## Known operational constraints
 
-- No persistent save: reloading the page resets all game state
-- No multiplayer: single-player only
 - No backend: all computation is client-side
+- No multiplayer: single-player only
+- No cloud save: localStorage only — clearing browser data resets progress
+
+## Distribution presence
+
+- GitHub Pages: `https://vaultsparkstudios.com/gridiron-gm/`
+- itch.io: listing copy written — pending publish
+- Reddit: post copy written — pending publish to r/footballgames + r/WebGames
 
 ## Future ops plan
 

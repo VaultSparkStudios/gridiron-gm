@@ -73,8 +73,29 @@
 - [x] **v34 GM: PostHog Analytics Hook** — VITE_POSTHOG_KEY; CDN lazy-load; dual-fires with beacon; window._phLoaded guard
 - [x] **v34 SEO: index.html improvements** — expanded meta description, keywords tag, VideoGame JSON-LD schema
 
-## Backlog (v34 audit brainstorm — unimplemented)
+## Done (v35.0 — 2026-03-27)
 
+- [x] **v35 GM: Expanded FN table** — 120 → 210 first names; eliminates repeat-name fatigue by season 3
+- [x] **v35 GM: Expanded LN table** — 120 → 225 last names; full 47,250 unique name combinations
+- [x] **v35 GM: Expanded COL table** — 53 → 102 colleges (P5 + G5 + FCS coverage)
+- [x] **v35 GM: Expanded FACTS table** — 21 → 47 bio facts (rich backstory diversity)
+- [x] **v35 GM: Canvas recap card 1200×630** — dlCard() upgraded from 480×270; Twitter-optimized PNG download; team-color gradient, badge, record, top performer, branding bar
+- [x] **v35 Asset: PWA manifest fixed** — start_url+scope = /gridiron-gm/; SVG icons; categories; shortcuts
+- [x] **v35 Asset: icon.svg / icon-192.svg / icon-512.svg** — football + GM badge design; maskable
+- [x] **v35 Asset: service worker (sw.js)** — cache-first static, network-first assets, stale cache cleanup, offline shell
+- [x] **v35 main.jsx: SW registration** — registers /gridiron-gm/sw.js on window load
+- [x] **v35 Asset: cover.svg redesigned** — field grid, feature pills, football illustration, gradient title, full branding
+- [x] **v35 Docs: itch.io listing copy** — full description, tags, feature bullets ready to paste
+- [x] **v35 Docs: Reddit post copy** — title + body for r/footballgames / r/WebGames / r/sports_sims
+
+## Backlog (v35 audit brainstorm — unimplemented)
+
+- [ ] **DISTRIBUTION: Publish itch.io listing** — copy ready; go to itch.io → Create project → paste → Play in Browser → external link to GitHub Pages URL
+- [ ] **DISTRIBUTION: Post to Reddit** — copy ready; r/footballgames + r/WebGames + r/sports_sims; best time Tue–Thu 7–9pm ET
+- [ ] **GM: Dynamic news ticker** — league-wide news strip generated from sim data each week; makes world feel alive beyond user team
+- [ ] **GM: Dynasty Record Book** — localStorage timeline of every season; champ, MVP, record, top drafter per year; creates legacy feeling
+- [ ] **GM: Global Leaderboard (Supabase)** — post-champ score submission; all-time rankings; strongest known retention driver
+- [ ] **GM: Pro GM paywall (Stripe)** — actual gate on God Mode / broadcast mode / extra save slots; $2.99 one-time
 - [ ] **GM: Player Trade Demand system** — players request trades when morale < 30 for 3+ weeks; front office must respond within 2 weeks or face gmRep penalty
 - [ ] **GM: Coaching Upgrade tree** — spend SP on OC/DC specific traits (run-heavy, spread, blitz-heavy) beyond current scheme
 - [ ] **GM: Rival Week markers** — designate 1 rival per team; weekly game shows rivalry card; win adds +3 fanSat + gmRep
