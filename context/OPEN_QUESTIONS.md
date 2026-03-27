@@ -46,7 +46,7 @@
 | 2 | Deploy Claude proxy Worker | `VITE_CLAUDE_PROXY_URL` — see `docs/CLAUDE_AI_STORYLINE_SETUP.md` |
 | 3 | Stripe Pro GM integration | See `docs/PRO_GM_SETUP.md` — stub UI exists |
 | 4 | Supabase multiplayer backend | See `docs/MULTIPLAYER_SETUP.md` — stub UI exists |
-| 5 | Expand `/rosters/nfl-2025.json` to 32 teams | 5-team stub exists; community expansion needed |
+| 5 | ~~Expand `/rosters/nfl-2025.json` to 32 teams~~ | **DONE v33** — all 32 teams shipped |
 | 6 | Phaser full 60-min game | `docs/PHASER_60MIN_GAME_SETUP.md` — gridiron-gm-play major work |
 
 ---

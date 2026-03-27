@@ -2,11 +2,11 @@
 
 ## Snapshot
 
-- Date: 2026-03-26
+- Date: 2026-03-27
 - Overall status: Live on GitHub Pages, active development
-- Current version: v32.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — GM v32 built clean (pending commit), Play unchanged
+- Current version: v33.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — GM v33 built + pushed `f1ad615`, Play unchanged
 - Studio OS: Fully compliant
-- Audit score: 86/100 (A-) at v31 baseline; v32 targets 91/100
+- Audit score: 86/100 (A-) at v31 baseline; v32 ~91/100; v33 targets 93/100
 
 ## What exists
 
@@ -223,12 +223,18 @@
 
 ## Important paths
 
-- `src/App.jsx` — all game code (2381 lines, v32.0)
+- `src/App.jsx` — all game code (2410 lines, v33.0)
 - `gridiron-gm-play/src/scenes/FieldScene.js` — primary Phaser gameplay file
 - `gridiron-gm-play/src/scenes/PlayCallScene.js` — play call menu (8 runs/passes)
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()
 - `.github/workflows/` — ci.yml + deploy-pages.yml
 - `context/` — Studio OS project memory
+
+## v33.0 additions (2026-03-27)
+
+**GM:** Auto-Save / Continue (debounced autoSave() → gm_autosave localStorage; splash "▶ CONTINUE" shows yr/wk/record; applyAutoSave() full state restore), Dead Cap Warning modal (releaseP skipWarn gate at ≥$2M dead cap; confirm or cancel), Trade Deadline Frenzy (genDeadlineFrenzy() at wk9; up to 4 AI expiring-contract offers; Accept costs 3rd pick; +2 gmRep on accept), Enhanced AI Storylines (8 rich offline templates — QB stats/personality, injuries, cap crisis, morale, vet count, rookies, gmRep, power ranking snapshot; contextual 4-story selection), Web Share API (shareViaWebAPI() native share mobile / clipboard desktop; 📤 buttons on Recap Card + Offseason Grade + Trophy Room), Enhanced Multiplayer modal (6 feature items + copy link + setup instructions), 32-team Real Roster JSON (public/rosters/nfl-2025.json all 32 NFL teams; 10 players each; 2025 OVR/salary/contract; _stub:false)
+
+**Commit:** `f1ad615` — pushed to `origin/main` — live on GitHub Pages
 
 ## v32.0 additions (2026-03-26)
 
