@@ -2,21 +2,36 @@
   "name": "Gridiron GM",
   "short_name": "GridironGM",
   "description": "Build your dynasty — draft, trade, coach, and win championships.",
-  "start_url": "/",
+  "start_url": "/gridiron-gm/",
+  "scope": "/gridiron-gm/",
   "display": "standalone",
   "background_color": "#0a0f1a",
   "theme_color": "#0a0f1a",
   "orientation": "portrait-primary",
+  "categories": ["games", "sports"],
   "icons": [
     {
-      "src": "/images/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "/gridiron-gm/images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     },
     {
-      "src": "/images/icon-512.png",
+      "src": "/gridiron-gm/images/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/gridiron-gm/images/icon-512.svg",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Game",
+      "url": "/gridiron-gm/",
+      "description": "Start a new franchise"
     }
   ]
 }
