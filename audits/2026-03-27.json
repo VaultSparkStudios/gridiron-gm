@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.2",
+  "project": "gridiron-gm",
+  "date": "2026-03-27",
+  "session": 1,
+  "sessionType": "bootstrap",
+  "label": "Bootstrap Baseline",
+  "calibration": true,
+  "scores": {
+    "devHealth": null,
+    "creativeAlignment": null,
+    "momentum": null,
+    "engagement": null,
+    "processQuality": null
+  },
+  "total": null,
+  "maxScore": 50,
+  "velocity": 0,
+  "protocolVelocity": null,
+  "durationMinutes": 30,
+  "debt": "\u2192",
+  "rollingAvg3": {
+    "devHealth": null,
+    "creativeAlignment": null,
+    "momentum": null,
+    "engagement": null,
+    "processQuality": null,
+    "total": null
+  },
+  "topWin": "Studio OS bootstrap initiated \u2014 project now under VaultSpark Studio OS governance",
+  "topGap": "No SIL data yet \u2014 first real session will establish baseline",
+  "intentOutcome": "Achieved",
+  "improvementsShipped": null,
+  "improvementGroups": {},
+  "testsTotal": null,
+  "testsByType": {},
+  "testsDelta": null,
+  "deployStatus": "not-applicable",
+  "ignisFlags": [
+    "intent-achieved"
+  ],
+  "ignisNote": "Bootstrap \u2014 AI football GM; mobile optimization is the key UX gap to address early."
+}

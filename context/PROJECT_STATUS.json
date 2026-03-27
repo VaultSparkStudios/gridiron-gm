@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.2",
   "name": "Gridiron GM",
   "slug": "gridiron-gm",
   "medium": "game",
@@ -8,8 +8,8 @@
   "priority": "high",
   "owner": "VaultSpark Studios",
   "health": "green",
-  "summary": "Browser-based NFL franchise simulator — draft, trade, simulate, and play real-time Phaser gameplay. Manage AND play your dynasty entirely in the browser.",
-  "currentFocus": "v30.0 shipped — 35 innovations + Play commentary/game-plan/highlight-card. PWA installable. Backlog clear.",
+  "summary": "Browser-based NFL franchise simulator \u2014 draft, trade, simulate, and play real-time Phaser gameplay. Manage AND play your dynasty entirely in the browser.",
+  "currentFocus": "v30.0 shipped \u2014 35 innovations + Play commentary/game-plan/highlight-card. PWA installable. Backlog clear.",
   "nextMilestone": "Analytics endpoint (VITE_ANALYTICS_URL) + P126+ Play mechanics or next innovation audit wave.",
   "launchWindow": "Launched",
   "repo": "https://github.com/VaultSparkStudios/gridiron-gm",
@@ -25,7 +25,7 @@
   "appJsxLines": 1993,
   "franchiseValue": "high",
   "topBlockers": [
-    "VITE_ANALYTICS_URL not set — engagement data unmeasurable until endpoint deployed"
+    "VITE_ANALYTICS_URL not set \u2014 engagement data unmeasurable until endpoint deployed"
   ],
   "pendingManualActions": [
     "Fill VITE_ANALYTICS_URL in both .env.local files then redeploy",
@@ -37,5 +37,14 @@
     "context/PROJECT_BRIEF.md",
     "context/PORTFOLIO_CARD.md",
     "context/LATEST_HANDOFF.md"
-  ]
+  ],
+  "silAvg3": null,
+  "silVelocity": 0,
+  "silDebt": "\u2192",
+  "silLastSession": "2026-03-27",
+  "ignisScore": null,
+  "ignisGrade": null,
+  "ignisLastComputed": null,
+  "testsTotal": null,
+  "lastDeployStatus": "not-applicable"
 }
