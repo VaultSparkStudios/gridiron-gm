@@ -29,6 +29,7 @@ If meaningful work happened, update in this order:
 6. `context/SELF_IMPROVEMENT_LOOP.md` — MANDATORY (see below)
 7. `docs/CREATIVE_DIRECTION_RECORD.md` — MANDATORY if human gave any creative direction this session
 8. Any project-type or repo-specific files whose truth changed
+9. **Delete `context/.session-lock`** — MANDATORY last step. Removing the lock signals to studio-ops and other cross-repo agents that this project is safe to write to again.
 
 ### Where We Left Off — write to LATEST_HANDOFF.md
 

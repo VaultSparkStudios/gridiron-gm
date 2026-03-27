@@ -2,9 +2,19 @@
 # Use this when the user says only `start`.
 # ─────────────────────────────────────────────────────────────────────────────
 
-## Phase 0 — Mode Declaration
+## Phase 0 — Session Lock + Mode Declaration
 
-Before reading any files, determine session mode:
+**First action — write session lock:**
+Create `context/.session-lock` with content:
+```
+locked_by: agent-session
+session_start: YYYY-MM-DDTHH:MM:SSZ
+project: {project-slug}
+```
+This prevents studio-ops (or any cross-repo agent) from writing to this project while a session is active.
+The lock is cleared at closeout. If a lock file already exists from a prior session, overwrite it (stale lock).
+
+**Then determine session mode:**
 
 | Mode | Trigger | Focus |
 |---|---|---|
