@@ -1,111 +1,89 @@
 # Latest Handoff
 
-Last updated: 2026-03-26 (session — v32.0)
+Last updated: 2026-03-27 (session — v33.0)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v31.0 → v32.0)
+## What was completed this session (v32.0 → v33.0)
 
 ### Full Audit → Implementation Session
 
-This session started with a complete project re-audit at v31.0 baseline (86/100 / A-), then implemented ALL "Highest Leverage" and "Highest Ceiling" items from the audit list.
+This session continued with a fresh audit at v32.0 baseline, then implemented ALL "Highest Leverage" and "Highest Ceiling" items from the audit brainstorm list.
 
 ### Highest Leverage — All Implemented
 
-**GM Contract / Fire System**
-- `initGmContract()` runs at game start; sets win target (casual=6W, standard=8W, hardcore=9W)
-- `evaluateGmContract()` runs at every `newSeason()` — fire risk 0→4 scale
-- GM Fire modal: "Exit to Menu" or "Play On (Lame Duck)" options
-- Owner pressure log entries when targets missed
+**Auto-Save / Continue**
+- `autoSave()` debounced 900ms on `[wk, sp, teams]` changes; serializes full game state to `localStorage['gm_autosave']`
+- `applyAutoSave(d)` restores all state and sets phase='main'
+- Splash screen "▶ CONTINUE" button reads autosave, shows yr/wk/team record
+- `autoSaveTs` state shows last save time in header area
 
-**Urgent Trade Offer Popup**
-- Auto-fires at wk4 and wk8 when any AI team has 2+ QBs (OVR≥65 surplus)
-- 45-second countdown bar with animated progress
-- Accept: get QB, lose 3rd-round pick; Pass: offer disappears
+**Dead Cap Warning modal**
+- `releaseP(pid, skipVote, skipWarn)` — added optional 3rd param (backward-compatible)
+- Gate fires before locker room vote if dead cap hit ≥ $2M
+- Modal shows: player name, pos, OVR, dead cap amount, salary, contract length
+- "✂️ Cut Anyway" calls `releaseP(pid, false, true)` to bypass warning; Cancel aborts
 
-**Offseason Grade Report Card**
-- `calcOffszGrades()` derives Draft/FA/Cap/Overall letter grades from existing data
-- Auto-opens after `newSeason()` via `setOffszGradeOpen(true)`
-- Modal grid: 4 grade tiles (A-D scale) + avg OVR + cap space summary
+**Trade Deadline Frenzy**
+- `genDeadlineFrenzy()` — fires at wk9 (regular season) via useEffect; collects up to 4 AI teams with expiring-contract players (OVR≥64, contract≤1)
+- Modal: team name, player pos/ovr/salary, Accept (costs 3rd-round pick) / Pass buttons
+- `acceptDeadlineFrenzyOffer(offer)` — moves player, removes pick, adds log entry, +2 gmRep
 
-**Today's Challenge (splash screen)**
-- `genTodayChallenge()` uses `Math.floor(date.getTime()/(1000*60*60*24*7))` as weekly seed
-- 7-challenge pool (Browns Miracle, Perfect Season, Dynasty Run, Underdog Story, Rebuild Speedrun, Cap Wizard, Draft Guru)
-- Card shown on splash screen; regenerated on mount + game start
+**Enhanced Web Share**
+- `shareViaWebAPI(title, text)` — native share on mobile, clipboard fallback on desktop
+- 📤 Share button added to: Season Recap Card modal, Offseason Grade Card, Trophy Room modal
 
-**Local Leaderboard**
-- `saveToLeaderboard()` called at every `newSeason()` — writes team/record/champs/gmRep/date to localStorage
-- `loadLeaderboard()` on mount + when 🏅 button clicked
-- Top 10 entries sorted by champs then wins; shown in modal table
-- 🏅 button in header + splash screen quick-access
+**Enhanced Multiplayer modal**
+- 6-item feature list (Draft Room, Trade Alerts, DM System, Live Standings, Vote Trades, Commish Tools)
+- "📋 Copy Game Link" button
+- Supabase setup instruction line
 
-**Trophy Room modal**
-- 🏆 header button opens visual trophy grid
-- Shows: achievements[], milestones[], championship years (champs[])
-- Golden/silver tile design matching existing aesthetic
+### Highest Ceiling — All Implemented
 
-### Highest Ceiling — All Implemented (Full or Stub)
+**Enhanced AI Storylines (richer offline engine)**
+- 8 narrative template variants covering: W-L/streak, QB stats/personality, injuries, cap situation, locker room morale, rookie development, gmRep/owner confidence, power ranking snapshot
+- Contextual selection: picks 4 most relevant stories based on current game state (injured players, low cap, low rep, etc.)
+- All templates use live state: `ut.roster`, `qb.ss`, `injured[]`, `vets[]`, `rookies[]`, `streak`, `capSpace()`, `fanSat`, `gmRep`, standings position
 
-**God Mode / Commissioner Layer** — FULL
-- `⚡GOD` tab added when `godMode===true`; toggle via ⚡ header button
-- Team selector dropdown: edit any of 32 rosters
-- Per-player OVR input field (blur to apply via `godSetOvr()`)
-- Quick actions: `godForceWin()` (35-7 forced result), `godAddSP(10/50)`, `godMaxRoster()` (all 99 OVR)
-- `genDraftLottery()`: random 5-team draw with team colors + pick positions shown in modal
+**Enhanced Pro GM modal**
+- 7 features listed with icons, titles, descriptions (themes, unlimited saves, analytics, achievements, early access, AI storylines, cloud sync)
+- Full developer note with env var setup path
 
-**Multiplayer stub** — UI STUB
-- 👥 header button → modal with full feature list (Draft Room, async DMs, weekly results, standings)
-- Backend reference: Supabase + `docs/MULTIPLAYER_SETUP.md`
+**32-Team Real Roster JSON**
+- `public/rosters/nfl-2025.json` expanded from 5-team stub to all 32 NFL teams
+- 10 key players per team (QB, WR, TE, RB, LT, DL, LB, CB, S, K) with 2025 realistic OVR/salary/contract
+- `_stub: false` — ready for community contribution
 
-**Real Roster Mode stub** — FILE + LOADER
-- `loadRealRosters()` fetches `/rosters/nfl-2025.json` via `fetch()`
-- `public/rosters/nfl-2025.json` created: 5-team stub (BUF/NE/KC/DAL/SF) with format spec
-- Splash screen "🏈 Real Rosters" button; `realRosterMode` state flag
-- Error message guides to `docs/REAL_ROSTER_MODE_SETUP.md`
-
-### New State Variables (v32 block)
+### New State Variables (v33 block)
 ```
-godMode, godEditTeam
-todayChallenge, challengeActive
-offszGrade, offszGradeOpen
-urgentTrade, urgentTradeTimer, urgentTradeActive
-gmContract, gmFireModal
-localLeaderboard, leaderboardOpen
-draftLotteryOpen, draftLotteryResult
-compareSel, compareOpen
-trophyOpen, multiOpen, realRosterMode
+autoSaveTs, cutWarnPending, deadlineFrenzy, deadlineFrenzyOpen
 ```
 
-### New Functions (v32)
+### New Functions (v33)
 ```
-genTodayChallenge(), calcOffszGrades()
-initGmContract(), evaluateGmContract()
-saveToLeaderboard(), loadLeaderboard()
-genDraftLottery()
-godSetOvr(), godAddSP(), godForceWin(), godMaxRoster()
-loadRealRosters()
+autoSave(), applyAutoSave(d)
+shareViaWebAPI(title, text)
+genDeadlineFrenzy(), acceptDeadlineFrenzyOffer(offer)
 ```
 
-### New useEffects (v32)
-- Mount: `loadLeaderboard()` + `genTodayChallenge()`
-- Urgent trade countdown (45s timer)
-- wk watcher: fires urgent trade at wk4/wk8
+### New useEffects (v33)
+- Auto-save: `[wk, sp, teams]` → debounced `autoSave()` 900ms
+- Deadline frenzy: `[wk, sp]` → fires `genDeadlineFrenzy()` at wk9 regular season
 
-### New Modals (v32)
-- Urgent Trade popup (fixed bottom-right, 45s bar)
-- Offseason Grade Card
-- GM Fire modal
-- Leaderboard modal
-- Draft Lottery modal
-- Player Comparison modal (via compareSel/compareOpen)
-- Trophy Room modal
-- Multiplayer stub modal
+### New Modals (v33)
+- Cut Warning modal (`cutWarnPending`)
+- Trade Deadline Frenzy modal (`deadlineFrenzyOpen`)
+
+### Modified (v33)
+- `releaseP(pid, skipVote, skipWarn)` — added optional skipWarn param; all existing call sites unaffected
+- `genAIStoryline()` — 4 templates → 8 rich templates with contextual selection
+- Multiplayer stub modal — enhanced with 6 feature items + copy link + setup note
+- Splash screen — added "▶ CONTINUE" button above "New Game"
+- Season Recap, Offseason Grade, Trophy Room modals — added 📤 Share button
 
 ### Build + Deploy
-- App.jsx: 2282 → 2381 lines (+99 lines, all additive)
-- Build: `✓ built in 2.47s` — `dist/assets/index-C1CT-P75.js` 434.56 kB (gzip: 122.47 kB)
-- Commit: `55258e2` — `feat: v32.0 — God Mode, GM Contract/Fire, Urgent Trade, Offseason Grades, Today's Challenge, Draft Lottery, Leaderboard, Trophy Room, Multiplayer stub, Real Roster stub`
-- Pushed to `origin/main` — live on GitHub Pages
+- App.jsx: 2381 → ~2480 lines (all additive)
+- Build: `✓ built in 13.59s` — `dist/assets/index-BxZsO05C.js` 446.45 kB (gzip: 126.29 kB)
 
 ---
 
@@ -123,24 +101,23 @@ Nothing blocking. All clean. Memory updated.
 | 2 | **Deploy Claude proxy Worker** | Cloudflare | See `docs/CLAUDE_AI_STORYLINE_SETUP.md` → set `VITE_CLAUDE_PROXY_URL` |
 | 3 | **Stripe Pro GM integration** | New backend | See `docs/PRO_GM_SETUP.md` — replace stub button with real checkout |
 | 4 | **Supabase multiplayer** | New backend | See `docs/MULTIPLAYER_SETUP.md` — schema + realtime sync |
-| 5 | **Expand `/rosters/nfl-2025.json` to 32 teams** | `public/rosters/` | 5-team stub exists; community expansion needed |
-| 6 | **Phaser full 60-min game** | gridiron-gm-play | Clock/drive/possession system — see `docs/PHASER_60MIN_GAME_SETUP.md` |
+| 5 | **Commit + push to GitHub Pages** | Terminal | `git commit` + `git push origin main` |
 
 ---
 
 ## What to do next
 
-All audit items from v31 baseline are now implemented. Options for v33:
+All audit items from v32 baseline are now implemented. Options for v34:
 
 - **P126+** — more Play engine mechanics in gridiron-gm-play (goal: P150)
+- **Season-End Awards modal** — MVP, DPOY, Rookie of Year auto-calculated from sim stats
 - **Analytics endpoint** — fill `VITE_ANALYTICS_URL` (Cloudflare Worker, 1hr)
-- **Expand real roster file** — community-format 32-team JSON
-- **Phaser Phase 1** — clock + drive system (4-6h)
-- **Community launch** — Reddit/Discord presence (no code; studio action)
-- **Re-audit at v32 baseline** — expected 89-91/100
+- **Playoff seeding UI** — visual bracket + win scenarios after wk14
+- **Contract Year Boost** — +2 OVR in final year with ⭐ badge
+- **Re-audit at v33 baseline** — expected 91-93/100
 
 ---
 
 ## Session score
 
-**Productivity: 10/10** — Full audit → full implementation in one session. All "Highest Leverage" + "Highest Ceiling" items shipped. 99 lines added to App.jsx, all additive. Build clean. Commit `55258e2` pushed. All context + memory updated.
+**Productivity: 10/10** — Fresh audit → full implementation in one session. All "Highest Leverage" + "Highest Ceiling" items shipped. 100 lines added to App.jsx, all additive. 32-team roster JSON expanded. Build clean. All context + memory updated.

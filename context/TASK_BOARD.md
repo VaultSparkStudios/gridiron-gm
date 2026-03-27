@@ -51,6 +51,44 @@
 - [x] **v32 GM: Real Roster Mode stub** — loadRealRosters() fetches /rosters/nfl-2025.json; 5-team stub created
 - [x] **v32 Asset: public/rosters/nfl-2025.json** — 5-team community stub (BUF/NE/KC/DAL/SF) with format spec
 
+## Done (v33.0 — 2026-03-27)
+
+- [x] **v33 GM: Auto-Save / Continue** — debounced autoSave() on wk/sp/teams; gm_autosave localStorage; splash "▶ CONTINUE" button shows yr/wk/record
+- [x] **v33 GM: Dead Cap Warning modal** — releaseP() gates on dead cap ≥ $2M; shows dead hit, contract, OVR; confirm or cancel
+- [x] **v33 GM: Trade Deadline Frenzy** — genDeadlineFrenzy() at wk9; up to 4 AI expiring-contract players; Accept (cost 3rd pick) or Pass
+- [x] **v33 GM: Enhanced AI Storylines** — 8 rich offline templates using QB stats, injuries, cap, morale, veteran count, rookies, gmRep, streak, standings; contextually selects 4 best-fit stories
+- [x] **v33 GM: Web Share API** — shareViaWebAPI() on Season Recap, Offseason Grade, Trophy Room; native share on mobile / clipboard fallback on desktop
+- [x] **v33 GM: Enhanced Multiplayer modal** — 6-item feature list; Supabase setup link; copy game link button
+- [x] **v33 Asset: public/rosters/nfl-2025.json** — expanded from 5-team stub to all 32 NFL teams with full key-player rosters
+
+## Backlog (v33 audit brainstorm — unimplemented)
+
+- [ ] **GM: Player Trade Demand system** — players request trades when morale < 30 for 3+ weeks; front office must respond within 2 weeks or face gmRep penalty
+- [ ] **GM: Coaching Upgrade tree** — spend SP on OC/DC specific traits (run-heavy, spread, blitz-heavy) beyond current scheme
+- [ ] **GM: Rival Week markers** — designate 1 rival per team; weekly game shows rivalry card; win adds +3 fanSat + gmRep
+- [ ] **GM: Playoff seeding UI** — visual bracket showing current seeds + win-in scenarios after wk14+
+- [ ] **GM: Contract Year Boost** — players in final year get +2 OVR boost for motivation; shown with ⭐ badge
+- [ ] **GM: Pre-game Press Conference** — 3-question modal before each game; boost/penalty to morale based on answer tone
+- [ ] **GM: Halftime Adjustment** — live sim pause at half; 3 buttons (run-heavy, pass-heavy, blitz); modifier applied to 2nd half
+- [ ] **GM: Practice Squad Development** — PS players gain +1 OVR per 3 weeks automatically (currently static)
+- [ ] **GM: Fan Satisfaction Events** — fanSat reacts to specific events: record-setting game, star player injury, big FA signing
+- [ ] **GM: Advanced Draft Board filters** — filter by age range, pot tier, pos need score, combine grade
+- [ ] **GM: Scouting Department Expansion** — hire up to 3 scouts with different specialties (OL, DB, skill players)
+- [ ] **GM: Season-End Awards modal** — MVP, DPOY, OPOY, Rookie of Year, Coach of Year; auto-calculated from sim stats
+- [ ] **GM: Division Power Rankings sidebar** — live division standings mini-widget in schedule tab header
+- [ ] **GM: Injury Prone player flag** — players with 3+ injuries in history get ⚠️ badge; affects FA signing interest
+- [ ] **GM: Weather-aware game plan** — if gridiron-gm-play has weather flag, suggest run-heavy plan vs bad weather
+- [ ] **Play: Full 60-min game clock** — possession tracking, 4 quarters, game-ending scenarios (see docs/PHASER_60MIN_GAME_SETUP.md)
+- [ ] **Play: 2-point conversion plays** — dedicated play type after TD; risk/reward decision; affects sim bridge
+- [ ] **Play: Onside kick** — low-success-rate kickoff variant; available when trailing in 4th Q
+- [ ] **Play: Field goal range indicator** — kicker OVR → max reliable range shown on field during play call
+- [ ] **Play: Pass rush counter-moves** — swim move, spin, bull rush variants in pass rush mini-game
+- [ ] **Infrastructure: Cloudflare Worker analytics** — fill VITE_ANALYTICS_URL; events: game_start, season_end, trade_accepted, playoff_win
+- [ ] **Infrastructure: Claude proxy for AI storylines** — deploy proxy Worker; set VITE_CLAUDE_PROXY_URL (see docs/CLAUDE_AI_STORYLINE_SETUP.md)
+- [ ] **Infrastructure: Stripe Pro GM** — Stripe Checkout + webhook; unlocks Pro features (see docs/PRO_GM_SETUP.md)
+- [ ] **Infrastructure: Supabase multiplayer** — schema + realtime sync (see docs/MULTIPLAYER_SETUP.md)
+- [ ] **Content: Reddit/Discord community launch** — r/FootballGames, r/webgames post; Discord server setup
+
 ## In Progress
 
 - (none)

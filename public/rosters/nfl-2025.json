@@ -11,15 +11,15 @@
         { "name": "Dion Dawkins", "pos": "LT", "ovr": 82, "age": 29, "salary": 14, "contract": 2 },
         { "name": "Greg Rousseau", "pos": "DL", "ovr": 80, "age": 25, "salary": 4, "contract": 3 },
         { "name": "Matt Milano", "pos": "LB", "ovr": 82, "age": 30, "salary": 10, "contract": 1 },
-        { "name": "Tre'Davious White", "pos": "CB", "ovr": 81, "age": 29, "salary": 14, "contract": 1 },
-        { "name": "Jordan Poyer", "pos": "S", "ovr": 80, "age": 33, "salary": 8, "contract": 1 },
+        { "name": "Rasul Douglas", "pos": "CB", "ovr": 80, "age": 29, "salary": 8, "contract": 2 },
+        { "name": "Micah Hyde", "pos": "S", "ovr": 79, "age": 33, "salary": 8, "contract": 1 },
         { "name": "Tyler Bass", "pos": "K", "ovr": 78, "age": 27, "salary": 4, "contract": 2 }
       ]
     },
     { "id": 1, "city": "New England", "name": "Patriots", "ab": "NE", "conf": "AFC", "div": "East",
       "roster": [
         { "name": "Drake Maye", "pos": "QB", "ovr": 76, "age": 22, "salary": 6, "contract": 4 },
-        { "name": "JuJu Smith-Schuster", "pos": "WR", "ovr": 76, "age": 27, "salary": 9, "contract": 1 },
+        { "name": "Kendrick Bourne", "pos": "WR", "ovr": 75, "age": 28, "salary": 5, "contract": 1 },
         { "name": "Hunter Henry", "pos": "TE", "ovr": 78, "age": 30, "salary": 9, "contract": 1 },
         { "name": "Rhamondre Stevenson", "pos": "RB", "ovr": 76, "age": 25, "salary": 4, "contract": 2 },
         { "name": "Trent Brown", "pos": "LT", "ovr": 78, "age": 31, "salary": 10, "contract": 1 },
@@ -30,7 +30,161 @@
         { "name": "Chad Ryland", "pos": "K", "ovr": 73, "age": 25, "salary": 1, "contract": 2 }
       ]
     },
-    { "id": 2, "city": "Kansas City", "name": "Chiefs", "ab": "KC", "conf": "AFC", "div": "West",
+    { "id": 2, "city": "Miami", "name": "Dolphins", "ab": "MIA", "conf": "AFC", "div": "East",
+      "roster": [
+        { "name": "Tua Tagovailoa", "pos": "QB", "ovr": 90, "age": 26, "salary": 53, "contract": 4 },
+        { "name": "Tyreek Hill", "pos": "WR", "ovr": 96, "age": 30, "salary": 30, "contract": 3 },
+        { "name": "Jonnu Smith", "pos": "TE", "ovr": 79, "age": 29, "salary": 8, "contract": 2 },
+        { "name": "De'Von Achane", "pos": "RB", "ovr": 85, "age": 23, "salary": 3, "contract": 3 },
+        { "name": "Terron Armstead", "pos": "LT", "ovr": 90, "age": 33, "salary": 17, "contract": 2 },
+        { "name": "Zach Sieler", "pos": "DL", "ovr": 82, "age": 28, "salary": 14, "contract": 3 },
+        { "name": "Jerome Baker", "pos": "LB", "ovr": 78, "age": 27, "salary": 8, "contract": 2 },
+        { "name": "Jalen Ramsey", "pos": "CB", "ovr": 89, "age": 30, "salary": 20, "contract": 2 },
+        { "name": "Jevon Holland", "pos": "S", "ovr": 82, "age": 24, "salary": 4, "contract": 2 },
+        { "name": "Jason Sanders", "pos": "K", "ovr": 79, "age": 28, "salary": 4, "contract": 2 }
+      ]
+    },
+    { "id": 3, "city": "New York", "name": "Jets", "ab": "NYJ", "conf": "AFC", "div": "East",
+      "roster": [
+        { "name": "Aaron Rodgers", "pos": "QB", "ovr": 84, "age": 41, "salary": 35, "contract": 1 },
+        { "name": "Garrett Wilson", "pos": "WR", "ovr": 89, "age": 24, "salary": 3, "contract": 3 },
+        { "name": "Tyler Conklin", "pos": "TE", "ovr": 75, "age": 29, "salary": 5, "contract": 1 },
+        { "name": "Breece Hall", "pos": "RB", "ovr": 86, "age": 23, "salary": 2, "contract": 3 },
+        { "name": "Duane Brown", "pos": "LT", "ovr": 76, "age": 38, "salary": 10, "contract": 1 },
+        { "name": "Quinnen Williams", "pos": "DL", "ovr": 90, "age": 26, "salary": 22, "contract": 4 },
+        { "name": "C.J. Mosley", "pos": "LB", "ovr": 82, "age": 32, "salary": 13, "contract": 2 },
+        { "name": "Sauce Gardner", "pos": "CB", "ovr": 93, "age": 24, "salary": 6, "contract": 3 },
+        { "name": "Jordan Whitehead", "pos": "S", "ovr": 77, "age": 27, "salary": 7, "contract": 2 },
+        { "name": "Greg Zuerlein", "pos": "K", "ovr": 76, "age": 36, "salary": 3, "contract": 1 }
+      ]
+    },
+    { "id": 4, "city": "Baltimore", "name": "Ravens", "ab": "BAL", "conf": "AFC", "div": "North",
+      "roster": [
+        { "name": "Lamar Jackson", "pos": "QB", "ovr": 99, "age": 27, "salary": 52, "contract": 5 },
+        { "name": "Zay Flowers", "pos": "WR", "ovr": 83, "age": 23, "salary": 3, "contract": 3 },
+        { "name": "Mark Andrews", "pos": "TE", "ovr": 92, "age": 29, "salary": 18, "contract": 3 },
+        { "name": "Derrick Henry", "pos": "RB", "ovr": 88, "age": 30, "salary": 12, "contract": 2 },
+        { "name": "Ronnie Stanley", "pos": "LT", "ovr": 84, "age": 30, "salary": 22, "contract": 3 },
+        { "name": "Calais Campbell", "pos": "DL", "ovr": 80, "age": 38, "salary": 8, "contract": 1 },
+        { "name": "Roquan Smith", "pos": "LB", "ovr": 94, "age": 27, "salary": 20, "contract": 4 },
+        { "name": "Marlon Humphrey", "pos": "CB", "ovr": 88, "age": 28, "salary": 18, "contract": 3 },
+        { "name": "Kyle Hamilton", "pos": "S", "ovr": 93, "age": 23, "salary": 4, "contract": 3 },
+        { "name": "Justin Tucker", "pos": "K", "ovr": 95, "age": 35, "salary": 6, "contract": 3 }
+      ]
+    },
+    { "id": 5, "city": "Cincinnati", "name": "Bengals", "ab": "CIN", "conf": "AFC", "div": "North",
+      "roster": [
+        { "name": "Joe Burrow", "pos": "QB", "ovr": 95, "age": 28, "salary": 55, "contract": 5 },
+        { "name": "Ja'Marr Chase", "pos": "WR", "ovr": 97, "age": 24, "salary": 32, "contract": 4 },
+        { "name": "Tee Higgins", "pos": "WR", "ovr": 88, "age": 25, "salary": 21, "contract": 2 },
+        { "name": "Sam LaPorta", "pos": "TE", "ovr": 79, "age": 23, "salary": 2, "contract": 3 },
+        { "name": "Joe Mixon", "pos": "RB", "ovr": 83, "age": 28, "salary": 12, "contract": 2 },
+        { "name": "Orlando Brown", "pos": "LT", "ovr": 82, "age": 28, "salary": 17, "contract": 3 },
+        { "name": "Sam Hubbard", "pos": "DL", "ovr": 82, "age": 28, "salary": 15, "contract": 2 },
+        { "name": "Logan Wilson", "pos": "LB", "ovr": 78, "age": 27, "salary": 8, "contract": 3 },
+        { "name": "Cam Taylor-Britt", "pos": "CB", "ovr": 80, "age": 25, "salary": 2, "contract": 3 },
+        { "name": "Dax Hill", "pos": "S", "ovr": 79, "age": 24, "salary": 2, "contract": 3 }
+      ]
+    },
+    { "id": 6, "city": "Cleveland", "name": "Browns", "ab": "CLE", "conf": "AFC", "div": "North",
+      "roster": [
+        { "name": "Deshaun Watson", "pos": "QB", "ovr": 79, "age": 29, "salary": 46, "contract": 3 },
+        { "name": "Amari Cooper", "pos": "WR", "ovr": 84, "age": 30, "salary": 20, "contract": 2 },
+        { "name": "David Njoku", "pos": "TE", "ovr": 84, "age": 28, "salary": 15, "contract": 4 },
+        { "name": "Nick Chubb", "pos": "RB", "ovr": 88, "age": 28, "salary": 12, "contract": 2 },
+        { "name": "Jedrick Wills", "pos": "LT", "ovr": 79, "age": 25, "salary": 12, "contract": 2 },
+        { "name": "Myles Garrett", "pos": "DL", "ovr": 99, "age": 28, "salary": 25, "contract": 5 },
+        { "name": "Jeremiah Owusu-Koramoah", "pos": "LB", "ovr": 86, "age": 25, "salary": 8, "contract": 2 },
+        { "name": "Denzel Ward", "pos": "CB", "ovr": 86, "age": 27, "salary": 20, "contract": 3 },
+        { "name": "Juan Thornhill", "pos": "S", "ovr": 78, "age": 28, "salary": 6, "contract": 2 },
+        { "name": "Dustin Hopkins", "pos": "K", "ovr": 80, "age": 33, "salary": 4, "contract": 2 }
+      ]
+    },
+    { "id": 7, "city": "Pittsburgh", "name": "Steelers", "ab": "PIT", "conf": "AFC", "div": "North",
+      "roster": [
+        { "name": "Russell Wilson", "pos": "QB", "ovr": 81, "age": 36, "salary": 7, "contract": 1 },
+        { "name": "George Pickens", "pos": "WR", "ovr": 85, "age": 23, "salary": 2, "contract": 3 },
+        { "name": "Pat Freiermuth", "pos": "TE", "ovr": 79, "age": 25, "salary": 3, "contract": 3 },
+        { "name": "Najee Harris", "pos": "RB", "ovr": 79, "age": 26, "salary": 7, "contract": 1 },
+        { "name": "Dan Moore Jr.", "pos": "LT", "ovr": 75, "age": 25, "salary": 4, "contract": 2 },
+        { "name": "Cameron Heyward", "pos": "DL", "ovr": 89, "age": 35, "salary": 16, "contract": 2 },
+        { "name": "T.J. Watt", "pos": "LB", "ovr": 99, "age": 29, "salary": 28, "contract": 4 },
+        { "name": "Patrick Peterson", "pos": "CB", "ovr": 79, "age": 34, "salary": 3, "contract": 1 },
+        { "name": "Minkah Fitzpatrick", "pos": "S", "ovr": 93, "age": 27, "salary": 18, "contract": 4 },
+        { "name": "Chris Boswell", "pos": "K", "ovr": 86, "age": 33, "salary": 4, "contract": 3 }
+      ]
+    },
+    { "id": 8, "city": "Houston", "name": "Texans", "ab": "HOU", "conf": "AFC", "div": "South",
+      "roster": [
+        { "name": "C.J. Stroud", "pos": "QB", "ovr": 90, "age": 22, "salary": 5, "contract": 4 },
+        { "name": "Stefon Diggs", "pos": "WR", "ovr": 84, "age": 31, "salary": 14, "contract": 1 },
+        { "name": "Dalton Schultz", "pos": "TE", "ovr": 79, "age": 28, "salary": 9, "contract": 2 },
+        { "name": "Devin Singletary", "pos": "RB", "ovr": 78, "age": 27, "salary": 5, "contract": 2 },
+        { "name": "Laremy Tunsil", "pos": "LT", "ovr": 92, "age": 30, "salary": 24, "contract": 3 },
+        { "name": "Danielle Hunter", "pos": "DL", "ovr": 91, "age": 30, "salary": 20, "contract": 3 },
+        { "name": "Azeez Al-Shaair", "pos": "LB", "ovr": 80, "age": 27, "salary": 9, "contract": 3 },
+        { "name": "Derek Stingley Jr.", "pos": "CB", "ovr": 86, "age": 23, "salary": 3, "contract": 3 },
+        { "name": "Jimmie Ward", "pos": "S", "ovr": 79, "age": 33, "salary": 6, "contract": 1 },
+        { "name": "Ka'imi Fairbairn", "pos": "K", "ovr": 83, "age": 30, "salary": 5, "contract": 3 }
+      ]
+    },
+    { "id": 9, "city": "Indianapolis", "name": "Colts", "ab": "IND", "conf": "AFC", "div": "South",
+      "roster": [
+        { "name": "Anthony Richardson", "pos": "QB", "ovr": 78, "age": 22, "salary": 5, "contract": 4 },
+        { "name": "Michael Pittman Jr.", "pos": "WR", "ovr": 84, "age": 26, "salary": 16, "contract": 3 },
+        { "name": "Jelani Woods", "pos": "TE", "ovr": 77, "age": 25, "salary": 2, "contract": 3 },
+        { "name": "Jonathan Taylor", "pos": "RB", "ovr": 88, "age": 25, "salary": 17, "contract": 4 },
+        { "name": "Bernhard Raimann", "pos": "LT", "ovr": 77, "age": 25, "salary": 2, "contract": 3 },
+        { "name": "DeForest Buckner", "pos": "DL", "ovr": 92, "age": 30, "salary": 21, "contract": 3 },
+        { "name": "Shaquille Leonard", "pos": "LB", "ovr": 83, "age": 29, "salary": 19, "contract": 3 },
+        { "name": "Kenny Moore II", "pos": "CB", "ovr": 80, "age": 28, "salary": 11, "contract": 2 },
+        { "name": "Julian Blackmon", "pos": "S", "ovr": 78, "age": 26, "salary": 3, "contract": 2 },
+        { "name": "Matt Gay", "pos": "K", "ovr": 84, "age": 30, "salary": 5, "contract": 3 }
+      ]
+    },
+    { "id": 10, "city": "Jacksonville", "name": "Jaguars", "ab": "JAX", "conf": "AFC", "div": "South",
+      "roster": [
+        { "name": "Trevor Lawrence", "pos": "QB", "ovr": 88, "age": 25, "salary": 55, "contract": 5 },
+        { "name": "Christian Kirk", "pos": "WR", "ovr": 80, "age": 27, "salary": 18, "contract": 3 },
+        { "name": "Evan Engram", "pos": "TE", "ovr": 85, "age": 30, "salary": 18, "contract": 3 },
+        { "name": "Travis Etienne Jr.", "pos": "RB", "ovr": 87, "age": 25, "salary": 6, "contract": 3 },
+        { "name": "Anton Harrison", "pos": "LT", "ovr": 79, "age": 22, "salary": 2, "contract": 3 },
+        { "name": "Arik Armstead", "pos": "DL", "ovr": 80, "age": 31, "salary": 17, "contract": 2 },
+        { "name": "Foye Oluokun", "pos": "LB", "ovr": 82, "age": 28, "salary": 12, "contract": 3 },
+        { "name": "Tyson Campbell", "pos": "CB", "ovr": 81, "age": 25, "salary": 3, "contract": 3 },
+        { "name": "Andre Cisco", "pos": "S", "ovr": 79, "age": 25, "salary": 3, "contract": 3 },
+        { "name": "Evan McPherson", "pos": "K", "ovr": 85, "age": 24, "salary": 2, "contract": 2 }
+      ]
+    },
+    { "id": 11, "city": "Tennessee", "name": "Titans", "ab": "TEN", "conf": "AFC", "div": "South",
+      "roster": [
+        { "name": "Will Levis", "pos": "QB", "ovr": 74, "age": 24, "salary": 2, "contract": 3 },
+        { "name": "DeAndre Hopkins", "pos": "WR", "ovr": 83, "age": 32, "salary": 14, "contract": 1 },
+        { "name": "Chig Okonkwo", "pos": "TE", "ovr": 77, "age": 24, "salary": 2, "contract": 3 },
+        { "name": "Tony Pollard", "pos": "RB", "ovr": 82, "age": 27, "salary": 8, "contract": 2 },
+        { "name": "Andre Dillard", "pos": "LT", "ovr": 74, "age": 28, "salary": 4, "contract": 1 },
+        { "name": "Jeffery Simmons", "pos": "DL", "ovr": 92, "age": 27, "salary": 23, "contract": 4 },
+        { "name": "Harold Landry III", "pos": "LB", "ovr": 83, "age": 28, "salary": 20, "contract": 4 },
+        { "name": "L'Jarius Sneed", "pos": "CB", "ovr": 88, "age": 27, "salary": 19, "contract": 4 },
+        { "name": "Amani Hooker", "pos": "S", "ovr": 78, "age": 26, "salary": 4, "contract": 3 },
+        { "name": "Nick Folk", "pos": "K", "ovr": 80, "age": 39, "salary": 3, "contract": 1 }
+      ]
+    },
+    { "id": 12, "city": "Denver", "name": "Broncos", "ab": "DEN", "conf": "AFC", "div": "West",
+      "roster": [
+        { "name": "Bo Nix", "pos": "QB", "ovr": 75, "age": 24, "salary": 4, "contract": 4 },
+        { "name": "Courtland Sutton", "pos": "WR", "ovr": 82, "age": 29, "salary": 15, "contract": 2 },
+        { "name": "Greg Dulcich", "pos": "TE", "ovr": 75, "age": 24, "salary": 2, "contract": 2 },
+        { "name": "Javonte Williams", "pos": "RB", "ovr": 78, "age": 24, "salary": 3, "contract": 2 },
+        { "name": "Garett Bolles", "pos": "LT", "ovr": 80, "age": 32, "salary": 16, "contract": 2 },
+        { "name": "Zach Allen", "pos": "DL", "ovr": 79, "age": 27, "salary": 12, "contract": 3 },
+        { "name": "Jonathon Cooper", "pos": "LB", "ovr": 75, "age": 25, "salary": 3, "contract": 2 },
+        { "name": "Patrick Surtain II", "pos": "CB", "ovr": 96, "age": 24, "salary": 25, "contract": 4 },
+        { "name": "Justin Simmons", "pos": "S", "ovr": 85, "age": 30, "salary": 15, "contract": 2 },
+        { "name": "Wil Lutz", "pos": "K", "ovr": 82, "age": 30, "salary": 5, "contract": 3 }
+      ]
+    },
+    { "id": 13, "city": "Kansas City", "name": "Chiefs", "ab": "KC", "conf": "AFC", "div": "West",
       "roster": [
         { "name": "Patrick Mahomes", "pos": "QB", "ovr": 99, "age": 29, "salary": 45, "contract": 8 },
         { "name": "Travis Kelce", "pos": "TE", "ovr": 94, "age": 35, "salary": 14, "contract": 2 },
@@ -44,7 +198,35 @@
         { "name": "Harrison Butker", "pos": "K", "ovr": 93, "age": 29, "salary": 6, "contract": 4 }
       ]
     },
-    { "id": 3, "city": "Dallas", "name": "Cowboys", "ab": "DAL", "conf": "NFC", "div": "East",
+    { "id": 14, "city": "Las Vegas", "name": "Raiders", "ab": "LV", "conf": "AFC", "div": "West",
+      "roster": [
+        { "name": "Aidan O'Connell", "pos": "QB", "ovr": 73, "age": 26, "salary": 2, "contract": 2 },
+        { "name": "Davante Adams", "pos": "WR", "ovr": 91, "age": 31, "salary": 26, "contract": 2 },
+        { "name": "Michael Mayer", "pos": "TE", "ovr": 74, "age": 23, "salary": 2, "contract": 3 },
+        { "name": "Josh Jacobs", "pos": "RB", "ovr": 87, "age": 26, "salary": 12, "contract": 2 },
+        { "name": "Kolton Miller", "pos": "LT", "ovr": 83, "age": 28, "salary": 19, "contract": 3 },
+        { "name": "Christian Wilkins", "pos": "DL", "ovr": 88, "age": 28, "salary": 22, "contract": 4 },
+        { "name": "Robert Spillane", "pos": "LB", "ovr": 76, "age": 29, "salary": 7, "contract": 2 },
+        { "name": "Nate Hobbs", "pos": "CB", "ovr": 78, "age": 25, "salary": 3, "contract": 2 },
+        { "name": "Marcus Epps", "pos": "S", "ovr": 78, "age": 28, "salary": 8, "contract": 2 },
+        { "name": "Daniel Carlson", "pos": "K", "ovr": 88, "age": 28, "salary": 5, "contract": 3 }
+      ]
+    },
+    { "id": 15, "city": "Los Angeles", "name": "Chargers", "ab": "LAC", "conf": "AFC", "div": "West",
+      "roster": [
+        { "name": "Justin Herbert", "pos": "QB", "ovr": 94, "age": 26, "salary": 52, "contract": 5 },
+        { "name": "Keenan Allen", "pos": "WR", "ovr": 88, "age": 31, "salary": 23, "contract": 1 },
+        { "name": "Gerald Everett", "pos": "TE", "ovr": 77, "age": 30, "salary": 6, "contract": 2 },
+        { "name": "Austin Ekeler", "pos": "RB", "ovr": 85, "age": 29, "salary": 7, "contract": 2 },
+        { "name": "Rashawn Slater", "pos": "LT", "ovr": 93, "age": 25, "salary": 23, "contract": 4 },
+        { "name": "Joey Bosa", "pos": "DL", "ovr": 86, "age": 29, "salary": 26, "contract": 3 },
+        { "name": "Kenneth Murray Jr.", "pos": "LB", "ovr": 76, "age": 25, "salary": 3, "contract": 2 },
+        { "name": "Asante Samuel Jr.", "pos": "CB", "ovr": 83, "age": 25, "salary": 14, "contract": 3 },
+        { "name": "Derwin James Jr.", "pos": "S", "ovr": 93, "age": 27, "salary": 19, "contract": 4 },
+        { "name": "Cameron Dicker", "pos": "K", "ovr": 81, "age": 24, "salary": 2, "contract": 2 }
+      ]
+    },
+    { "id": 16, "city": "Dallas", "name": "Cowboys", "ab": "DAL", "conf": "NFC", "div": "East",
       "roster": [
         { "name": "Dak Prescott", "pos": "QB", "ovr": 89, "age": 31, "salary": 60, "contract": 4 },
         { "name": "CeeDee Lamb", "pos": "WR", "ovr": 96, "age": 25, "salary": 34, "contract": 4 },
@@ -58,7 +240,189 @@
         { "name": "Brandon Aubrey", "pos": "K", "ovr": 85, "age": 28, "salary": 1, "contract": 2 }
       ]
     },
-    { "id": 4, "city": "San Francisco", "name": "49ers", "ab": "SF", "conf": "NFC", "div": "West",
+    { "id": 17, "city": "New York", "name": "Giants", "ab": "NYG", "conf": "NFC", "div": "East",
+      "roster": [
+        { "name": "Daniel Jones", "pos": "QB", "ovr": 78, "age": 27, "salary": 40, "contract": 3 },
+        { "name": "Darius Slayton", "pos": "WR", "ovr": 77, "age": 27, "salary": 6, "contract": 2 },
+        { "name": "Darren Waller", "pos": "TE", "ovr": 82, "age": 31, "salary": 17, "contract": 3 },
+        { "name": "Saquon Barkley", "pos": "RB", "ovr": 91, "age": 27, "salary": 11, "contract": 2 },
+        { "name": "Andrew Thomas", "pos": "LT", "ovr": 89, "age": 25, "salary": 22, "contract": 4 },
+        { "name": "Dexter Lawrence", "pos": "DL", "ovr": 90, "age": 27, "salary": 20, "contract": 4 },
+        { "name": "Bobby Okereke", "pos": "LB", "ovr": 82, "age": 28, "salary": 12, "contract": 3 },
+        { "name": "Adoree' Jackson", "pos": "CB", "ovr": 81, "age": 28, "salary": 11, "contract": 2 },
+        { "name": "Jason Pinnock", "pos": "S", "ovr": 76, "age": 25, "salary": 2, "contract": 2 },
+        { "name": "Graham Gano", "pos": "K", "ovr": 82, "age": 37, "salary": 4, "contract": 2 }
+      ]
+    },
+    { "id": 18, "city": "Philadelphia", "name": "Eagles", "ab": "PHI", "conf": "NFC", "div": "East",
+      "roster": [
+        { "name": "Jalen Hurts", "pos": "QB", "ovr": 95, "age": 25, "salary": 51, "contract": 5 },
+        { "name": "A.J. Brown", "pos": "WR", "ovr": 95, "age": 27, "salary": 32, "contract": 4 },
+        { "name": "Dallas Goedert", "pos": "TE", "ovr": 90, "age": 29, "salary": 17, "contract": 4 },
+        { "name": "D'Andre Swift", "pos": "RB", "ovr": 84, "age": 25, "salary": 11, "contract": 3 },
+        { "name": "Jordan Mailata", "pos": "LT", "ovr": 88, "age": 27, "salary": 18, "contract": 4 },
+        { "name": "Jalen Carter", "pos": "DL", "ovr": 88, "age": 23, "salary": 4, "contract": 3 },
+        { "name": "Haason Reddick", "pos": "LB", "ovr": 88, "age": 29, "salary": 14, "contract": 3 },
+        { "name": "Darius Slay", "pos": "CB", "ovr": 87, "age": 33, "salary": 16, "contract": 3 },
+        { "name": "C.J. Gardner-Johnson", "pos": "S", "ovr": 86, "age": 26, "salary": 7, "contract": 3 },
+        { "name": "Jake Elliott", "pos": "K", "ovr": 86, "age": 29, "salary": 5, "contract": 3 }
+      ]
+    },
+    { "id": 19, "city": "Washington", "name": "Commanders", "ab": "WSH", "conf": "NFC", "div": "East",
+      "roster": [
+        { "name": "Jayden Daniels", "pos": "QB", "ovr": 82, "age": 23, "salary": 4, "contract": 4 },
+        { "name": "Terry McLaurin", "pos": "WR", "ovr": 86, "age": 28, "salary": 23, "contract": 3 },
+        { "name": "Logan Thomas", "pos": "TE", "ovr": 74, "age": 33, "salary": 5, "contract": 1 },
+        { "name": "Brian Robinson Jr.", "pos": "RB", "ovr": 78, "age": 25, "salary": 3, "contract": 2 },
+        { "name": "Charles Leno Jr.", "pos": "LT", "ovr": 77, "age": 32, "salary": 8, "contract": 1 },
+        { "name": "Daron Payne", "pos": "DL", "ovr": 88, "age": 27, "salary": 22, "contract": 4 },
+        { "name": "Frankie Luvu", "pos": "LB", "ovr": 80, "age": 28, "salary": 14, "contract": 3 },
+        { "name": "Emmanuel Forbes Jr.", "pos": "CB", "ovr": 74, "age": 22, "salary": 3, "contract": 3 },
+        { "name": "Kamren Curl", "pos": "S", "ovr": 82, "age": 24, "salary": 12, "contract": 3 },
+        { "name": "Austin Seibert", "pos": "K", "ovr": 78, "age": 27, "salary": 2, "contract": 2 }
+      ]
+    },
+    { "id": 20, "city": "Chicago", "name": "Bears", "ab": "CHI", "conf": "NFC", "div": "North",
+      "roster": [
+        { "name": "Caleb Williams", "pos": "QB", "ovr": 80, "age": 22, "salary": 6, "contract": 4 },
+        { "name": "DJ Moore", "pos": "WR", "ovr": 86, "age": 27, "salary": 19, "contract": 3 },
+        { "name": "Cole Kmet", "pos": "TE", "ovr": 79, "age": 25, "salary": 2, "contract": 2 },
+        { "name": "Khalil Herbert", "pos": "RB", "ovr": 77, "age": 25, "salary": 3, "contract": 2 },
+        { "name": "Darnell Wright", "pos": "LT", "ovr": 78, "age": 23, "salary": 2, "contract": 3 },
+        { "name": "Montez Sweat", "pos": "DL", "ovr": 88, "age": 27, "salary": 24, "contract": 4 },
+        { "name": "T.J. Edwards", "pos": "LB", "ovr": 81, "age": 27, "salary": 8, "contract": 3 },
+        { "name": "Jaylon Johnson", "pos": "CB", "ovr": 84, "age": 24, "salary": 16, "contract": 3 },
+        { "name": "Kevin Byard", "pos": "S", "ovr": 83, "age": 30, "salary": 9, "contract": 2 },
+        { "name": "Cairo Santos", "pos": "K", "ovr": 82, "age": 32, "salary": 4, "contract": 2 }
+      ]
+    },
+    { "id": 21, "city": "Detroit", "name": "Lions", "ab": "DET", "conf": "NFC", "div": "North",
+      "roster": [
+        { "name": "Jared Goff", "pos": "QB", "ovr": 87, "age": 30, "salary": 53, "contract": 4 },
+        { "name": "Amon-Ra St. Brown", "pos": "WR", "ovr": 91, "age": 24, "salary": 30, "contract": 4 },
+        { "name": "Sam LaPorta", "pos": "TE", "ovr": 80, "age": 23, "salary": 2, "contract": 3 },
+        { "name": "David Montgomery", "pos": "RB", "ovr": 82, "age": 27, "salary": 11, "contract": 3 },
+        { "name": "Taylor Decker", "pos": "LT", "ovr": 84, "age": 30, "salary": 18, "contract": 3 },
+        { "name": "Aidan Hutchinson", "pos": "DL", "ovr": 92, "age": 24, "salary": 4, "contract": 3 },
+        { "name": "Alex Anzalone", "pos": "LB", "ovr": 79, "age": 29, "salary": 9, "contract": 2 },
+        { "name": "Carlton Davis III", "pos": "CB", "ovr": 83, "age": 27, "salary": 15, "contract": 3 },
+        { "name": "Ifeatu Melifonwu", "pos": "S", "ovr": 78, "age": 25, "salary": 2, "contract": 2 },
+        { "name": "Michael Badgley", "pos": "K", "ovr": 77, "age": 29, "salary": 2, "contract": 2 }
+      ]
+    },
+    { "id": 22, "city": "Green Bay", "name": "Packers", "ab": "GB", "conf": "NFC", "div": "North",
+      "roster": [
+        { "name": "Jordan Love", "pos": "QB", "ovr": 90, "age": 26, "salary": 55, "contract": 4 },
+        { "name": "Christian Watson", "pos": "WR", "ovr": 81, "age": 24, "salary": 2, "contract": 3 },
+        { "name": "Tucker Kraft", "pos": "TE", "ovr": 77, "age": 23, "salary": 2, "contract": 3 },
+        { "name": "Josh Jacobs", "pos": "RB", "ovr": 86, "age": 26, "salary": 12, "contract": 2 },
+        { "name": "David Bakhtiari", "pos": "LT", "ovr": 89, "age": 33, "salary": 23, "contract": 3 },
+        { "name": "Rashan Gary", "pos": "DL", "ovr": 86, "age": 27, "salary": 18, "contract": 3 },
+        { "name": "De'Vondre Campbell", "pos": "LB", "ovr": 83, "age": 29, "salary": 10, "contract": 2 },
+        { "name": "Jaire Alexander", "pos": "CB", "ovr": 90, "age": 27, "salary": 21, "contract": 4 },
+        { "name": "Darnell Savage", "pos": "S", "ovr": 79, "age": 26, "salary": 3, "contract": 2 },
+        { "name": "Anders Carlson", "pos": "K", "ovr": 79, "age": 24, "salary": 2, "contract": 2 }
+      ]
+    },
+    { "id": 23, "city": "Minnesota", "name": "Vikings", "ab": "MIN", "conf": "NFC", "div": "North",
+      "roster": [
+        { "name": "Sam Darnold", "pos": "QB", "ovr": 79, "age": 27, "salary": 10, "contract": 1 },
+        { "name": "Justin Jefferson", "pos": "WR", "ovr": 99, "age": 25, "salary": 35, "contract": 4 },
+        { "name": "T.J. Hockenson", "pos": "TE", "ovr": 87, "age": 27, "salary": 17, "contract": 3 },
+        { "name": "Aaron Jones", "pos": "RB", "ovr": 82, "age": 29, "salary": 10, "contract": 2 },
+        { "name": "Christian Darrisaw", "pos": "LT", "ovr": 88, "age": 24, "salary": 19, "contract": 4 },
+        { "name": "Jonathan Greenard", "pos": "DL", "ovr": 84, "age": 27, "salary": 19, "contract": 4 },
+        { "name": "Jordan Hicks", "pos": "LB", "ovr": 80, "age": 32, "salary": 6, "contract": 2 },
+        { "name": "Byron Murphy II", "pos": "CB", "ovr": 84, "age": 26, "salary": 18, "contract": 3 },
+        { "name": "Harrison Smith", "pos": "S", "ovr": 88, "age": 35, "salary": 12, "contract": 2 },
+        { "name": "Will Reichard", "pos": "K", "ovr": 78, "age": 23, "salary": 1, "contract": 2 }
+      ]
+    },
+    { "id": 24, "city": "Atlanta", "name": "Falcons", "ab": "ATL", "conf": "NFC", "div": "South",
+      "roster": [
+        { "name": "Kirk Cousins", "pos": "QB", "ovr": 83, "age": 36, "salary": 45, "contract": 4 },
+        { "name": "Drake London", "pos": "WR", "ovr": 83, "age": 23, "salary": 3, "contract": 3 },
+        { "name": "Kyle Pitts", "pos": "TE", "ovr": 87, "age": 24, "salary": 5, "contract": 3 },
+        { "name": "Bijan Robinson", "pos": "RB", "ovr": 89, "age": 22, "salary": 5, "contract": 3 },
+        { "name": "Jake Matthews", "pos": "LT", "ovr": 83, "age": 32, "salary": 16, "contract": 2 },
+        { "name": "Grady Jarrett", "pos": "DL", "ovr": 87, "age": 31, "salary": 19, "contract": 3 },
+        { "name": "Kaden Elliss", "pos": "LB", "ovr": 78, "age": 27, "salary": 6, "contract": 3 },
+        { "name": "A.J. Terrell", "pos": "CB", "ovr": 84, "age": 25, "salary": 20, "contract": 4 },
+        { "name": "Jessie Bates III", "pos": "S", "ovr": 86, "age": 27, "salary": 16, "contract": 4 },
+        { "name": "Younghoe Koo", "pos": "K", "ovr": 87, "age": 29, "salary": 5, "contract": 3 }
+      ]
+    },
+    { "id": 25, "city": "Carolina", "name": "Panthers", "ab": "CAR", "conf": "NFC", "div": "South",
+      "roster": [
+        { "name": "Bryce Young", "pos": "QB", "ovr": 73, "age": 22, "salary": 7, "contract": 4 },
+        { "name": "Adam Thielen", "pos": "WR", "ovr": 78, "age": 34, "salary": 6, "contract": 1 },
+        { "name": "Hayden Hurst", "pos": "TE", "ovr": 76, "age": 31, "salary": 4, "contract": 1 },
+        { "name": "Miles Sanders", "pos": "RB", "ovr": 76, "age": 27, "salary": 6, "contract": 2 },
+        { "name": "Ikem Ekwonu", "pos": "LT", "ovr": 79, "age": 23, "salary": 3, "contract": 3 },
+        { "name": "Derrick Brown", "pos": "DL", "ovr": 82, "age": 26, "salary": 9, "contract": 2 },
+        { "name": "Shaq Thompson", "pos": "LB", "ovr": 78, "age": 30, "salary": 10, "contract": 2 },
+        { "name": "Donte Jackson", "pos": "CB", "ovr": 79, "age": 28, "salary": 9, "contract": 2 },
+        { "name": "Xavier Woods", "pos": "S", "ovr": 76, "age": 28, "salary": 5, "contract": 2 },
+        { "name": "Eddy Pineiro", "pos": "K", "ovr": 75, "age": 28, "salary": 2, "contract": 1 }
+      ]
+    },
+    { "id": 26, "city": "New Orleans", "name": "Saints", "ab": "NO", "conf": "NFC", "div": "South",
+      "roster": [
+        { "name": "Derek Carr", "pos": "QB", "ovr": 81, "age": 33, "salary": 40, "contract": 4 },
+        { "name": "Chris Olave", "pos": "WR", "ovr": 86, "age": 24, "salary": 4, "contract": 3 },
+        { "name": "Foster Moreau", "pos": "TE", "ovr": 76, "age": 27, "salary": 5, "contract": 2 },
+        { "name": "Alvin Kamara", "pos": "RB", "ovr": 87, "age": 29, "salary": 15, "contract": 2 },
+        { "name": "Trevor Penning", "pos": "LT", "ovr": 75, "age": 25, "salary": 3, "contract": 3 },
+        { "name": "Cameron Jordan", "pos": "DL", "ovr": 84, "age": 35, "salary": 13, "contract": 2 },
+        { "name": "Demario Davis", "pos": "LB", "ovr": 85, "age": 35, "salary": 13, "contract": 2 },
+        { "name": "Marshon Lattimore", "pos": "CB", "ovr": 86, "age": 28, "salary": 19, "contract": 3 },
+        { "name": "Tyrann Mathieu", "pos": "S", "ovr": 83, "age": 32, "salary": 9, "contract": 1 },
+        { "name": "Blake Grupe", "pos": "K", "ovr": 76, "age": 26, "salary": 2, "contract": 2 }
+      ]
+    },
+    { "id": 27, "city": "Tampa Bay", "name": "Buccaneers", "ab": "TB", "conf": "NFC", "div": "South",
+      "roster": [
+        { "name": "Baker Mayfield", "pos": "QB", "ovr": 85, "age": 29, "salary": 100, "contract": 3 },
+        { "name": "Mike Evans", "pos": "WR", "ovr": 92, "age": 31, "salary": 18, "contract": 3 },
+        { "name": "Cade Otton", "pos": "TE", "ovr": 77, "age": 25, "salary": 2, "contract": 3 },
+        { "name": "Rachaad White", "pos": "RB", "ovr": 79, "age": 25, "salary": 3, "contract": 3 },
+        { "name": "Tristan Wirfs", "pos": "LT", "ovr": 94, "age": 25, "salary": 23, "contract": 4 },
+        { "name": "Vita Vea", "pos": "DL", "ovr": 90, "age": 29, "salary": 16, "contract": 3 },
+        { "name": "Lavonte David", "pos": "LB", "ovr": 86, "age": 34, "salary": 10, "contract": 2 },
+        { "name": "Carlton Davis III", "pos": "CB", "ovr": 83, "age": 27, "salary": 15, "contract": 3 },
+        { "name": "Antoine Winfield Jr.", "pos": "S", "ovr": 92, "age": 25, "salary": 21, "contract": 4 },
+        { "name": "Chase McLaughlin", "pos": "K", "ovr": 78, "age": 28, "salary": 2, "contract": 2 }
+      ]
+    },
+    { "id": 28, "city": "Arizona", "name": "Cardinals", "ab": "ARI", "conf": "NFC", "div": "West",
+      "roster": [
+        { "name": "Kyler Murray", "pos": "QB", "ovr": 86, "age": 27, "salary": 46, "contract": 4 },
+        { "name": "Marvin Harrison Jr.", "pos": "WR", "ovr": 84, "age": 22, "salary": 4, "contract": 4 },
+        { "name": "Trey McBride", "pos": "TE", "ovr": 83, "age": 25, "salary": 2, "contract": 3 },
+        { "name": "James Conner", "pos": "RB", "ovr": 80, "age": 29, "salary": 7, "contract": 2 },
+        { "name": "Paris Johnson Jr.", "pos": "LT", "ovr": 78, "age": 23, "salary": 3, "contract": 3 },
+        { "name": "Dante Fowler Jr.", "pos": "DL", "ovr": 79, "age": 30, "salary": 9, "contract": 2 },
+        { "name": "Zaven Collins", "pos": "LB", "ovr": 78, "age": 25, "salary": 4, "contract": 2 },
+        { "name": "Byron Murphy II", "pos": "CB", "ovr": 82, "age": 26, "salary": 18, "contract": 3 },
+        { "name": "Budda Baker", "pos": "S", "ovr": 88, "age": 28, "salary": 15, "contract": 3 },
+        { "name": "Matt Prater", "pos": "K", "ovr": 82, "age": 40, "salary": 3, "contract": 1 }
+      ]
+    },
+    { "id": 29, "city": "Los Angeles", "name": "Rams", "ab": "LAR", "conf": "NFC", "div": "West",
+      "roster": [
+        { "name": "Matthew Stafford", "pos": "QB", "ovr": 87, "age": 36, "salary": 40, "contract": 2 },
+        { "name": "Cooper Kupp", "pos": "WR", "ovr": 88, "age": 31, "salary": 26, "contract": 3 },
+        { "name": "Tyler Higbee", "pos": "TE", "ovr": 80, "age": 30, "salary": 7, "contract": 2 },
+        { "name": "Kyren Williams", "pos": "RB", "ovr": 83, "age": 24, "salary": 3, "contract": 3 },
+        { "name": "Joe Noteboom", "pos": "LT", "ovr": 77, "age": 29, "salary": 10, "contract": 2 },
+        { "name": "Aaron Donald", "pos": "DL", "ovr": 86, "age": 33, "salary": 23, "contract": 1 },
+        { "name": "Ernest Jones IV", "pos": "LB", "ovr": 78, "age": 25, "salary": 3, "contract": 2 },
+        { "name": "Ahkello Witherspoon", "pos": "CB", "ovr": 78, "age": 29, "salary": 6, "contract": 2 },
+        { "name": "Jordan Fuller", "pos": "S", "ovr": 79, "age": 27, "salary": 7, "contract": 2 },
+        { "name": "Joshua Karty", "pos": "K", "ovr": 76, "age": 23, "salary": 1, "contract": 2 }
+      ]
+    },
+    { "id": 30, "city": "San Francisco", "name": "49ers", "ab": "SF", "conf": "NFC", "div": "West",
       "roster": [
         { "name": "Brock Purdy", "pos": "QB", "ovr": 88, "age": 25, "salary": 6, "contract": 2 },
         { "name": "Deebo Samuel", "pos": "WR", "ovr": 85, "age": 28, "salary": 20, "contract": 3 },
@@ -71,8 +435,22 @@
         { "name": "Talanoa Hufanga", "pos": "S", "ovr": 84, "age": 25, "salary": 9, "contract": 3 },
         { "name": "Jake Moody", "pos": "K", "ovr": 78, "age": 25, "salary": 1, "contract": 3 }
       ]
+    },
+    { "id": 31, "city": "Seattle", "name": "Seahawks", "ab": "SEA", "conf": "NFC", "div": "West",
+      "roster": [
+        { "name": "Geno Smith", "pos": "QB", "ovr": 83, "age": 34, "salary": 31, "contract": 3 },
+        { "name": "Tyler Lockett", "pos": "WR", "ovr": 83, "age": 31, "salary": 17, "contract": 3 },
+        { "name": "Noah Fant", "pos": "TE", "ovr": 78, "age": 27, "salary": 11, "contract": 2 },
+        { "name": "Kenneth Walker III", "pos": "RB", "ovr": 84, "age": 24, "salary": 3, "contract": 3 },
+        { "name": "Charles Cross", "pos": "LT", "ovr": 80, "age": 23, "salary": 4, "contract": 3 },
+        { "name": "Leonard Williams", "pos": "DL", "ovr": 84, "age": 30, "salary": 24, "contract": 3 },
+        { "name": "Boye Mafe", "pos": "LB", "ovr": 79, "age": 24, "salary": 3, "contract": 3 },
+        { "name": "Devon Witherspoon", "pos": "CB", "ovr": 84, "age": 23, "salary": 3, "contract": 3 },
+        { "name": "Quandre Diggs", "pos": "S", "ovr": 82, "age": 31, "salary": 10, "contract": 2 },
+        { "name": "Jason Myers", "pos": "K", "ovr": 83, "age": 32, "salary": 5, "contract": 2 }
+      ]
     }
   ],
-  "_stub": true,
-  "_instructions": "This is a 5-team stub. Expand to all 32 teams following this format. See docs/REAL_ROSTER_MODE_SETUP.md for the full spec and community contribution guide."
+  "_stub": false,
+  "_instructions": "Full 32-team NFL 2025 roster file. See docs/REAL_ROSTER_MODE_SETUP.md for format spec and community contribution guide."
 }
