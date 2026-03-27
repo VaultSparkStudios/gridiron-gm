@@ -37,6 +37,20 @@
 - [x] **v31 Docs: Competitive Analysis** — `docs/COMPETITIVE_ANALYSIS_FOOTBALL_GM_2026.html` vs Football-GM/ZenGM
 - [x] **v31 Docs: Ceiling Feature Guides** — PHASER_60MIN, REAL_ROSTER_MODE, CLAUDE_AI_STORYLINE, MULTIPLAYER, PRO_GM setup docs
 
+## Done (v32.0 — 2026-03-26)
+
+- [x] **v32 GM: God Mode / Commissioner Layer** — ⚡GOD tab; godSetOvr() per player, godForceWin(), godAddSP(), godMaxRoster(); team selector; toggle via header ⚡ button
+- [x] **v32 GM: GM Contract / Fire System** — evaluateGmContract() at season end; fire risk increments on missed targets; GM Fire modal (lame duck or exit)
+- [x] **v32 GM: Urgent Trade Offer popup** — auto-triggers wk4/wk8; 45s countdown; accept or pass; cost: 3rd-round pick
+- [x] **v32 GM: Offseason Grade Report Card** — calcOffszGrades(); Draft/FA/Cap/Overall letter grades; auto-opens at newSeason()
+- [x] **v32 GM: Today's Challenge splash card** — seed-based weekly challenge (7-pool); shown on splash + generated on mount
+- [x] **v32 GM: Draft Lottery Animation** — genDraftLottery(); visual 5-team draw with team colors; God Mode tab button
+- [x] **v32 GM: Local Leaderboard** — saveToLeaderboard() at newSeason(); top 10 in localStorage; 🏅 header + splash button
+- [x] **v32 GM: Trophy Room modal** — 🏆 header button; achievements + milestones + championship years
+- [x] **v32 GM: Multiplayer stub modal** — 👥 header; coming-soon feature list + Supabase docs reference
+- [x] **v32 GM: Real Roster Mode stub** — loadRealRosters() fetches /rosters/nfl-2025.json; 5-team stub created
+- [x] **v32 Asset: public/rosters/nfl-2025.json** — 5-team community stub (BUF/NE/KC/DAL/SF) with format spec
+
 ## In Progress
 
 - (none)

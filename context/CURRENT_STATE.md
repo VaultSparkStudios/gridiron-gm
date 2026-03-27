@@ -4,8 +4,9 @@
 
 - Date: 2026-03-26
 - Overall status: Live on GitHub Pages, active development
-- Current version: v31.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — GM built clean and pushed (`8d91fce`), Play unchanged
+- Current version: v32.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — GM v32 built clean (pending commit), Play unchanged
 - Studio OS: Fully compliant
+- Audit score: 86/100 (A-) at v31 baseline; v32 targets 91/100
 
 ## What exists
 
