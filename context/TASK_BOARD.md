@@ -1,5 +1,48 @@
 # Task Board
 
+## Brainstorm Pipeline (v37 Audit — 2026-03-27)
+
+### Highest Leverage (implementing now)
+
+- [x] **PostHog funnel: splash_view, pro_cta_click, checkout_opened** ✅ v37.0
+- [x] **"Share Your Dynasty" auto-prompt at season end** ✅ v37.0
+- [x] **Season Pass tier ($4.99/yr)** ✅ v37.0 — set VITE_STRIPE_ANNUAL_LINK to activate
+- [x] **Live AI Draft Partner (Claude streaming)** ✅ v37.0 — set VITE_CLAUDE_PROXY_URL to activate Claude calls; offline bank works now
+- [x] **Formation Selection Pre-Snap (Phaser)** ✅ v37.0 Play — Shotgun/I-Form/Pistol/Spread with modifiers
+- [ ] **Wire Stripe Live** [MANUAL] — set VITE_STRIPE_PAYMENT_LINK in .env.local + GitHub Secrets; score +4pts monetization
+- [ ] **Publish itch.io + Reddit** [MANUAL] — copy ready in docs/; score +5pts distribution
+- [ ] **Deploy Claude Proxy Worker** [MANUAL] — set VITE_CLAUDE_PROXY_URL; score +3pts AI
+- [ ] **Real Roster JSON completion** [MANUAL/DATA] — fill 32 teams × 15 key players in public/rosters/nfl-2025.json; score +3pts real rosters
+- [ ] **Supabase Global LB setup** [MANUAL] — create leaderboard table, set env vars; score +2pts engagement
+
+### Backlog (scored — ordered by ROI)
+
+- [ ] **Dynamic League News Ticker** — real-time league events generated from state each wk sim; score +2pts UX; effort: 3hr
+- [ ] **Itch.io embed + studio landing page** — iframe widget + Play Now hero section; score +2pts distribution; effort: 2hr
+- [ ] **Pre-Season Training Camp Mini-Game** — 3-day position drills; winners get +2 OVR; score +2pts engagement; effort: 1 day
+- [ ] **Coaching Upgrade Tree (trait lines)** — 3-node tree per coordinator; SP cost → simGame modifier; score +2pts depth; effort: 1.5 days
+- [ ] **Halftime Adjustments (live sim pause)** — GM modal at halftime: Double Cover/Blitz/Run Clock modifies Q3-Q4; score +2pts live sim; effort: 1.5 days
+- [ ] **Injury Report Page (Weekly Medical Briefing)** — styled Q/D/IR report card each week; score +1pt UX; effort: 4hr
+- [ ] **Player Trade Demand System** — morale<35 for 3+ weeks generates trade demand; score +2pts franchise depth; effort: 4hr
+- [ ] **Stadium Upgrades as Live Ops Layer** — expand 3-tier system with SP cost + franchise modifier; score +2pts depth+monetization; effort: 1 day
+- [ ] **Free Agency Bidding Wars UI** — competing AI offer on OVR≥80 signings; score +2pts FA depth; effort: 1 day
+- [ ] **Franchise Rivals system** — track history vs AI teams across seasons; rivalry trophies; score +3pts narrative; effort: 1 week
+- [ ] **Procedural Trade Rumors (wk 7-9)** — fake rumor mill in news ticker; some real; score +2pts immersion; effort: 3 days
+- [ ] **Embed-Anywhere Widget** — lightweight iFrame card for Reddit/itch posts; score +2pts distribution; effort: 2 days
+- [ ] **Historical Dynasty Comparison** — all-time franchise records, Supabase global ranking; score +2pts engagement; effort: 3 days
+- [ ] **YouTube/Twitch Integration** — Claude-powered season summary script; one-click tweetstorm; score +3pts viral; effort: 1 week
+- [ ] **Discord Server + #weekly-challenge** [MANUAL] — VaultSpark Discord; Rookie/Legend GM roles; score +4pts community; effort: 1 day
+- [ ] **Weekly Challenge Live Ops Calendar** — 8-week pre-planned challenges; persistent hub banner; score +3pts engagement; effort: 1 day
+- [ ] **Async Multiplayer via Supabase** — 4-8 human GMs, commissioner league; score +8pts multiplayer; effort: 3 weeks
+- [ ] **Franchise Mode Season Pass ($4.99/yr)** — annual Stripe tier with weekly challenge rewards + cosmetics; score +6pts monetization; effort: 2 weeks
+- [ ] **Live AI Draft Partner (streaming)** — Claude streams analyst commentary per pick; score +5pts AI; effort: 1 week
+- [ ] **PWA → App Store via Capacitor** — wrap Vite PWA; iOS + Android submission; score +5pts distribution; effort: 1 week
+- [ ] **Full Replay System (drive-by-drive)** — driveLog[] stored; post-game rewatch on field; score +3pts live sim; effort: 2 weeks
+- [ ] **Phaser Formation Selection Pre-Snap** — Shotgun/I-Form/Pistol/Spread affects route depth + blocking; score +3pts live sim; effort: 1.5 weeks
+- [ ] **Product Hunt prep** [MANUAL] — screenshots + 90s trailer; schedule Tuesday; score +3pts distribution; effort: 4hr
+
+---
+
 ## Done (recent)
 
 - [x] v3.2–v5.6: Full franchise sim + Phaser P1–P27, all core systems

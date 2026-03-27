@@ -4,9 +4,9 @@
 
 - Date: 2026-03-27
 - Overall status: Live on GitHub Pages, active development
-- Current version: **v36.0** (gridiron-gm) / **Play v36.0** (gridiron-gm-play) — all committed + pushed
+- Current version: **v37.0** (gridiron-gm) / **Play v37.0** (gridiron-gm-play) — all committed + pushed
 - Studio OS: Fully compliant
-- Audit score: v34 baseline 63/100 → v35 ~68/100 → v36 ~80/100 (Dynasty Book, HOF, Pro GM, Global LB, 60-min clock)
+- Audit score: v34 baseline 63/100 → v36 ~80/100 → v37 ~86/100 (PostHog funnel, Dynasty Share, Season Pass, AI Draft Partner, Formations)
 
 ## What exists
 
@@ -229,6 +229,16 @@
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()
 - `.github/workflows/` — ci.yml + deploy-pages.yml
 - `context/` — Studio OS project memory
+
+## v37.0 additions (2026-03-27)
+
+**GM:** PostHog funnel tracking (`splash_view`, `pro_cta_click`, `checkout_opened` events), Dynasty Share toast (auto-prompts native share at season end with record + gmRep; `dynastyShareOpen` state), Season Pass annual tier ($4.99/yr; `checkoutAnnual()` opens `VITE_STRIPE_ANNUAL_LINK`; BEST VALUE badge; `proAnnual` state persisted to `gm_pro_annual`; dual-button Pro UI), Live AI Draft Partner (fires on user's clock; 8-item offline commentary bank; optional Claude proxy call via `VITE_CLAUDE_PROXY_URL`; `draftAnalyst`/`draftAnalystLoading` state; analyst panel in draft tab)
+
+**Play:** Offensive Formation Selection pre-snap (4 formations: Shotgun/I-Form/Pistol/Spread; formation picker before play call grid with stats; auto-proceeds after 3s; formation badge flash on field; `state.offFormation` in gameState.js); Formation modifiers applied to run speed (I-Form +6%, Shotgun -6%) and pass compCh (Shotgun +0.06, Spread +0.05, I-Form -0.04)
+
+**New state vars:** `dynastyShareOpen, proAnnual, draftAnalyst, draftAnalystLoading` (GM) · `offFormation` in gameState.js (Play)
+
+**New env vars:** `VITE_STRIPE_ANNUAL_LINK` — Stripe annual checkout for Season Pass
 
 ## v36.0 additions (2026-03-27)
 
