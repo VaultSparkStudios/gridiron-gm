@@ -366,3 +366,38 @@
 - [x] **Analytics .env.local** — .env.local created in both repos; VITE_ANALYTICS_URL ready to fill in
 - [x] **Season summary card** — auto-opens showSeasonSummary modal on championship; stat leaders + copy/share
 - [x] **Snap-count milestone toast** — _newLoyalPlayers collected at wk snap loop; ❤️ LOYAL toast via injToasts on first hit
+
+## Done (v30.0 — 2026-03-26 — 35 Innovations + Audit Fixes)
+
+### GM App (gridiron-gm) — commit 30eb5fa
+- [x] **Beat Reporter** — weekly AI reporter generates post-game write-ups in log tab
+- [x] **Save Slots** — 3 save slots in dev tab; switch active save mid-session
+- [x] **Legacy Records** — franchise records (most wins/TDs/etc.) tracked and displayed in log tab
+- [x] **DDA (Dynamic Difficulty Adjustment)** — ddaAdj state; window._gmDDA global; simGame reads modifier; ±0.06 nudge per streak
+- [x] **Parade Screen** — championship confetti overlay with parade route and fan celebration
+- [x] **Draft Day Animation** — animated pick card reveal with team logo flash on draft day
+- [x] **Cap Restructuring** — convert guaranteed money to voidable years; prorated cap hit tool
+- [x] **AI GM DMs** — rival GM direct message panel; personality-driven negotiations
+- [x] **Player Arc System** — players have narrative arcs (breakout/decline/redemption) shown in modal
+- [x] **Speedrun Mode** — dev tab toggle; compresses week sim timing for rapid testing
+- [x] **Coaching Specialization** — OC/DC have specialty slot (red zone, 3rd down, etc.) with bonuses
+- [x] **Trade War Room Timer** — 90s countdown on AI trade offers; auto-decline on expire
+- [x] **Custom Team Creator** — name/city/abbreviation/colors at new-game setup
+- [x] **Injury Rehab Decisions** — weekly rehab choice modal (rest/push/therapy) for injured players
+- [x] **Power Rankings Broadcast** — weekly power rankings overlay card shown post-simWk
+- [x] **Historical Challenges** — unlock/play scenarios based on real historical game setups
+- [x] **Chemistry Graph** — team chemistry visualization toggle in roster tab
+- [x] **Media Week Pressure** — storyline pressure cards before big games; affects gmRep
+- [x] **Franchise Sale** — sell franchise option in owner tab; triggers dynasty end + legacy score
+- [x] **SIL Score Badge** — dev tab shows current SIL score breakdown
+- [x] **Newspaper Modal** — weekly newspaper front page generated from sim events
+- [x] **FA Combine Showcase** — pre-FA scouting combine mini-event with measurables
+- [x] **AI Spectator Mode** — "Watch" button auto-plays live game without user interaction
+- [x] **PWA manifest** — public/manifest.json + index.html meta tags; installable as app
+
+### Play Engine (gridiron-gm-play) — commit c4487ce
+- [x] **I-30 Web Speech Commentary** — _speak() helper; zero-cost TTS on user TD / INT / sack / FG / game end
+- [x] **Commentary Toggle** — COMMENTARY ON/OFF in BootScene settings overlay; persisted localStorage
+- [x] **I-4 Game Plan Bridge** — gamePlan field in gm_roster_export; BootScene extracts → window._gmGamePlan; FieldScene applies ±0.12 passCh modifier
+- [x] **I-7 Highlight Card Download** — 400×225 canvas card in GameOverScene; score, MVP stats, watermark; "📷 HIGHLIGHT CARD" button
+- [x] **Analytics: user_td event** — track('user_td', {yardLine, quarter}) on user touchdown
