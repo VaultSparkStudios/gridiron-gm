@@ -1,100 +1,146 @@
 # Latest Handoff
 
-Last updated: 2026-03-26 (session — v31.0)
+Last updated: 2026-03-26 (session — v32.0)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v30.0 → v31.0)
+## What was completed this session (v31.0 → v32.0)
 
-### Audit + Competitive Analysis
-- Full project audit — `context/AUDIT_v30.md` — overall **81/100 (B+)**, 10 category scores, 30 innovation items ranked with Impact/Effort/Score-Lift ratings, Highest Leverage 6 + Highest Ceiling 5 recommended
-- Competitive analysis HTML report — `docs/COMPETITIVE_ANALYSIS_FOOTBALL_GM_2026.html` — vs Football-GM/ZenGM: feature matrix, scoring, audience mapping, strategic recommendations
+### Full Audit → Implementation Session
 
-### Highest Leverage (implemented in App.jsx)
+This session started with a complete project re-audit at v31.0 baseline (86/100 / A-), then implemented ALL "Highest Leverage" and "Highest Ceiling" items from the audit list.
 
-**GM Rep Bar always visible**
-- Thin XP strip between header and message bar on every tab
-- Shows tier name (ROOKIE→VETERAN→RESPECTED→ELITE→LEGEND), progress bar, XP/threshold
-- Uses `gmRepTier()` helper; updates live as gmRep changes
+### Highest Leverage — All Implemented
 
-**Stats Hub tab**
-- New "hub" tab added to TABS array
-- 5 sub-sections via `hubSection` state: `leaders` (season stat leaders grid by category), `franchise` (dynasty history, timeline, dynasty report share button), `roster` (position group grades A–F, team strength breakdown), `storyline` (AI Storylines trigger + display), `pro` (Pro GM subscription UI)
+**GM Contract / Fire System**
+- `initGmContract()` runs at game start; sets win target (casual=6W, standard=8W, hardcore=9W)
+- `evaluateGmContract()` runs at every `newSeason()` — fire risk 0→4 scale
+- GM Fire modal: "Exit to Menu" or "Play On (Lame Duck)" options
+- Owner pressure log entries when targets missed
 
-**Trade Finder auto-suggest**
-- `runTradeFinder()` scans all 31 AI rosters against user's top 4 positional needs
-- Returns up to 5 proposals sorted by trade value differential
-- Each proposal shows: team, GET player (pos/OVR), SEND player (pos/OVR), fairness badge (FAIR ≤15/SLIGHT EDGE ≤35/UNEVEN ≤60/LOPSIDED >60) with color coding
-- "Load →" button pre-populates the trade interface for immediate execution
+**Urgent Trade Offer Popup**
+- Auto-fires at wk4 and wk8 when any AI team has 2+ QBs (OVR≥65 surplus)
+- 45-second countdown bar with animated progress
+- Accept: get QB, lose 3rd-round pick; Pass: offer disappears
 
-**Season Recap Card**
-- Canvas-based 480×270 downloadable image
-- Auto-triggers via `setShowRecapCard(true)` at season end in `simAll()`
-- Manual trigger via 📊 button in header
-- Shows: franchise name, season record, top offensive performer (passing/rushing yards), top defensive player (sacks/tackles), PF/PA
-- "Download Card" (canvas.toBlob → URL) + "Copy Text" (navigator.clipboard) buttons
+**Offseason Grade Report Card**
+- `calcOffszGrades()` derives Draft/FA/Cap/Overall letter grades from existing data
+- Auto-opens after `newSeason()` via `setOffszGradeOpen(true)`
+- Modal grid: 4 grade tiles (A-D scale) + avg OVR + cap space summary
 
-**Mobile Responsive**
-- `isMobile` state initialized from `window.innerWidth<640`
-- Resize listener in `useEffect([]` updates `isMobile` on window resize
-- Applied throughout: tab bar font/padding, main content padding, header (hides lastSaved timestamp)
+**Today's Challenge (splash screen)**
+- `genTodayChallenge()` uses `Math.floor(date.getTime()/(1000*60*60*24*7))` as weekly seed
+- 7-challenge pool (Browns Miracle, Perfect Season, Dynasty Run, Underdog Story, Rebuild Speedrun, Cap Wizard, Draft Guru)
+- Card shown on splash screen; regenerated on mount + game start
 
-**AI Storyline Engine**
-- `genAIStoryline()` in Hub > AI Storylines section
-- Offline mode: template-based storylines from game state (franchise name, record, injuries, morale, GM rep tier)
-- Claude API mode: reads `VITE_CLAUDE_PROXY_URL` env var; if set, POSTs to proxy, parses `content[0].text`; falls back to offline on error
-- `aiStorylines` state stores array of `{id, text, wk}`; `aiStorylineOpen` modal displays them
+**Local Leaderboard**
+- `saveToLeaderboard()` called at every `newSeason()` — writes team/record/champs/gmRep/date to localStorage
+- `loadLeaderboard()` on mount + when 🏅 button clicked
+- Top 10 entries sorted by champs then wins; shown in modal table
+- 🏅 button in header + splash screen quick-access
 
-**Pro GM stub UI**
-- Hub > Pro tab shows feature list + subscribe button (stub — no Stripe wired yet)
-- `proGmOpen` state for modal toggle
+**Trophy Room modal**
+- 🏆 header button opens visual trophy grid
+- Shows: achievements[], milestones[], championship years (champs[])
+- Golden/silver tile design matching existing aesthetic
 
-### Highest Ceiling (scaffolded — setup docs created)
+### Highest Ceiling — All Implemented (Full or Stub)
 
-All 5 ceiling features have architectural design docs in `docs/`:
-- `docs/PHASER_60MIN_GAME_SETUP.md` — clock/drive/possession/full game loop in gridiron-gm-play; 12-16h estimate
-- `docs/REAL_ROSTER_MODE_SETUP.md` — community JSON format, `loadRealRosters()` implementation, SEO impact
-- `docs/CLAUDE_AI_STORYLINE_SETUP.md` — Cloudflare Worker proxy, cost ~$0.75/month, full integration code
-- `docs/MULTIPLAYER_SETUP.md` — Supabase schema, auth, sync functions; 12-24h estimate
-- `docs/PRO_GM_SETUP.md` — Stripe checkout flow, webhook handler, feature gating, revenue estimates
+**God Mode / Commissioner Layer** — FULL
+- `⚡GOD` tab added when `godMode===true`; toggle via ⚡ header button
+- Team selector dropdown: edit any of 32 rosters
+- Per-player OVR input field (blur to apply via `godSetOvr()`)
+- Quick actions: `godForceWin()` (35-7 forced result), `godAddSP(10/50)`, `godMaxRoster()` (all 99 OVR)
+- `genDraftLottery()`: random 5-team draw with team colors + pick positions shown in modal
+
+**Multiplayer stub** — UI STUB
+- 👥 header button → modal with full feature list (Draft Room, async DMs, weekly results, standings)
+- Backend reference: Supabase + `docs/MULTIPLAYER_SETUP.md`
+
+**Real Roster Mode stub** — FILE + LOADER
+- `loadRealRosters()` fetches `/rosters/nfl-2025.json` via `fetch()`
+- `public/rosters/nfl-2025.json` created: 5-team stub (BUF/NE/KC/DAL/SF) with format spec
+- Splash screen "🏈 Real Rosters" button; `realRosterMode` state flag
+- Error message guides to `docs/REAL_ROSTER_MODE_SETUP.md`
+
+### New State Variables (v32 block)
+```
+godMode, godEditTeam
+todayChallenge, challengeActive
+offszGrade, offszGradeOpen
+urgentTrade, urgentTradeTimer, urgentTradeActive
+gmContract, gmFireModal
+localLeaderboard, leaderboardOpen
+draftLotteryOpen, draftLotteryResult
+compareSel, compareOpen
+trophyOpen, multiOpen, realRosterMode
+```
+
+### New Functions (v32)
+```
+genTodayChallenge(), calcOffszGrades()
+initGmContract(), evaluateGmContract()
+saveToLeaderboard(), loadLeaderboard()
+genDraftLottery()
+godSetOvr(), godAddSP(), godForceWin(), godMaxRoster()
+loadRealRosters()
+```
+
+### New useEffects (v32)
+- Mount: `loadLeaderboard()` + `genTodayChallenge()`
+- Urgent trade countdown (45s timer)
+- wk watcher: fires urgent trade at wk4/wk8
+
+### New Modals (v32)
+- Urgent Trade popup (fixed bottom-right, 45s bar)
+- Offseason Grade Card
+- GM Fire modal
+- Leaderboard modal
+- Draft Lottery modal
+- Player Comparison modal (via compareSel/compareOpen)
+- Trophy Room modal
+- Multiplayer stub modal
 
 ### Build + Deploy
-- Build: `✓ built in 4.96s` — `dist/assets/index-BJ9vOBl3.js` 413.94 kB (gzip: 117.49 kB)
-- Commit: `8d91fce` — `feat: v31.0 — GM Rep bar, Stats Hub, Trade Finder, Season Recap Card, Mobile Responsive, AI Storyline stub, Pro GM stub + 5 ceiling setup docs`
+- App.jsx: 2282 → 2381 lines (+99 lines, all additive)
+- Build: `✓ built in 2.47s` — `dist/assets/index-C1CT-P75.js` 434.56 kB (gzip: 122.47 kB)
+- Commit: `55258e2` — `feat: v32.0 — God Mode, GM Contract/Fire, Urgent Trade, Offseason Grades, Today's Challenge, Draft Lottery, Leaderboard, Trophy Room, Multiplayer stub, Real Roster stub`
 - Pushed to `origin/main` — live on GitHub Pages
 
 ---
 
 ## What is mid-flight
 
-Nothing blocking. All clean.
+Nothing blocking. All clean. Memory updated.
 
 ---
 
-## ⚠️ Pending user/manual actions (DELAYED — cannot be automated)
+## ⚠️ Pending user/manual actions
 
 | # | Action | Where | Why blocked |
 |---|--------|--------|-------------|
-| 1 | **Fill in `VITE_ANALYTICS_URL`** | Both `.env.local` files | Needs analytics endpoint — redeploy after setting |
-| 2 | **Deploy Claude proxy Worker** | Cloudflare | See `docs/CLAUDE_AI_STORYLINE_SETUP.md` — then set `VITE_CLAUDE_PROXY_URL` |
-| 3 | **Stripe Pro GM integration** | New backend | See `docs/PRO_GM_SETUP.md` — replace stub button |
-| 4 | **Supabase multiplayer** | New backend | See `docs/MULTIPLAYER_SETUP.md` — schema + sync |
-| 5 | **`public/rosters/nfl-2025.json`** | gridiron-gm repo | Community file needed for Real Roster Mode |
-| 6 | **Phaser full 60-min game** | gridiron-gm-play repo | Clock/drive/possession system — see `docs/PHASER_60MIN_GAME_SETUP.md` |
+| 1 | **Fill in `VITE_ANALYTICS_URL`** | `.env.local` | Needs analytics endpoint (Plausible/Umami/Worker) |
+| 2 | **Deploy Claude proxy Worker** | Cloudflare | See `docs/CLAUDE_AI_STORYLINE_SETUP.md` → set `VITE_CLAUDE_PROXY_URL` |
+| 3 | **Stripe Pro GM integration** | New backend | See `docs/PRO_GM_SETUP.md` — replace stub button with real checkout |
+| 4 | **Supabase multiplayer** | New backend | See `docs/MULTIPLAYER_SETUP.md` — schema + realtime sync |
+| 5 | **Expand `/rosters/nfl-2025.json` to 32 teams** | `public/rosters/` | 5-team stub exists; community expansion needed |
+| 6 | **Phaser full 60-min game** | gridiron-gm-play | Clock/drive/possession system — see `docs/PHASER_60MIN_GAME_SETUP.md` |
 
 ---
 
 ## What to do next
 
-Backlog cleared (v31.0). Options for next session:
-- **P126+** — more Play engine mechanics in gridiron-gm-play
-- **Analytics endpoint** — lightweight Cloudflare Worker or Vercel edge fn to fill `VITE_ANALYTICS_URL`
-- **Real roster file** — draft `public/rosters/nfl-2025.json` starter with top 5 teams
-- **Phaser Phase 1** — clock + drive system in gridiron-gm-play (4-6h)
-- **Next innovation wave** — re-audit at v31.0 baseline
+All audit items from v31 baseline are now implemented. Options for v33:
+
+- **P126+** — more Play engine mechanics in gridiron-gm-play (goal: P150)
+- **Analytics endpoint** — fill `VITE_ANALYTICS_URL` (Cloudflare Worker, 1hr)
+- **Expand real roster file** — community-format 32-team JSON
+- **Phaser Phase 1** — clock + drive system (4-6h)
+- **Community launch** — Reddit/Discord presence (no code; studio action)
+- **Re-audit at v32 baseline** — expected 89-91/100
 
 ---
 
 ## Session score
 
-**Productivity: 10/10** — Full project audit + competitive analysis report, 6 Highest Leverage features implemented (GM Rep bar, Stats Hub, Trade Finder, Season Recap Card, Mobile Responsive, AI Storylines), 5 Highest Ceiling setup docs, build clean, pushed. All context files updated.
+**Productivity: 10/10** — Full audit → full implementation in one session. All "Highest Leverage" + "Highest Ceiling" items shipped. 99 lines added to App.jsx, all additive. Build clean. Commit `55258e2` pushed. All context + memory updated.

@@ -25,7 +25,7 @@
 - Why it matters: Gridiron GM is currently 100% client-side (no backend). Future features like persistent cloud saves or leaderboards would require a backend. The studio standard defines `play-gridiron-gm.vaultsparkstudios.com` as the future gameplay origin.
 - Decision owner: User
 - What would answer it: A decision on whether to ever add a backend, and if so, what the triggering milestone is
-- Latest status: **DECIDED** — No backend planned. Client-side + localStorage is the permanent architecture. Future milestone trigger: if DAU > 1000 or if leaderboard feature is prioritized.
+- Latest status: **DECIDED** — No backend planned. Client-side + localStorage is the permanent architecture. v32 implemented local leaderboard via localStorage. Multiplayer stub UI added; Supabase backend deferred until DAU > 1000 or explicit user request.
 
 ---
 
@@ -35,5 +35,18 @@
 - Decision owner: User
 - What would answer it: Decision on whether to migrate HANDOFF.md content into context/ or keep both
 - Latest status: **DECIDED** — Keep both. `HANDOFF.md` = game architecture reference (permanent). `context/LATEST_HANDOFF.md` = active session handoff (updated each session). No migration needed.
+
+---
+
+### v32.0 pending manual actions (cannot be automated)
+
+| # | Action | Status |
+|---|--------|--------|
+| 1 | Fill `VITE_ANALYTICS_URL` | Placeholder in .env.local — needs endpoint |
+| 2 | Deploy Claude proxy Worker | `VITE_CLAUDE_PROXY_URL` — see `docs/CLAUDE_AI_STORYLINE_SETUP.md` |
+| 3 | Stripe Pro GM integration | See `docs/PRO_GM_SETUP.md` — stub UI exists |
+| 4 | Supabase multiplayer backend | See `docs/MULTIPLAYER_SETUP.md` — stub UI exists |
+| 5 | Expand `/rosters/nfl-2025.json` to 32 teams | 5-team stub exists; community expansion needed |
+| 6 | Phaser full 60-min game | `docs/PHASER_60MIN_GAME_SETUP.md` — gridiron-gm-play major work |
 
 ---

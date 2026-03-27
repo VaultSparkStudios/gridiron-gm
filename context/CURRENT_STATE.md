@@ -223,12 +223,18 @@
 
 ## Important paths
 
-- `src/App.jsx` — all game code (~2300+ lines, v31.0)
+- `src/App.jsx` — all game code (2381 lines, v32.0)
 - `gridiron-gm-play/src/scenes/FieldScene.js` — primary Phaser gameplay file
 - `gridiron-gm-play/src/scenes/PlayCallScene.js` — play call menu (8 runs/passes)
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()
 - `.github/workflows/` — ci.yml + deploy-pages.yml
 - `context/` — Studio OS project memory
+
+## v32.0 additions (2026-03-26)
+
+**GM:** God Mode / Commissioner Layer (⚡GOD tab, godSetOvr/godForceWin/godAddSP/godMaxRoster, 32-team editor, genDraftLottery()), GM Contract/Fire System (initGmContract, evaluateGmContract, fire risk 0-4, fire modal), Urgent Trade Offer popup (wk4/wk8, 45s countdown bar, accept/pass), Offseason Grade Report Card (calcOffszGrades — Draft/FA/Cap/Overall A-D, auto-opens at newSeason), Today's Challenge splash card (seed-based weekly rotation, 7-challenge pool), Local Leaderboard (saveToLeaderboard each season, top-10 localStorage, 🏅 header+splash), Trophy Room modal (🏆 header, achievements+milestones+champs tiles), Multiplayer stub modal (👥 header, feature list + Supabase docs ref), Real Roster Mode stub (loadRealRosters + public/rosters/nfl-2025.json 5-team community file), header buttons (🏅🏆👥⚡), splash Today's Challenge card + Real Rosters + Leaderboard links
+
+**Audit:** v32 baseline target 91/100 (from v31's 86/100 A-)
 
 ## v31.0 additions (2026-03-26)
 
@@ -239,6 +245,9 @@
 **GM:** Beat Reporter, Save Slots, Legacy Records, DDA (window._gmDDA), Parade Screen, Draft Day Animation, Cap Restructuring, AI GM DMs, Player Arc System, Speedrun Mode, Coaching Specialization, Trade War Room Timer, Custom Team Creator, Injury Rehab Decisions, Power Rankings Broadcast, Historical Challenges, Chemistry Graph, Media Week Pressure, Franchise Sale, SIL Score Badge, Newspaper Modal, FA Combine Showcase, AI Spectator Mode, PWA manifest
 
 **Play:** Web Speech commentary (_speak + toggle), game plan bridge (gm_roster_export.gamePlan → window._gmGamePlan → ±0.12 passCh), downloadable highlight card (GameOverScene 400×225 canvas)
+
+## v32.0 GM state vars added
+`godMode, godEditTeam, todayChallenge, challengeActive, offszGrade, offszGradeOpen, urgentTrade, urgentTradeTimer, urgentTradeActive, gmContract, gmFireModal, localLeaderboard, leaderboardOpen, draftLotteryOpen, draftLotteryResult, compareSel, compareOpen, trophyOpen, multiOpen, realRosterMode`
 
 ## In progress
 
