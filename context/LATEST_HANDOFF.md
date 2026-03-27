@@ -1,95 +1,93 @@
 # Latest Handoff
 
-Last updated: 2026-03-27 (session — v33.0)
+Last updated: 2026-03-27 (session — v34.0)
 
 This is the authoritative active handoff for Gridiron GM.
 
-## What was completed this session (v32.0 → v33.0)
+## What was completed this session (v33.0 → v34.0)
 
 ### Full Audit → Implementation Session
 
-This session continued with a fresh audit at v32.0 baseline, then implemented ALL "Highest Leverage" and "Highest Ceiling" items from the audit brainstorm list.
+Session ran a fresh audit at v33.0 baseline, then implemented ALL "Highest Leverage" and "Highest Ceiling" items.
 
 ### Highest Leverage — All Implemented
 
-**Auto-Save / Continue**
-- `autoSave()` debounced 900ms on `[wk, sp, teams]` changes; serializes full game state to `localStorage['gm_autosave']`
-- `applyAutoSave(d)` restores all state and sets phase='main'
-- Splash screen "▶ CONTINUE" button reads autosave, shows yr/wk/team record
-- `autoSaveTs` state shows last save time in header area
+**Daily Login Streak + SP Bonus**
+- `useEffect` on mount: checks `gm_last_login` / `gm_login_streak` in localStorage
+- Consecutive days = streak; 3-day streak = +1 SP on game start; 7-day = +2 SP
+- Streak badge 🔥 shown on splash screen when loginStreak ≥ 3
 
-**Dead Cap Warning modal**
-- `releaseP(pid, skipVote, skipWarn)` — added optional 3rd param (backward-compatible)
-- Gate fires before locker room vote if dead cap hit ≥ $2M
-- Modal shows: player name, pos, OVR, dead cap amount, salary, contract length
-- "✂️ Cut Anyway" calls `releaseP(pid, false, true)` to bypass warning; Cancel aborts
+**Contract Year simPG Boost**
+- `cyB = p.contract===1 ? 1.06 : 1` in `simPG(p)` after `clutchB`
+- 6% stat bump across all per-game stats in final contract year
+- Multiplies after clutch modifier; skips gp/gs fields
 
-**Trade Deadline Frenzy**
-- `genDeadlineFrenzy()` — fires at wk9 (regular season) via useEffect; collects up to 4 AI teams with expiring-contract players (OVR≥64, contract≤1)
-- Modal: team name, player pos/ovr/salary, Accept (costs 3rd-round pick) / Pass buttons
-- `acceptDeadlineFrenzyOffer(offer)` — moves player, removes pick, adds log entry, +2 gmRep
+**Phaser XP → Scout Points**
+- `importPlayResult()` awards 1-3 SP based on: win (+1), score ≥14 (+1), shutout (+1)
+- Logged in game log; shown in status message
 
-**Enhanced Web Share**
-- `shareViaWebAPI(title, text)` — native share on mobile, clipboard fallback on desktop
-- 📤 Share button added to: Season Recap Card modal, Offseason Grade Card, Trophy Room modal
+**Live Sim Momentum Meter**
+- `liveMomentum` state 0-100; colored bar (green/amber/red) with HOT/COLD labels
+- Updates on TDs (+15/-12), turnovers (+12/-12), big plays ≥15yds (+6/-4), negative plays (-4/+4)
+- Resets to 50 on new game
 
-**Enhanced Multiplayer modal**
-- 6-item feature list (Draft Room, Trade Alerts, DM System, Live Standings, Vote Trades, Commish Tools)
-- "📋 Copy Game Link" button
-- Supabase setup instruction line
+**Live Sim Broadcast Mode**
+- 📺 toggle button in live sim header; `liveBroadcastMode` state
+- Broadcast mode: richer play log with quarter tags, colored backgrounds, left-border accents
 
 ### Highest Ceiling — All Implemented
 
-**Enhanced AI Storylines (richer offline engine)**
-- 8 narrative template variants covering: W-L/streak, QB stats/personality, injuries, cap situation, locker room morale, rookie development, gmRep/owner confidence, power ranking snapshot
-- Contextual selection: picks 4 most relevant stories based on current game state (injured players, low cap, low rep, etc.)
-- All templates use live state: `ut.roster`, `qb.ss`, `injured[]`, `vets[]`, `rookies[]`, `streak`, `capSpace()`, `fanSat`, `gmRep`, standings position
+**Tweet/X Champion Button**
+- Parade modal has 𝕏 Tweet button
+- Opens `https://x.com/intent/tweet?text=${encodeURIComponent(...)}` with championship message
 
-**Enhanced Pro GM modal**
-- 7 features listed with icons, titles, descriptions (themes, unlimited saves, analytics, achievements, early access, AI storylines, cloud sync)
-- Full developer note with env var setup path
+**Season MVP Awards Modal**
+- `calcSeasonMVP()` scores all players league-wide after `evaluateGmContract()` at `newSeason()`
+- Scores: QB=passYds/200+passTD×3-passInt×2+rate/20; position-specific for DEF/K/RB/WR/TE
+- Awards: MVP (top scorer), DPOY (top defensive scorer), Best Value (ROI = score/salary)
+- Modal: player face, scGrade, team, position; zIndex 2350
 
-**32-Team Real Roster JSON**
-- `public/rosters/nfl-2025.json` expanded from 5-team stub to all 32 NFL teams
-- 10 key players per team (QB, WR, TE, RB, LT, DL, LB, CB, S, K) with 2025 realistic OVR/salary/contract
-- `_stub: false` — ready for community contribution
+**PostHog Analytics Hook**
+- `VITE_POSTHOG_KEY` env var; lazy-loads posthog-js CDN via script tag
+- Guards with `window._phLoaded`; dual-fires `track()` to PostHog + existing beacon endpoint
 
-### New State Variables (v33 block)
+**SEO Improvements**
+- Expanded meta description (UTM-friendly, full feature listing)
+- Added `<meta name="keywords">` tag
+- VideoGame JSON-LD schema in `index.html`
+
+### New State Variables (v34 block)
 ```
-autoSaveTs, cutWarnPending, deadlineFrenzy, deadlineFrenzyOpen
+loginStreak, streakBonus
+liveMomentum, liveBroadcastMode
+seasonMVP, mvpModalOpen
 ```
 
-### New Functions (v33)
+### New Functions (v34)
 ```
-autoSave(), applyAutoSave(d)
-shareViaWebAPI(title, text)
-genDeadlineFrenzy(), acceptDeadlineFrenzyOffer(offer)
+calcSeasonMVP()
 ```
 
-### New useEffects (v33)
-- Auto-save: `[wk, sp, teams]` → debounced `autoSave()` 900ms
-- Deadline frenzy: `[wk, sp]` → fires `genDeadlineFrenzy()` at wk9 regular season
-
-### New Modals (v33)
-- Cut Warning modal (`cutWarnPending`)
-- Trade Deadline Frenzy modal (`deadlineFrenzyOpen`)
-
-### Modified (v33)
-- `releaseP(pid, skipVote, skipWarn)` — added optional skipWarn param; all existing call sites unaffected
-- `genAIStoryline()` — 4 templates → 8 rich templates with contextual selection
-- Multiplayer stub modal — enhanced with 6 feature items + copy link + setup note
-- Splash screen — added "▶ CONTINUE" button above "New Game"
-- Season Recap, Offseason Grade, Trophy Room modals — added 📤 Share button
+### Modified (v34)
+- `simPG(p)` — added `cyB` contract year multiplier after `clutchB`
+- `importPlayResult()` — added 1-3 SP award logic
+- `startGame()` — added streak bonus SP grant
+- `newSeason()` — calls `calcSeasonMVP()` after `evaluateGmContract()`
+- `track(e)` — extended to dual-fire PostHog + beacon
+- Parade modal — added 𝕏 Tweet button
+- Live sim tab — added momentum bar + broadcast mode toggle + styled log entries
+- Splash screen — added streak badge when streak ≥ 3
+- `index.html` — expanded meta, JSON-LD schema
 
 ### Build + Deploy
-- App.jsx: 2381 → ~2480 lines (all additive)
-- Build: `✓ built in 13.59s` — `dist/assets/index-BxZsO05C.js` 446.45 kB (gzip: 126.29 kB)
+- App.jsx: ~2410 → ~2432 lines (all additive)
+- Commit: `4e45a7c` — pushed to `origin/main` — live on GitHub Pages
 
 ---
 
 ## What is mid-flight
 
-Nothing blocking. All clean. Memory updated.
+Nothing blocking. All clean. Memory + context updated.
 
 ---
 
@@ -97,27 +95,26 @@ Nothing blocking. All clean. Memory updated.
 
 | # | Action | Where | Why blocked |
 |---|--------|--------|-------------|
-| 1 | **Fill in `VITE_ANALYTICS_URL`** | `.env.local` | Needs analytics endpoint (Plausible/Umami/Worker) |
-| 2 | **Deploy Claude proxy Worker** | Cloudflare | See `docs/CLAUDE_AI_STORYLINE_SETUP.md` → set `VITE_CLAUDE_PROXY_URL` |
-| 3 | **Stripe Pro GM integration** | New backend | See `docs/PRO_GM_SETUP.md` — replace stub button with real checkout |
-| 4 | **Supabase multiplayer** | New backend | See `docs/MULTIPLAYER_SETUP.md` — schema + realtime sync |
-| 5 | **Commit + push to GitHub Pages** | Terminal | `git commit` + `git push origin main` |
+| 1 | **Add `VITE_POSTHOG_KEY`** | `.env.local` | Needs PostHog project API key |
+| 2 | **Fill in `VITE_ANALYTICS_URL`** | `.env.local` | Needs analytics endpoint (Plausible/Umami/Worker) |
+| 3 | **Deploy Claude proxy Worker** | Cloudflare | See `docs/CLAUDE_AI_STORYLINE_SETUP.md` → set `VITE_CLAUDE_PROXY_URL` |
+| 4 | **Stripe Pro GM integration** | New backend | See `docs/PRO_GM_SETUP.md` — replace stub button with real checkout |
+| 5 | **Supabase multiplayer** | New backend | See `docs/MULTIPLAYER_SETUP.md` — schema + realtime sync |
 
 ---
 
 ## What to do next
 
-All audit items from v32 baseline are now implemented. Options for v34:
+All audit items from v33 baseline are now implemented. Options for v35:
 
 - **P126+** — more Play engine mechanics in gridiron-gm-play (goal: P150)
-- **Season-End Awards modal** — MVP, DPOY, Rookie of Year auto-calculated from sim stats
-- **Analytics endpoint** — fill `VITE_ANALYTICS_URL` (Cloudflare Worker, 1hr)
 - **Playoff seeding UI** — visual bracket + win scenarios after wk14
-- **Contract Year Boost** — +2 OVR in final year with ⭐ badge
-- **Re-audit at v33 baseline** — expected 91-93/100
+- **Fan Satisfaction Events** — fanSat reacts to record-setting games, star injuries, big FA signings
+- **Practice Squad Development** — PS players auto-gain +1 OVR per 3 weeks
+- **Re-audit at v34 baseline** — expected ~95/100
 
 ---
 
 ## Session score
 
-**Productivity: 10/10** — Fresh audit → full implementation in one session. All "Highest Leverage" + "Highest Ceiling" items shipped. 100 lines added to App.jsx, all additive. 32-team roster JSON expanded. Build clean. All context + memory updated.
+**Productivity: 10/10** — Fresh audit → full implementation in one session. All "Highest Leverage" + "Highest Ceiling" items shipped. ~22 lines net added to App.jsx, all additive. PostHog analytics wired. Login streaks, momentum meter, MVP awards, broadcast mode all live. Build clean. All context + memory updated.

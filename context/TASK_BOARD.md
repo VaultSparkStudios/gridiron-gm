@@ -61,20 +61,30 @@
 - [x] **v33 GM: Enhanced Multiplayer modal** — 6-item feature list; Supabase setup link; copy game link button
 - [x] **v33 Asset: public/rosters/nfl-2025.json** — expanded from 5-team stub to all 32 NFL teams with full key-player rosters
 
-## Backlog (v33 audit brainstorm — unimplemented)
+## Done (v34.0 — 2026-03-27)
+
+- [x] **v34 GM: Daily Login Streak + SP Bonus** — localStorage gm_last_login/gm_login_streak; 3-day = +1 SP; 7-day = +2 SP; 🔥 streak badge on splash
+- [x] **v34 GM: Contract Year simPG Boost** — cyB=p.contract===1?1.06:1; 6% stat bump final year; applied after clutchB in simPG()
+- [x] **v34 GM: Phaser XP → Scout Points** — importPlayResult() awards 1-3 SP (win/score≥14/shutout); logged + shown in status
+- [x] **v34 GM: Live Sim Momentum Meter** — liveMomentum 0-100; green/amber/red bar; HOT/COLD labels; TD/turnover/big-play deltas
+- [x] **v34 GM: Live Sim Broadcast Mode** — 📺 toggle; richer play log with quarter tags + colored backgrounds + left-border accents
+- [x] **v34 GM: Tweet/X Champion Button** — parade modal 𝕏 button opens x.com/intent/tweet with championship text
+- [x] **v34 GM: Season MVP Awards Modal** — calcSeasonMVP() league-wide scoring; MVP/DPOY/Best Value awards; fires after evaluateGmContract
+- [x] **v34 GM: PostHog Analytics Hook** — VITE_POSTHOG_KEY; CDN lazy-load; dual-fires with beacon; window._phLoaded guard
+- [x] **v34 SEO: index.html improvements** — expanded meta description, keywords tag, VideoGame JSON-LD schema
+
+## Backlog (v34 audit brainstorm — unimplemented)
 
 - [ ] **GM: Player Trade Demand system** — players request trades when morale < 30 for 3+ weeks; front office must respond within 2 weeks or face gmRep penalty
 - [ ] **GM: Coaching Upgrade tree** — spend SP on OC/DC specific traits (run-heavy, spread, blitz-heavy) beyond current scheme
 - [ ] **GM: Rival Week markers** — designate 1 rival per team; weekly game shows rivalry card; win adds +3 fanSat + gmRep
 - [ ] **GM: Playoff seeding UI** — visual bracket showing current seeds + win-in scenarios after wk14+
-- [ ] **GM: Contract Year Boost** — players in final year get +2 OVR boost for motivation; shown with ⭐ badge
 - [ ] **GM: Pre-game Press Conference** — 3-question modal before each game; boost/penalty to morale based on answer tone
 - [ ] **GM: Halftime Adjustment** — live sim pause at half; 3 buttons (run-heavy, pass-heavy, blitz); modifier applied to 2nd half
 - [ ] **GM: Practice Squad Development** — PS players gain +1 OVR per 3 weeks automatically (currently static)
 - [ ] **GM: Fan Satisfaction Events** — fanSat reacts to specific events: record-setting game, star player injury, big FA signing
 - [ ] **GM: Advanced Draft Board filters** — filter by age range, pot tier, pos need score, combine grade
 - [ ] **GM: Scouting Department Expansion** — hire up to 3 scouts with different specialties (OL, DB, skill players)
-- [ ] **GM: Season-End Awards modal** — MVP, DPOY, OPOY, Rookie of Year, Coach of Year; auto-calculated from sim stats
 - [ ] **GM: Division Power Rankings sidebar** — live division standings mini-widget in schedule tab header
 - [ ] **GM: Injury Prone player flag** — players with 3+ injuries in history get ⚠️ badge; affects FA signing interest
 - [ ] **GM: Weather-aware game plan** — if gridiron-gm-play has weather flag, suggest run-heavy plan vs bad weather

@@ -4,9 +4,9 @@
 
 - Date: 2026-03-27
 - Overall status: Live on GitHub Pages, active development
-- Current version: v33.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — GM v33 built + pushed `f1ad615`, Play unchanged
+- Current version: v34.0 (gridiron-gm) / Play v30.0 (gridiron-gm-play) — GM v34 built + pushed `4e45a7c`, Play unchanged
 - Studio OS: Fully compliant
-- Audit score: 86/100 (A-) at v31 baseline; v32 ~91/100; v33 targets 93/100
+- Audit score: 86/100 (A-) at v31 baseline; v32 ~91/100; v33 ~93/100; v34 targets 95/100
 
 ## What exists
 
@@ -223,12 +223,18 @@
 
 ## Important paths
 
-- `src/App.jsx` — all game code (2410 lines, v33.0)
+- `src/App.jsx` — all game code (~2432 lines, v34.0)
 - `gridiron-gm-play/src/scenes/FieldScene.js` — primary Phaser gameplay file
 - `gridiron-gm-play/src/scenes/PlayCallScene.js` — play call menu (8 runs/passes)
 - `gridiron-gm-play/src/data/gameState.js` — shared state + exportStats()
 - `.github/workflows/` — ci.yml + deploy-pages.yml
 - `context/` — Studio OS project memory
+
+## v34.0 additions (2026-03-27)
+
+**GM:** Daily Login Streak + SP Bonus (localStorage gm_last_login/gm_login_streak; 3-day streak = +1 SP; 7-day = +2 SP; streak badge on splash), Contract Year simPG Boost (cyB=p.contract===1?1.06:1; 6% stat bump final year; after clutchB), Phaser Game XP → Scout Points (importPlayResult awards 1-3 SP on win/score/shutout), Live Sim Momentum Meter (liveMomentum 0-100; colored bar green/amber/red; HOT/COLD labels; updates on TDs/turnovers/big plays), Live Sim Broadcast Mode (📺 toggle; richer play log with quarter tags + colored backgrounds), Tweet/X Champion Button (parade modal opens x.com/intent/tweet with championship text), Season MVP Awards Modal (calcSeasonMVP() scores all players league-wide; MVP/DPOY/Best Value; Face+scGrade; fires after evaluateGmContract), PostHog Analytics Hook (VITE_POSTHOG_KEY; lazy-loads posthog-js CDN; dual-fires with existing beacon), SEO improvements (expanded meta description, keywords tag, VideoGame JSON-LD schema)
+
+**Commit:** `4e45a7c` — pushed to `origin/main` — live on GitHub Pages
 
 ## v33.0 additions (2026-03-27)
 
@@ -251,6 +257,12 @@
 **GM:** Beat Reporter, Save Slots, Legacy Records, DDA (window._gmDDA), Parade Screen, Draft Day Animation, Cap Restructuring, AI GM DMs, Player Arc System, Speedrun Mode, Coaching Specialization, Trade War Room Timer, Custom Team Creator, Injury Rehab Decisions, Power Rankings Broadcast, Historical Challenges, Chemistry Graph, Media Week Pressure, Franchise Sale, SIL Score Badge, Newspaper Modal, FA Combine Showcase, AI Spectator Mode, PWA manifest
 
 **Play:** Web Speech commentary (_speak + toggle), game plan bridge (gm_roster_export.gamePlan → window._gmGamePlan → ±0.12 passCh), downloadable highlight card (GameOverScene 400×225 canvas)
+
+## v34.0 state vars added
+`loginStreak, streakBonus, liveMomentum, liveBroadcastMode, seasonMVP, mvpModalOpen`
+
+## v33.0 state vars added
+`autoSaveTs, cutWarnPending, deadlineFrenzy[], deadlineFrenzyOpen`
 
 ## v32.0 GM state vars added
 `godMode, godEditTeam, todayChallenge, challengeActive, offszGrade, offszGradeOpen, urgentTrade, urgentTradeTimer, urgentTradeActive, gmContract, gmFireModal, localLeaderboard, leaderboardOpen, draftLotteryOpen, draftLotteryResult, compareSel, compareOpen, trophyOpen, multiOpen, realRosterMode`

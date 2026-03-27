@@ -38,15 +38,15 @@
 
 ---
 
-### v32.0 pending manual actions (cannot be automated)
+### v34.0 pending manual actions (cannot be automated)
 
 | # | Action | Status |
 |---|--------|--------|
-| 1 | Fill `VITE_ANALYTICS_URL` | Placeholder in .env.local — needs endpoint |
-| 2 | Deploy Claude proxy Worker | `VITE_CLAUDE_PROXY_URL` — see `docs/CLAUDE_AI_STORYLINE_SETUP.md` |
-| 3 | Stripe Pro GM integration | See `docs/PRO_GM_SETUP.md` — stub UI exists |
-| 4 | Supabase multiplayer backend | See `docs/MULTIPLAYER_SETUP.md` — stub UI exists |
-| 5 | ~~Expand `/rosters/nfl-2025.json` to 32 teams~~ | **DONE v33** — all 32 teams shipped |
+| 1 | Add `VITE_POSTHOG_KEY` to `.env.local` | PostHog project API key needed |
+| 2 | Fill `VITE_ANALYTICS_URL` | Placeholder in .env.local — needs endpoint |
+| 3 | Deploy Claude proxy Worker | `VITE_CLAUDE_PROXY_URL` — see `docs/CLAUDE_AI_STORYLINE_SETUP.md` |
+| 4 | Stripe Pro GM integration | See `docs/PRO_GM_SETUP.md` — stub UI exists |
+| 5 | Supabase multiplayer backend | See `docs/MULTIPLAYER_SETUP.md` — stub UI exists |
 | 6 | Phaser full 60-min game | `docs/PHASER_60MIN_GAME_SETUP.md` — gridiron-gm-play major work |
 
 ---
