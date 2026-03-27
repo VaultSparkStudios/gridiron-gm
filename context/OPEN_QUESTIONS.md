@@ -7,7 +7,7 @@
 - Why it matters: Currently `liveStats` tracks per-game stats in the live sim but they are NOT written to player `.ss` season stats. Only the live box score and POG use them. This means live-simmed games show different totals in the stats tab vs. sim-simmed games.
 - Decision owner: User
 - What would answer it: A decision on whether to implement the write-back and whether it should replace or add to the existing simGame stat path
-- Latest status: Open — noted in HANDOFF.md §8 known issue #3
+- Latest status: **RESOLVED (v29.0)** — live stat write-back implemented in `useEffect([liveDone])` via `addS(p.ss, liveStats[userSide][pid])`. Season stats now include live game contributions. Question closed.
 
 ---
 
