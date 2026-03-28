@@ -1,3 +1,5 @@
+<!-- template-version: 2.0 -->
+<!-- synced-from: studio-ops/prompts/start.md @ Session 19 (2026-03-28) -->
 # ── START ────────────────────────────────────────────────────────────────────
 # Use this when the user says only `start`.
 # ─────────────────────────────────────────────────────────────────────────────
@@ -66,7 +68,7 @@ Read in this exact order. Do not skip or reorder.
 
 After reading the SIL Rolling Status header:
 
-- Note the sparkline — is the 5-session trajectory ↑ ↓ flat?
+- Note the sparkline — is the 5-session trajectory up down flat?
 - Note rolling averages — which category is the lowest? Flag if any avg is below 5.0
 - Identify any `[SIL]` items on TASK_BOARD not yet actioned
 - **If a `[SIL]` item was skipped 2+ sessions → escalate to Now on TASK_BOARD and flag in brief**
@@ -74,7 +76,7 @@ After reading the SIL Rolling Status header:
 
 **Studio benchmarking (no extra reads required):**
 If STUDIO_BRAIN.md has been read (Founder Mode), note in brief:
-> Studio avg SIL: [X]/50 · This project last session: [X]/50 [↑↓→ vs studio avg]
+> Studio avg SIL: [X]/50 · This project last session: [X]/50 [up/down/flat vs studio avg]
 
 ---
 
@@ -90,7 +92,7 @@ If STUDIO_BRAIN.md has been read (Founder Mode), note in brief:
   work described in LATEST_HANDOFF.md, flag the gap in the startup brief and recover it at
   next closeout.
 - **Momentum Runway enforcement:** If the last computed Momentum Runway (from SIL Rolling Status
-  or LATEST_HANDOFF.md) is ≤ 2.0 sessions, this session MUST begin with TASK_BOARD pre-loading
+  or LATEST_HANDOFF.md) is <= 2.0 sessions, this session MUST begin with TASK_BOARD pre-loading
   before any feature or protocol work. Add items to the Now bucket first. Surface this as the
   first item in PRIORITIES in the startup brief. Do not skip this step.
 
@@ -120,18 +122,19 @@ Reply using this exact structure:
   Deploy     {deployed to {env} · auto-deploy active / manual / N/A}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  LAST AUDIT   {total}/50 · {date}
-  SPARKLINE    {▁▂▃▄▅▆▇█} (last 5 sessions, oldest→newest)
+  DASHBOARD
+  SIL          {total}/50 · Avgs — 3: {n.n} | 5: {n.n} | 10: {n.n} | 25: — | all: {n.n}
+  IGNIS        {n}/100 ({GRADE}) · Compliance: {n}/{total}
+  Velocity: {N} · Debt: {up/down/flat} · Runway: ~{n.n} sessions
+  SPARKLINE    {sparkline bars} (last 5 sessions)
 
-  Dev Health        {n}/10  {↑↓→}  3-avg: {n.n}
-  Creative Align    {n}/10  {↑↓→}  3-avg: {n.n}
-  Momentum          {n}/10  {↑↓→}  3-avg: {n.n}
-  Engagement        {n}/10  {↑↓→}  3-avg: {n.n}
-  Process Quality   {n}/10  {↑↓→}  3-avg: {n.n}
+  Dev Health        {n}/10  {arrow}  3-avg: {n.n}
+  Creative Align    {n}/10  {arrow}  3-avg: {n.n}
+  Momentum          {n}/10  {arrow}  3-avg: {n.n}
+  Engagement        {n}/10  {arrow}  3-avg: {n.n}
+  Process Quality   {n}/10  {arrow}  3-avg: {n.n}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  VELOCITY     Last session: {N} tasks · Trend: {↑↓→}
-  DEBT         {→ stable / ↑ growing / ↓ shrinking}
   NEXT MOVE    {specific recommended action}
   BLOCKERS     {open blockers or "None"}
   [SIL] FLAGS  {escalated items or "None"}
@@ -152,6 +155,12 @@ Reply using this exact structure:
 
 **WHERE WE LEFT OFF** data comes from `context/LATEST_HANDOFF.md` — the closeout protocol
 writes it there. If no prior session exists, omit the section entirely.
+
+**DASHBOARD** data sources (no extra file reads — all from files already loaded in Phase 2):
+- `SIL` + `Avgs` → from Rolling Status header in `context/SELF_IMPROVEMENT_LOOP.md` (already read)
+- `IGNIS` → from `context/PROJECT_STATUS.json` `ignisScore` field (already read via CURRENT_STATE)
+- `Compliance` → from `context/CURRENT_STATE.md` compliance count (already read)
+- `Velocity` / `Debt` / `Runway` → from Rolling Status header (already read)
 
 **IGNIS INSIGHT** data comes from `portfolio/IGNIS_CORE.md` — read only the project-specific
 section (search for the project slug). Pull: ignisScore, grade, brainstorm_conversion_rate,

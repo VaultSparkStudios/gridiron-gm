@@ -1,3 +1,5 @@
+<!-- template-version: 2.0 -->
+<!-- synced-from: studio-ops/prompts/closeout.md @ Session 19 (2026-03-28) -->
 # Closeout Protocol
 
 Use this when the user says only `closeout`.
@@ -65,11 +67,18 @@ Exclude `[SIL]` meta-tasks. Record as integer: `Velocity: N`
 - `↓` if net `[DEBT]` items were resolved this session
 - `→` if debt was unchanged or no `[DEBT]` items exist
 
-**Rolling 3-session averages:**
-Look back at the last 3 SIL entries in `context/SELF_IMPROVEMENT_LOOP.md` and compute:
+**Rolling averages (3 / 5 / 10 / 25 / all):**
+Look back at the SIL entries in `context/SELF_IMPROVEMENT_LOOP.md` and compute:
+
+For each window (3, 5, 10, 25, all):
+- **Total avg** = sum of Total scores in window / count — round to 1 decimal
+- If fewer entries than the window size exist, use all available and mark with `[N=n]`
+- Omit windows where N < 3 (not enough data to be meaningful)
+
+For the **3-session window only**, also compute per-category averages:
 - `Avg Dev Health` = (score1 + score2 + score3) / 3 — round to 1 decimal
 - Same calculation for all 5 categories
-- If fewer than 3 prior entries exist, average what is available and label with `[N=n]`
+- This is the only window with per-category breakdown (token efficiency)
 
 **Sparkline:**
 Collect the Total scores from the last 5 SIL entries (including this session). Map each to a bar:
@@ -100,9 +109,10 @@ The top of `context/SELF_IMPROVEMENT_LOOP.md` contains a `## Rolling Status` blo
 <!-- rolling-status-start -->
 ## Rolling Status (auto-updated each closeout)
 Sparkline (last 5 totals): ▃▅▆▇█
-3-session avg: Dev X.X | Align X.X | Momentum X.X | Engage X.X | Process X.X
-Avg total: XX.X / 50  |  Velocity trend: ↑↓→  |  Debt: ↑↓→
-Last session: YYYY-MM-DD | Session N | Total: XX/50 | Velocity: N
+Avgs — 3: XX.X | 5: XX.X | 10: XX.X | 25: — | all: XX.X  (— = insufficient data)
+  └ 3-session: Dev X.X | Align X.X | Momentum X.X | Engage X.X | Process X.X
+Velocity trend: ↑↓→  |  Protocol velocity: ↑↓→  |  Debt: ↑↓→
+Last session: YYYY-MM-DD | Session N | Total: XX/50 | Velocity: N | protocolVelocity: N
 ─────────────────────────────────────────────────────────────────────
 <!-- rolling-status-end -->
 ```
@@ -146,7 +156,7 @@ momentumRunway = open_Now_items / silAvg_velocity_last3
 - Count open (incomplete) items currently in the `## Now` bucket of TASK_BOARD
 - Use the rolling 3-session velocity average (from Step 1)
 - If velocity average is 0 (architecture phase): write "N/A — architecture phase; pre-load TASK_BOARD recommended before next implementation sprint"
-- If runway ≤ 2 sessions: **flag** — "Low momentum runway. Add items to Now before next session."
+- If runway <= 2 sessions: **flag** — "Low momentum runway. Add items to Now before next session."
 
 **Output:** "Momentum runway: ~N sessions at current velocity" (include in closeout summary)
 
@@ -220,7 +230,8 @@ Use this exact format:
 
 ```markdown
 ## YYYY-MM-DD — Session N | Total: XX/50 | Velocity: N | Debt: →
-Rolling avg (last 3): Dev X.X | Align X.X | Momentum X.X | Engage X.X | Process X.X
+Avgs — 3: XX.X | 5: XX.X | 10: XX.X | 25: — | all: XX.X
+  └ 3-session: Dev X.X | Align X.X | Momentum X.X | Engage X.X | Process X.X
 
 | Category | Score | vs Last | Notes |
 |---|---|---|---|
@@ -255,7 +266,7 @@ and Studio Review agent to aggregate scores programmatically without parsing Mar
 
 ```json
 {
-  "schemaVersion": "1.2",
+  "schemaVersion": "1.3",
   "project": "{slug from context/PROJECT_STATUS.json}",
   "date": "YYYY-MM-DD",
   "session": N,
@@ -283,6 +294,7 @@ and Studio Review agent to aggregate scores programmatically without parsing Mar
     "processQuality": null,
     "total": null
   },
+  "rollingAvgTotals": { "3": null, "5": null, "10": null, "25": null, "all": null },
   "topWin": "...",
   "topGap": "...",
   "intentOutcome": "Achieved",
