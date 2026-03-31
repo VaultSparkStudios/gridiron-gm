@@ -1,5 +1,5 @@
-<!-- template-version: 2.0 -->
-<!-- synced-from: studio-ops/prompts/closeout.md @ Session 19 (2026-03-28) -->
+<!-- template-version: 2.2 -->
+<!-- synced-from: studio-ops/prompts/closeout.md @ Session 21 (2026-03-31) -->
 # Closeout Protocol
 
 Use this when the user says only `closeout`.
@@ -30,8 +30,9 @@ If meaningful work happened, update in this order:
 5. `context/DECISIONS.md` — when reasoning changed
 6. `context/SELF_IMPROVEMENT_LOOP.md` — MANDATORY (see below)
 7. `docs/CREATIVE_DIRECTION_RECORD.md` — MANDATORY if human gave any creative direction this session
-8. Any project-type or repo-specific files whose truth changed
-9. **Delete `context/.session-lock`** — MANDATORY last step. Removing the lock signals to studio-ops and other cross-repo agents that this project is safe to write to again.
+8. `context/TRUTH_AUDIT.md` — when source-of-truth, founder-facing reporting, schema, or prompt/template truth changed
+9. Any project-type or repo-specific files whose truth changed
+10. **Delete `context/.session-lock`** — MANDATORY last step. Removing the lock signals to studio-ops and other cross-repo agents that this project is safe to write to again.
 
 ### Where We Left Off — write to LATEST_HANDOFF.md
 
@@ -112,6 +113,7 @@ Sparkline (last 5 totals): ▃▅▆▇█
 Avgs — 3: XX.X | 5: XX.X | 10: XX.X | 25: — | all: XX.X  (— = insufficient data)
   └ 3-session: Dev X.X | Align X.X | Momentum X.X | Engage X.X | Process X.X
 Velocity trend: ↑↓→  |  Protocol velocity: ↑↓→  |  Debt: ↑↓→
+Momentum runway: ~N.N sessions  |  Intent rate: NN% (last 5)
 Last session: YYYY-MM-DD | Session N | Total: XX/50 | Velocity: N | protocolVelocity: N
 ─────────────────────────────────────────────────────────────────────
 <!-- rolling-status-end -->
@@ -156,11 +158,16 @@ momentumRunway = open_Now_items / silAvg_velocity_last3
 - Count open (incomplete) items currently in the `## Now` bucket of TASK_BOARD
 - Use the rolling 3-session velocity average (from Step 1)
 - If velocity average is 0 (architecture phase): write "N/A — architecture phase; pre-load TASK_BOARD recommended before next implementation sprint"
-- If runway <= 2 sessions: **flag** — "Low momentum runway. Add items to Now before next session."
+- If runway ≤ 2 sessions: **flag** — "Low momentum runway. Add items to Now before next session."
 
 **Output:** "Momentum runway: ~N sessions at current velocity" (include in closeout summary)
 
-This data does not go into the audit JSON — it is for the closeout summary and IGNIS synthesis only.
+Write `Momentum runway: ~N.N sessions` into the Rolling Status header (Step 2).
+
+**Intent completion rate:**
+Also compute from audit JSONs: `count(intentOutcome == "Achieved") / total_sessions` over last 5 sessions.
+Write `Intent rate: NN%` into the Rolling Status header.
+Flag if rate falls below 70% over last 5 sessions.
 
 ---
 
@@ -194,6 +201,27 @@ Owner can make, or any "blocked on human" items discovered this session.
 
 This step is **mandatory** — never skip by assuming no human-required items exist. Always confirm
 explicitly either way.
+
+---
+
+### Step 4.6 — Truth Audit refresh
+
+If this session changed any of the following, refresh `context/TRUTH_AUDIT.md`:
+- `context/PROJECT_STATUS.json` or registry JSON truth
+- founder-facing derived Markdown (`PROJECT_REGISTRY.md`, dashboards, summary docs)
+- prompts or templates
+- any contradiction called out in the prior truth audit
+
+At minimum, update:
+- `Last reviewed`
+- `Overall status`
+- `Protocol Genome`
+- `Drift Heatmap`
+- `Recommended Actions`
+
+Also update `context/PROJECT_STATUS.json`:
+- `truthAuditStatus`
+- `truthAuditLastRun`
 
 ---
 
