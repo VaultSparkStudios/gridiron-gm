@@ -16,7 +16,7 @@
   "blockers": [
     "VITE_ANALYTICS_URL not set — engagement data unmeasurable until endpoint deployed"
   ],
-  "lastUpdated": "2026-03-31",
+  "lastUpdated": "2026-04-01",
   "silScore": "44/50",
   "silAvg3": null,
   "silVelocity": 0,
