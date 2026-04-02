@@ -5,16 +5,16 @@
   "type": "game",
   "lifecycle": "building",
   "audience": "internal",
-  "status": "active",
-  "health": "green",
+  "status": "vaulted",
+  "health": "yellow",
   "owner": "VaultSpark Studios",
   "localPath": "C:\\Users\\p4cka\\documents\\development\\Gridiron-GM",
   "github": "https://github.com/VaultSparkStudios/gridiron-gm",
   "liveUrl": "https://vaultsparkstudios.com/gridiron-gm/",
-  "currentFocus": "v30.0 shipped — 35 innovations + Play commentary/game-plan/highlight-card. PWA installable. Backlog clear.",
-  "nextMilestone": "Analytics endpoint (VITE_ANALYTICS_URL) + P126+ Play mechanics or next innovation audit wave.",
+  "currentFocus": "Vaulted — bug fixing and polish before re-release. Password gate active.",
+  "nextMilestone": "Bug-free re-release with cap fix, UI polish, and clean stat tables.",
   "blockers": [
-    "VITE_ANALYTICS_URL not set — engagement data unmeasurable until endpoint deployed"
+    "Multiple gameplay bugs being resolved before public re-release"
   ],
   "lastUpdated": "2026-04-01",
   "silScore": "44/50",
