@@ -65,3 +65,51 @@ Additive record of human-guided creative decisions. Append only. Do not rewrite.
 - Direction: Backlog item from TASK_BOARD.md — "Position filter on scouting/draft prospect boards"
 - Outcome: scPosF and drPosF state added; position filter bar appears on scouting and draft tabs (both active-draft and pre-draft views); all 14 positions including LT/LG/C/RG/RT available as filters
 - Canon impact: None — UI improvement only
+
+---
+
+## 2026-04-01 — Vault the game (password gate)
+
+- Direction: Too many glitches — lock the game and prevent public access; add a password gate to both gridiron-gm and gridiron-gm-play
+- Outcome: JS password overlay on both index.html files; code vsgm2026; sessionStorage unlock; styled dark/on-brand
+- Canon impact: None — infrastructure; game itself unchanged
+
+---
+
+## 2026-04-01 — Cap space starting over budget
+
+- Direction: Fix cap space — starting a league was $50M over the cap
+- Outcome: genPlayer salary multiplier changed from Rf(2,18) to Rf(1,9); average roster now ~$165M vs ~$312M
+- Canon impact: Roster construction feel — teams now start with realistic cap headroom
+
+---
+
+## 2026-04-01 — Position skills display (readable labels)
+
+- Direction: Position skills read like code (armStr, throwPow etc.) — fix the labels; no both arm strength and throw power as separate stats
+- Outcome: PA_LABELS map added for all 50+ camelCase keys; throwPow removed from QB posAttrs (redundant with armStr); display now uses readable names
+- Canon impact: armStr is the canonical QB arm power stat; throwPow is retired
+
+---
+
+## 2026-04-01 — Cleaner stat tables
+
+- Direction: Stat tables can be cleaner
+- Outcome: Grid cells widened (44→52px), padding increased, font size bumped, zero-value stats filtered from display
+- Canon impact: None — visual polish only
+
+---
+
+## 2026-04-01 — Live sim scroll
+
+- Direction: The live sim feature forces the screen to go down to the plays — fix this
+- Outcome: scrollIntoView replaced with in-container scroll; play-by-play log now auto-scrolls internally without moving the page
+- Canon impact: None — UX fix
+
+---
+
+## 2026-04-01 — Website vault update
+
+- Direction: Update the landing page and all info on vaultsparkstudios.com to reflect that Gridiron GM is currently vaulted/not released
+- Outcome: Game page status → Vaulted, CTAs → Join The Vault, games grid card updated, studioRegistry updated, PROJECT_STATUS.json updated
+- Canon impact: Public-facing status is now "Vaulted — Returning Soon" across all surfaces

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.3",
+  "project": "gridiron-gm",
+  "date": "2026-04-01",
+  "session": "v38.1",
+  "sessionType": "implementation",
+  "label": null,
+  "calibration": false,
+  "scores": {
+    "devHealth": 8,
+    "creativeAlignment": 8,
+    "momentum": 8,
+    "engagement": 5,
+    "processQuality": 9
+  },
+  "total": 38,
+  "maxScore": 50,
+  "velocity": 6,
+  "protocolVelocity": 3,
+  "durationMinutes": 60,
+  "debt": "→",
+  "rollingAvg3": {
+    "devHealth": 8.0,
+    "creativeAlignment": 8.0,
+    "momentum": 8.0,
+    "engagement": 6.0,
+    "processQuality": 9.3,
+    "total": 38.7
+  },
+  "rollingAvgTotals": { "3": 38.7, "5": 30.3, "10": null, "25": null, "all": 30.3 },
+  "topWin": "Cap space bug eliminated — rosters now land $155–180M vs $312M over ceiling; 3 other user-facing bugs fixed in same session.",
+  "topGap": "Engagement score absorbs the vault cost; need a defined bug-sweep checklist before re-release to avoid indefinite vault period.",
+  "intentOutcome": "Achieved",
+  "improvementsShipped": 6,
+  "improvementGroups": {
+    "gameplay-bugs": ["cap-space-fix", "live-sim-scroll"],
+    "ui-polish": ["position-skill-labels", "throwPow-removed", "stat-tables"],
+    "infrastructure": ["password-gate", "website-vault", "gitignore"]
+  },
+  "testsTotal": null,
+  "testsByType": {},
+  "testsDelta": null,
+  "deployStatus": "deployed",
+  "ignisFlags": ["intent-achieved", "high-velocity"],
+  "ignisNote": "Vaulting a live game to fix bugs is a high-trust move — Engagement score absorbs the cost but Dev Health and Process Quality rise; watch whether this pattern accelerates re-release or extends the vault period."
+}

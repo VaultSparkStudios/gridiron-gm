@@ -19,6 +19,8 @@
 
 - [ ] **[SIL] startGame reset manifest** — add comment block in startGame listing every state that must be reset; prevents future leaks; effort: 15min
 - [ ] **[SIL] New-game smoke test** — Playwright or manual checklist: load → NEW GAME → pick team → assert phase=main, no blocking modal; effort: 1hr
+- [ ] **[SIL] Dev mode bypass for password gate** — hidden keycode in index.html skips gate for dev testing without removing it; effort: 10min
+- [ ] **[SIL] Stat section grouping** — group player modal stats by phase (passing / rushing / receiving / defense) with thin dividers; effort: 30min
 
 ### Backlog (scored — ordered by ROI)
 

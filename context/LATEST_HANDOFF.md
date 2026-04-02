@@ -1,146 +1,80 @@
 # Latest Handoff
 
-Last updated: 2026-03-27 (session — v37.1)
+Last updated: 2026-04-01 (session — v38.1)
 
-This is the authoritative active handoff for Gridiron GM.
+Session Intent: Fix cap space starting over cap, position skill labels showing camelCase, stat tables, live sim forcing page scroll. Added: password gate and website vault.
 
-## What was completed this session (v37.0 → v37.1)
-
-### Bug fix: New game stuck after selecting team
-
-`startGame` was missing 13 state resets. When a user played a game, exited to menu (via fire modal "Exit to Menu"), and started a new game in the same session, stale state from the prior game leaked in. Most visibly: `showSeasonSummary` / `paradeOpen` (championship modals) and `dynastyShareOpen` (v37 toast) could remain `true`, covering the screen. `draftIdx` was never reset, which would corrupt the next draft.
-
-**Fixed:** Added to `startGame` — `setDraftIdx(0)`, `setDraftActive(false)`, `setDraftPaused(false)`, `setDraftTimer(120)`, `setDraftClockActive(false)`, `setPb(null)`, `setChamps([])`, `setSeasonHistory([])`, `setShowSeasonSummary(false)`, `setParadeOpen(false)`, `setDynastyShareOpen(false)`, `setDraftAnalyst(null)`, `setDraftAnalystLoading(false)`, `setAchievements([])`.
+## Where We Left Off (Session v38.1)
+- Shipped: 6 fixes across 3 groups — gameplay bugs (cap space, live sim scroll), UI polish (position skill labels, stat tables), infrastructure (password gate, website vault, .gitignore)
+- Tests: N/A — no test suite
+- Deploy: deployed to GitHub Pages (both repos) · auto-deploy active · website also pushed
 
 ---
 
-## What was completed last session (v35.0 → v36.0)
+## What was completed this session (v37.1 → v38.1)
 
-### Full Audit at v34 Baseline + Implement All High-Leverage + High-Ceiling Items
+### Bug fix: Starting cap space $50M over ceiling
 
-Session ran a complete project audit scoring 63/100 at v34, produced a 30-item scored innovation brainstorm, implemented all "Highest Leverage Right Now" items in v35, then implemented all "Highest Ceiling" items in v36. Score trajectory: 63 → ~68 (v35) → ~80 (v36).
+`genPlayer` salary was `Math.round((ovr/99)*Rf(2,18)*100)/100` — a 43-player roster averaged ~$312M against a $200M cap. Changed multiplier to `Rf(1,9)`: average roster now lands ~$165M, safely between the $150M floor and $200M ceiling.
 
----
+### Bug fix: Live sim scroll hijacking page
 
-### Audit Score — v34.0 Baseline
+`useEffect` on `[liveLog]` called `logEndRef.current.scrollIntoView({behavior:"smooth"})` — this scrolled the entire page down to the play-by-play log on every new play. Fixed to scroll only within the log container: `container.scrollTop = container.scrollHeight`.
 
-| Category | Score |
-|---|---|
-| Core Gameplay Depth | 8.5/10 |
-| Technical Architecture | 5.5/10 |
-| Content Depth | 5.0/10 |
-| Polish & UX | 5.5/10 |
-| Retention Loops | 6.5/10 |
-| Monetization | 2.0/10 |
-| Virality & Social | 3.5/10 |
-| Live Ops | 3.0/10 |
-| Discoverability | 3.5/10 |
-| Stability & Ops | 6.0/10 |
-| **Overall** | **63/100** |
+### UI: Position skill labels
 
----
+QB `posAttrs` array had both `armStr` and `throwPow` (redundant). Removed `throwPow`. Added `PA_LABELS` constant mapping all 50+ camelCase position skill keys to readable labels (e.g. `pocketAwr` → `"Pocket"`, `readDef` → `"Read Def"`). Display changed from `k.slice(0,8)` to `PA_LABELS[k]||k`.
 
-### v36.0 — Highest Ceiling — All Implemented
+### UI: Stat table improvements
 
-**Dynasty Record Book**
-- `dynastyBook` state (loaded from `gm_dynasty_book` localStorage); one entry per season
-- `saveDynastyBook(yr, ut, champs)` called at `newSeason()` + `submitGlobalScore()`
-- Log tab visual timeline: color-coded rows (champion = gold), 🏆 marker, team abbreviation dot, W-L record, top player
-- Persists across reloads; merged in `importLeague()`
+Season and career stat grid cells: `minmax(44px,1fr)` → `52px`, padding `2px` → `4px 3px`, value font `13` → `14`. Zero-value stats now filtered from season stats display. Labels get `letterSpacing:.3` for readability.
 
-**HOF Induction Ceremony Modal**
-- Triggers at season end forEach retiring player with `ovr>=88` or `av>=70`
-- Gold ceremony modal (zIndex 4200) with player stats, face, team, OVR, AV, seasons
-- Downloadable 1200×630 canvas HOF card (team color gradient, player name, gold HOF badge)
-- Share button via Web Share API / clipboard fallback
+### Infrastructure: Password gate
 
-**League JSON Export / Import**
-- `exportLeague()` — serializes full state (teams, schedule, FA, draft picks, log, champs, dynasty book) to `.json` download
-- `importLeague()` — FileReader reads uploaded file, restores all state, sets phase='main', tab='roster'
-- 📤/📥 buttons in header
-- Enables cross-device save, backups, community sharing
+Both `gridiron-gm/index.html` and `gridiron-gm-play/index.html` now show a full-screen lock screen on load. Password: `vsgm2026`. Correct entry sets `sessionStorage['gm_preview']='1'` and hides the gate. Styled dark/on-brand. Enter key supported.
 
-**Stripe Pro GM Scaffold**
-- `proUnlocked` state (persisted at `gm_pro='1'` in localStorage)
-- `checkoutPro()` opens `VITE_STRIPE_PAYMENT_LINK` in new tab; dev-mode auto-unlocks without link
-- PRO badge in header when active; God Mode tooltip says "PRO FEATURE"
-- Subscribe modal shows "$2.99 ONE-TIME" pricing; active state shows ✅ PRO GM ACTIVE
+### Infrastructure: Website vault
 
-**Supabase Global Leaderboard**
-- `submitGlobalScore()` — POSTs to `{VITE_SUPABASE_URL}/rest/v1/leaderboard` on season end
-- `fetchGlobalLB()` — GETs top 10 sorted by champs/wins; called when user opens Global tab
-- Leaderboard modal: Local / Global tabs; loading state; graceful empty if env vars absent
-- Required Supabase table columns: `team, wins, champs, gmrep, yr, record, submitted_at`
+`vaultsparkstudios.github.io`:
+- `games/gridiron-gm/index.html` — status badge → "Vaulted" (`status-stub`), removed Play Now CTA, hero/feature buttons → Join The Vault, status row → "Vaulted — Returning Soon", demo placeholder → "Currently Vaulted"
+- `games/index.html` — game card `data-status` → `vaulted`, badge → "Vaulted", "Play Now" → "Get Early Access"
+- `studio-hub/src/data/studioRegistry.js` — `status: "vaulted"`, `statusLabel: "Vaulted"`
+- `context/PROJECT_STATUS.json` — `status: "vaulted"`, `health: "yellow"`
 
-**Full 60-Minute Phaser Game Clock**
-- `state.clock = 900` seconds per quarter in `gameState.js`
-- `_tickClock(seconds)` in FieldScene.js: deducts per play type (incomplete: 5-17s, run: 25-43s, pass: 32-50s)
-- Quarter advances when clock hits 0; Q5+ = game over; `_recoverFatigue()` at quarter end
-- Q2 and Q4 two-minute warning overlay banners
-- Play cap raised from 40 → 120 plays
-- HUD: `clockTxt` at W/2+30 shows MM:SS; `_fmtClock()` helper; red when Q4 ≤ 30s
-- `clockUpdate` event fired by FieldScene; handled by HudScene listener
-- `finalClock` exported in `exportStats()` for GM bridge
+### Infrastructure: .gitignore
 
----
-
-### Modified Files (v36)
-
-**gridiron-gm:**
-- `src/App.jsx` — +~80 lines; 6 new state vars; 6 new functions; header buttons; log tab dynasty timeline; HOF modal; LB Local/Global tabs; Pro GM modal update
-
-**gridiron-gm-play:**
-- `src/data/gameState.js` — clock/clockRunning fields + resetState(); finalClock in exportStats()
-- `src/scenes/FieldScene.js` — _tickClock() method; play clock deduction per result type; play cap raised
-- `src/scenes/HudScene.js` — clockTxt display; _fmtClock() helper; _onClockUpdate() event handler; clockUpdate listener
-
----
-
-### Build
-
-- App.jsx: ~2450 → ~2460+ lines (all additive)
-- Build: ✅ clean (`npm run build` 5.22s, no warnings, 3 output files)
-- gridiron-gm commit: `feat: v36.0 — Dynasty Record Book, HOF Induction Modal, League JSON Export/Import, Pro GM scaffold, Supabase Global LB, 60-min Phaser clock`
-- gridiron-gm-play commit: `feat: v36.0 Play — 60-min game clock, MM:SS HUD, quarter transitions, two-minute warnings`
-- Both repos pushed
+Added `Vaulted-PW.txt` and `context/.session-lock` to `.gitignore`.
 
 ---
 
 ## What is mid-flight
 
-Nothing blocking. All clean.
+Nothing blocking. All pushed and clean.
 
 ---
 
-## ⚠️ Pending user/manual actions
+## ⚠️ Human Action Required
 
 | # | Action | Where | Why blocked |
 |---|--------|--------|-------------|
-| 1 | **Publish itch.io listing** | itch.io → Dashboard → Create project | Copy is written (v35 session) — paste + set "Play in Browser" → external link to GitHub Pages URL |
-| 2 | **Post to Reddit** | r/footballgames, r/WebGames, r/sports_sims | Copy is written (v35 session) — best time Tue–Thu 7–9pm ET |
-| 3 | **Add `VITE_POSTHOG_KEY`** | `.env.local` | Needs PostHog project API key |
-| 4 | **Fill `VITE_ANALYTICS_URL`** | `.env.local` | Needs analytics endpoint |
-| 5 | **Deploy Claude proxy Worker** | Cloudflare | See `docs/CLAUDE_AI_STORYLINE_SETUP.md` |
-| 6 | **Create Stripe Payment Link** | Stripe dashboard | Create one-time $2.99 link → set `VITE_STRIPE_PAYMENT_LINK` in `.env.local` |
-| 7 | **Create Supabase table + set keys** | Supabase dashboard | Create `leaderboard` table (team, wins, champs, gmrep, yr, record, submitted_at) → set `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` |
-| 8 | **Create Discord Server** | discord.com | VaultSpark Discord; weekly challenge bot for retention |
+| 1 | **Wire Stripe Live** | `.env.local` + GitHub Secrets | Set `VITE_STRIPE_PAYMENT_LINK`; scaffold is live |
+| 2 | **Publish itch.io + Reddit** | itch.io / Reddit | Copy ready in docs/; game is vaulted — do after re-release |
+| 3 | **Deploy Claude Proxy Worker** | Cloudflare | Set `VITE_CLAUDE_PROXY_URL` |
+| 4 | **Supabase Global LB setup** | Supabase dashboard | Create leaderboard table, set env vars |
+| 5 | **Re-open public access** | Remove password gate from both index.html files | Once bugs are resolved and build is polished |
 
 ---
 
 ## What to do next
 
-Distribution and monetization are the primary gap to 90+. Top recommendations:
-
-1. **Publish itch.io** — highest immediate discoverability; copy is ready
-2. **Post to Reddit** — organic player acquisition; copy is ready
-3. **Wire Stripe** — creates real revenue path; scaffold is in place (checkoutPro is live)
-4. **Wire Supabase** — enables global social comparison; tables defined; code is live
-5. **Product Hunt launch** — schedule for Tuesday; screenshot carousel + 90-sec trailer
-
-After distribution: highest remaining ceiling items from the audit backlog are Player Trade Demand system, Coaching Upgrade tree, and Practice Squad Development.
+1. **Continue bug sweep** — now that the game is vaulted, run through all major gameplay flows (new game, full season, draft, playoffs) and log every glitch
+2. **[SIL] Dev mode bypass** — add hidden keycode to skip gate for dev testing
+3. **[SIL] Stat section grouping** — group player modal stats by phase
+4. **[SIL] startGame reset manifest** — 15-min task, long overdue
+5. **Re-release** — remove gate, update website back to "Live", announce on itch.io + Reddit
 
 ---
 
 ## Session score
 
-**Productivity: 10/10** — Complete audit → 30-item brainstorm → all "Highest Leverage" + all "Highest Ceiling" items implemented across two versions (v35 + v36). Score trajectory 63→80. Dynasty Record Book, HOF modal, Export/Import, Pro GM scaffold, Supabase LB, and full 60-min Phaser clock all shipped. Build clean. Both repos committed and pushed.
+**Productivity: 9/10** — 6 concrete fixes shipped across gameplay, UI, and infrastructure in a single session. All committed and pushed clean. Website fully updated to reflect vaulted state.

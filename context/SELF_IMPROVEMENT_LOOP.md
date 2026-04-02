@@ -1,9 +1,11 @@
 <!-- rolling-status-start -->
 ## Rolling Status (auto-updated each closeout)
-Sparkline (last 5 totals): 5 → 38 → 40
-3-session avg: Dev 7 | Align 8 | Momentum 8 | Engage 6 | Process 7
-Avg total: 28/50  |  Velocity trend: ↑  |  Debt: → (new game reset bug was latent)
-Last session: 2026-03-27 | Session v37.1 | Total: 40/50 | Velocity: ↑
+Sparkline (last 5 totals): 5 → 38 → 40 → 38  [N=4]
+Avgs — 3: 38.7 | 5: 30.3 [N=4] | 10: — | 25: — | all: 30.3 [N=4]
+  └ 3-session: Dev 8.0 | Align 8.0 | Momentum 8.0 | Engage 6.0 | Process 9.3
+Velocity trend: →  |  Protocol velocity: ↑  |  Debt: →
+Momentum runway: ~3+ sessions  |  Intent rate: 100% (last 4) [N=4]
+Last session: 2026-04-01 | Session v38.1 | Total: 38/50 | Velocity: 6 | protocolVelocity: 3
 ─────────────────────────────────────────────────────────────────────
 <!-- rolling-status-end -->
 
@@ -79,6 +81,39 @@ Rate 0–10 per category at each closeout:
 
 - [SIL] Fill out all context files with project-specific content
 - [SIL] Define first concrete milestone for Momentum tracking
+
+---
+
+### 2026-04-01 — v38.1 | Total: 38/50 | Velocity: 6 | Debt: →
+Avgs — 3: 38.7 | 5: 30.3 [N=4] | all: 30.3 [N=4]
+  └ 3-session: Dev 8.0 | Align 8.0 | Momentum 8.0 | Engage 6.0 | Process 9.3
+
+| Category | Score | vs Last | Notes |
+|---|---|---|---|
+| Dev Health | 8 | → | Cap bug fixed, live sim scroll fixed, build clean throughout |
+| Creative Alignment | 8 | → | All fixes align with SOUL polish mandate; vaulting is strategic not creative drift |
+| Momentum | 8 | → | 6 concrete items shipped, 2 repos + website pushed, clean session |
+| Engagement | 5 | ↓ | Game intentionally vaulted — reduces public access short-term |
+| Process Quality | 9 | ↓ | Clean commits, full startup brief, .gitignore hygiene, session lock cleared |
+| **Total** | **38/50** | **↓ from 40** | |
+
+**Top win:** Cap space bug eliminated — was $50M over ceiling on game start; now rosters land $155–180M. Simultaneously fixed 3 other user-facing bugs in one focused session.
+
+**Top gap:** Engagement score will stay low until the vault reopens; need a clear bug-sweep checklist before re-release so there's a defined finish line.
+
+**Intent outcome:** Achieved — all 5 declared fixes shipped; password gate and website vault were scoped additions, both completed.
+
+**IGNIS note:** Vaulting a live game to fix bugs is a high-trust move — Engagement score absorbs the cost but Dev Health and Process Quality rise; watch whether this pattern accelerates re-release or extends the vault period.
+
+**Brainstorm**
+
+1. **Dev mode bypass for password gate** — hidden keycode (e.g., ↑↑↓↓ enter) in index.html skips the gate during local dev; prevents gate from slowing iteration. First step: add keydown sequence listener before the gate script. High probability.
+2. **Stat section grouping** — group player modal stats by offensive phase (passing / rushing / receiving) and defensive phase with thin separators; makes the grid scannable. First step: wrap stat entries in labeled groups by position type in the render loop. High probability.
+3. **Bug-sweep checklist doc** — create `docs/BUG_SWEEP_CHECKLIST.md` with 15-20 manual test flows (new game, full season, draft, trade, live sim); defines "done" for the vault period. First step: generate the list from known issues + gameplay flows. High probability.
+4. **Cap health by position group** — below existing cap bar in roster tab, add a mini breakdown (OL / skill / DL / LB / DB / K) so GM can see where cap is concentrated. First step: group `capHit` by position in the roster render. Medium probability.
+5. **"Coming back soon" enhancement** — upgrade the password gate page to include an email capture field (ConvertKit/Mailchimp) so visitors can sign up for re-release notification. First step: add ConvertKit embed form above the Enter button. Medium probability.
+
+**Committed to TASK_BOARD:** [SIL] Dev mode bypass for password gate · [SIL] Stat section grouping
 
 ---
 

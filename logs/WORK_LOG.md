@@ -4,6 +4,19 @@ Append entries. Do not edit historical entries.
 
 ---
 
+## 2026-04-01 (session — v38.1)
+
+- Cap space bug fixed: genPlayer salary Rf(2,18) → Rf(1,9); avg roster ~$165M vs $310M
+- Live sim scroll fixed: scrollIntoView → in-container scroll (no more page jumping)
+- Position skill labels: PA_LABELS map added; throwPow removed from QB (redundant with armStr)
+- Stat tables: 52px cells, 4px padding, 14px values, zero-value stats filtered
+- Password gate: both gridiron-gm and gridiron-gm-play index.html gated (vsgm2026)
+- Website vault: games/gridiron-gm, games/index, studioRegistry all updated to vaulted state
+- .gitignore: Vaulted-PW.txt and context/.session-lock excluded
+- All changes committed and pushed; build clean
+
+---
+
 ## 2026-03-25 (session 18 — v11.0)
 
 - Session: v11.0 — 10 GM features + P74–P78 Phaser features
