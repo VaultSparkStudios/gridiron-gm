@@ -1,51 +1,43 @@
-<!-- template-version: 2.2 -->
-<!-- synced-from: studio-ops/prompts/start.md @ Session 21 (2026-03-31) -->
-# ── START ────────────────────────────────────────────────────────────────────
-# Use this when the user says only `start`.
-# ─────────────────────────────────────────────────────────────────────────────
+<!-- template-version: 2.4 -->
+<!-- synced-from: studio-ops/prompts/start.md @ Session 34 (2026-04-02) -->
+# START
 
-## Phase 0 — Session Lock + Mode Declaration
-
-**First action — write session lock:**
-Create `context/.session-lock` with content:
-```
-locked_by: agent-session
-session_start: YYYY-MM-DDTHH:MM:SSZ
-project: {project-slug}
-```
-This prevents studio-ops (or any cross-repo agent) from writing to this project while a session is active.
-The lock is cleared at closeout. If a lock file already exists from a prior session, overwrite it (stale lock).
-
-**Then determine session mode:**
-
-| Mode | Trigger | Focus |
-|---|---|---|
-| **BUILDER MODE** | Default (no qualifier) | Deep work on this project only |
-| **FOUNDER MODE** | User says "start: founder mode" | Cross-project strategy; reads STUDIO_BRAIN.md first |
-
-In **Builder Mode:** read only project files. Skip STUDIO_BRAIN.md unless a specific studio flag
-is relevant to this session.
-
-In **Founder Mode:** read `portfolio/STUDIO_BRAIN.md` first for studio-wide context, then
-proceed with project files.
+Executed when the user says only `start`.
 
 ---
 
-## Phase 1 — Initiation Type Detection
+## 1 · Session Lock  *(mandatory first action)*
+
+Create `context/.session-lock`:
+```
+locked_by: agent-session
+session_start: <ISO timestamp>
+project: <slug>
+```
+Overwrite if a stale lock exists. Lock is cleared at closeout.
+
+**Session mode:**
+
+| Mode | Trigger | Focus |
+|---|---|---|
+| **BUILDER** | Default | This project only |
+| **FOUNDER** | "start: founder mode" | Cross-project strategy; read `portfolio/STUDIO_BRAIN.md` first |
+
+---
+
+## 2 · Initiation Type
 
 Check `context/SELF_IMPROVEMENT_LOOP.md`:
 
 | Condition | Type | Action |
 |---|---|---|
-| File missing or no dated entries | **A — Bootstrap** | Follow `prompts/initiate.md` — do not proceed with Phase 2 |
-| 1 entry labeled "Bootstrap Baseline" / "Foundation Baseline" and core files are still template-only | **B — Foundation** | Follow `prompts/initiate.md` Section B |
-| 2+ dated entries with real scores | **C — Returning** | Continue with Phase 2 |
+| File missing or no dated entries | **A — Bootstrap** | Follow `prompts/initiate.md` — stop here |
+| 1 "Bootstrap/Foundation Baseline" entry; core files still template-only | **B — Foundation** | Follow `prompts/initiate.md` §B — stop here |
+| 2+ dated entries with real scores | **C — Returning** | Continue below |
 
 ---
 
-## Phase 2 — Load Context
-
-Read in this exact order. Do not skip or reorder.
+## 3 · Load Context  *(read in order — do not skip or reorder)*
 
 | # | File | Purpose |
 |---|---|---|
@@ -57,51 +49,39 @@ Read in this exact order. Do not skip or reorder.
 | 6 | `context/DECISIONS.md` | Key decisions with rationale |
 | 7 | `context/TASK_BOARD.md` | Now / Next / Blocked / Later tasks |
 | 8 | `context/LATEST_HANDOFF.md` | Authoritative handoff from last session |
-| 9 | `context/SELF_IMPROVEMENT_LOOP.md` — **header only** | Rolling Status block: sparkline, averages, last scores. No need to read full entry history. |
-| 10 | `context/TRUTH_AUDIT.md` (if present and relevant) | Source-of-truth hierarchy, contradiction status, founder-facing drift |
+| 9 | `context/SELF_IMPROVEMENT_LOOP.md` — **header only** | Rolling Status: sparkline, avgs, last scores |
+| 10 | `context/TRUTH_AUDIT.md` *(if present and relevant)* | Source-of-truth hierarchy, contradiction status |
 | 11 | Task-specific files | Only after all above are read |
 
-**Founder Mode only:** Also read `portfolio/STUDIO_BRAIN.md` (read between steps 9 and 10).
+*Founder Mode: read `portfolio/STUDIO_BRAIN.md` between steps 9 and 10.*
 
 ---
 
-## Phase 3 — SIL Escalation Check
+## 4 · SIL Escalation Check
 
-After reading the SIL Rolling Status header:
+From the Rolling Status header (no extra reads):
 
-- Note the sparkline — is the 5-session trajectory ↑ ↓ flat?
-- Note rolling averages — which category is the lowest? Flag if any avg is below 5.0
-- Identify any `[SIL]` items on TASK_BOARD not yet actioned
-- **If a `[SIL]` item was skipped 2+ sessions → escalate to Now on TASK_BOARD and flag in brief**
-- Surface the top unactioned brainstorm idea from the last SIL entry
+- Note sparkline trajectory (↑ ↓ flat) and lowest rolling avg category — flag if any avg < 5.0
+- List unactioned `[SIL]` TASK_BOARD items — **escalate to Now if skipped 2+ sessions**
+- Surface top unactioned brainstorm idea from the last SIL entry
 
-**Studio benchmarking (no extra reads required):**
-If STUDIO_BRAIN.md has been read (Founder Mode), note in brief:
-> Studio avg SIL: [X]/50 · This project last session: [X]/50 [↑↓→ vs studio avg]
+*Founder Mode only:* note `Studio avg SIL: [X]/500 · This project: [X]/500 [↑↓→]` in brief.
 
 ---
 
-## Phase 4 — Startup Rules
+## 5 · Startup Rules
 
-- Treat repo files as source of truth — not prior chat memory
-- Do not edit code during startup unless user immediately asks for implementation
-- Use `context/LATEST_HANDOFF.md` as the active handoff source
-- Treat any other handoff docs as historical context only
-- Note any assumptions before acting on them
-- **If resuming from a compacted/interrupted session:** check whether the prior session's human
-  direction was recorded in `docs/CREATIVE_DIRECTION_RECORD.md`. If the last CDR entry predates
-  work described in LATEST_HANDOFF.md, flag the gap in the startup brief and recover it at
-  next closeout.
-- **Momentum Runway enforcement:** If the last computed Momentum Runway (from SIL Rolling Status
-  or LATEST_HANDOFF.md) is ≤ 2.0 sessions, this session MUST begin with TASK_BOARD pre-loading
-  before any feature or protocol work. Add items to the Now bucket first. Surface this as the
-  first item in PRIORITIES in the startup brief. Do not skip this step.
+- Repo files are source of truth — not prior chat memory
+- `PROJECT_STATUS.json` and registry JSON beat derived Markdown when values conflict
+- No code edits during startup unless immediately requested
+- `context/LATEST_HANDOFF.md` is the active handoff; all other handoff docs are historical
+- Note assumptions before acting on them
+- **Compacted/interrupted session:** Check if human direction is in `docs/CREATIVE_DIRECTION_RECORD.md`. If the last CDR entry predates work described in `LATEST_HANDOFF.md`, flag the gap and recover at closeout.
+- **⛔ Momentum Runway ≤ 2.0:** Begin with TASK_BOARD pre-loading before any feature or protocol work. Surface as first item in PRIORITIES.
 
 ---
 
-## Phase 5 — Output: Startup Brief
-
-Reply using this exact structure:
+## 6 · Output — Startup Brief
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -117,25 +97,23 @@ Reply using this exact structure:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   WHERE WE LEFT OFF  (Session {N-1})
   Shipped    {N improvements across N groups — group1, group2, ...}
-             {or: "N tasks completed" if no improvement groups defined}
-  Tests      {N passing (N core / N server / N client) · delta: +N/-N}
-             {or: "N/A" if project has no test suite}
-  Deploy     {deployed to {env} · auto-deploy active / manual / N/A}
+  Tests      {N passing · delta: +N/-N}  or  N/A
+  Deploy     {env · auto / manual / N/A}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   DASHBOARD
-  SIL    ██████████████████░░ {total}/50  {▁▂▃▄▅▆▇█}  Avg: {n.n}
-         Dev {n.n}{↑↓→} │ Align {n.n}{↑↓→} │ Momentum {n.n}{↑↓→} │ Engage {n.n}{↑↓→} │ Process {n.n}{↑↓→}
+  SIL    ██████████████████░░ {total}/500  {sparkline}  Avg: {n.n}
+         Dev {nn}{↑↓→} │ Align {nn}{↑↓→} │ Momentum {nn}{↑↓→} │ Engage {nn}{↑↓→} │ Process {nn}{↑↓→}
   FLOW   Velocity: {N}{↑↓→} │ Debt: {↑↓→} │ Runway: ~{n.n} sessions │ Days since: {N}
   IGNIS  {n}/100K ({TIER}) │ Compliance: {n}/{total}
   TRUTH  {green|yellow|red|unknown} │ Genome: {n}/25
 
   SIGNALS
-  {✓ or ⚠ or ⛔} Compliance    {status}
-  {✓ or ⚠ or ⛔} Tests         {status}
-  {✓ or ⚠ or ⛔} CI            {status}
-  {✓ or ⚠ or ⛔} Velocity      {status}
-  {✓ or ⚠ or ⛔} Runway        {status}
+  {✓|⚠|⛔} Compliance    {status}
+  {✓|⚠|⛔} Tests         {status}
+  {✓|⚠|⛔} CI            {status}
+  {✓|⚠|⛔} Velocity      {status}
+  {✓|⚠|⛔} Runway        {status}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   NEXT MOVE    {specific recommended action}
@@ -144,56 +122,49 @@ Reply using this exact structure:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   IGNIS INSIGHT  ignisScore: {N}/100K ({TIER})
-  Top pattern: {most relevant IGNIS pattern for this project}
-  Brainstorm rate: {brainstorm_conversion_rate}% ({status})
-  Intent rate: {intentCompletionRate}% (last 5 sessions)
-  {One synthesised observation from portfolio/IGNIS_CORE.md
-   specific to this project — e.g. velocity trend, engagement
-   gap, creative drift signal, stall pattern warning, momentum
-   runway warning, or canon decision applicable this session.
+  Top pattern: {most relevant IGNIS pattern}
+  Brainstorm rate: {brainstorm_conversion_rate}%  Intent rate: {intentCompletionRate}% (last 5)
+  {One synthesised observation from portfolio/IGNIS_CORE.md — velocity trend, engagement gap,
+   creative drift, stall pattern, runway warning, or applicable canon decision.
    Write "— insufficient data (UNTRACKED)" if no project entry.}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  CANON CHECK    {Any STUDIO_CANON.md decision relevant to this session's planned work — one line or "none applicable"}
+  CANON CHECK    {Canon decision relevant to this session's planned work — or "none applicable"}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-**WHERE WE LEFT OFF** data comes from `context/LATEST_HANDOFF.md` — the closeout protocol
-writes it there. If no prior session exists, omit the section entirely.
+### DASHBOARD sources  *(all from files already loaded — no extra reads)*
 
-**DASHBOARD** data sources (no extra file reads — all from files already loaded in Phase 2):
-- `SIL` progress bar → total/50 rendered as 20-char bar: █ per 2.5 points, ░ for remainder
-- `SIL` + `Avgs` + `FLOW` → from Rolling Status header in `context/SELF_IMPROVEMENT_LOOP.md` (already read)
-- `Days since` → compute from `Last session:` date in Rolling Status header vs today
-- `IGNIS` → from `context/PROJECT_STATUS.json` `ignisScore` field (already read via CURRENT_STATE)
-- `TRUTH` → from `context/TRUTH_AUDIT.md` if present; otherwise `unknown`
-- `Compliance` → from `context/CURRENT_STATE.md` compliance count (already read)
-- `Velocity` / `Debt` / `Runway` → from Rolling Status header (already read)
+| Field | Source |
+|---|---|
+| SIL bar · Avgs · FLOW · sparkline | `SELF_IMPROVEMENT_LOOP.md` Rolling Status header |
+| Days since | `Last session:` date vs today |
+| IGNIS score | `context/PROJECT_STATUS.json` → `ignisScore` |
+| TRUTH / Genome | `context/TRUTH_AUDIT.md` (or `unknown` if absent) |
+| Compliance count | `context/CURRENT_STATE.md` |
 
-**SIGNALS** badge rules (apply in order):
-- Compliance: ✓ if 20/20; ⚠ if <20 but >15; ⛔ if ≤15
-- Tests: ✓ if passing and delta ≥0; ⚠ if delta <0; ⛔ if tests failing; omit if N/A
-- CI: ✓ if green; ⚠ if unknown; ⛔ if failing
-- Velocity: ✓ if ≥2 or trending ↑; ⚠ if 1 and stable; ⛔ if 0 or trending ↓
-- Runway: ✓ if >4 sessions; ⚠ if 2-4; ⛔ if ≤2
+**SIL bar:** 20 chars · █ per 25 pts · ░ remainder
 
-**IGNIS INSIGHT** data comes from `portfolio/IGNIS_CORE.md` — read only the project-specific
-section (search for the project slug). Pull: ignisScore, grade, brainstorm_conversion_rate,
-top relevant pattern, and project-specific insight line. Do not read the full file.
-If the file does not exist or has no entry for this project, write "— insufficient data (UNTRACKED)."
-If the synthesis is older than `context/PROJECT_STATUS.json` `ignisLastComputed` or the truth audit flags it stale,
-label it explicitly as stale rather than presenting it as current.
+**SIGNALS thresholds:**
+- Compliance: ✓ 20/20 · ⚠ >15 · ⛔ ≤15
+- Tests: ✓ passing + delta ≥0 · ⚠ delta <0 · ⛔ failing · *omit if N/A*
+- CI: ✓ green · ⚠ unknown · ⛔ failing
+- Velocity: ✓ ≥2 or ↑ · ⚠ 1 stable · ⛔ 0 or ↓
+- Runway: ✓ >4 · ⚠ 2–4 · ⛔ ≤2
 
-**CANON CHECK** data comes from `docs/STUDIO_CANON.md` — scan for any canon decisions relevant
-to the current session's planned work. Surface at most 1–2. Omit if none apply.
-Reading STUDIO_CANON.md is optional — only needed if working on protocol, templates, or initiation.
+**IGNIS INSIGHT:** Read only the project section in `portfolio/IGNIS_CORE.md`. Pull ignisScore, grade, brainstorm_conversion_rate, and one project-specific observation. If synthesis is older than `PROJECT_STATUS.json → ignisLastComputed` or flagged stale by truth audit, label it explicitly as stale. Write `UNTRACKED` if no project entry exists.
+
+**CANON CHECK:** Scan `docs/STUDIO_CANON.md` for decisions relevant to this session's planned work. Surface at most 1–2. Optional — skip if not working on protocol, templates, or initiation.
 
 ---
 
-## Phase 6 — Session Intent Declaration
+## 7 · Session Intent
 
-After delivering the startup brief, ask only if the user did not already provide the session goal:
+If the user did not provide a session goal, ask:
 
 > **"What is the primary goal for this session?"** (one sentence)
 
-Log the declared intent in `context/LATEST_HANDOFF.md` under a `Session Intent:` field at the top.
-This is checked and logged at closeout.
+Log the declared intent in `context/LATEST_HANDOFF.md` under `Session Intent:`.
+
+**Key rules:**
+- SPARKED projects must have staging before deploying. See `docs/STAGING_PROTOCOL.md`.
+- Every public-facing project needs VaultSpark Studios branding. See CANON-006 in `docs/STUDIO_CANON.md`.

@@ -1,265 +1,138 @@
-<!-- template-version: 2.2 -->
-<!-- synced-from: studio-ops/prompts/closeout.md @ Session 21 (2026-03-31) -->
-# Closeout Protocol
+<!-- template-version: 2.4 -->
+<!-- synced-from: studio-ops/prompts/closeout.md @ Session 34 (2026-04-02) -->
+# CLOSEOUT
 
-Use this when the user says only `closeout`.
-
----
-
-## Step 0 — Session Intent Check
-
-Before writing any files, compare the session's actual work against the declared intent logged in
-`context/LATEST_HANDOFF.md` under `Session Intent:`. Classify the outcome:
-
-- **Achieved** — worked as planned
-- **Partial** — some scope drifted; note what and why
-- **Redirected** — focus changed significantly; log the reason
-
-This outcome is included in the closeout output and the `logs/WORK_LOG.md` entry.
+Executed when the user says only `closeout`.
 
 ---
 
-## Required write-back
+## Step 0 · Intent Check
 
-If meaningful work happened, update in this order:
+Compare actual work to the declared intent in `context/LATEST_HANDOFF.md → Session Intent:`.
+
+Classify: **Achieved** · **Partial** *(note scope drift)* · **Redirected** *(log reason)*
+
+---
+
+## Write-Back Order  *(if meaningful work happened)*
 
 1. `context/CURRENT_STATE.md`
 2. `context/TASK_BOARD.md`
-3. `context/LATEST_HANDOFF.md` — include **Where We Left Off** block (see below)
+3. `context/LATEST_HANDOFF.md` — include **Where We Left Off** block
 4. `logs/WORK_LOG.md`
 5. `context/DECISIONS.md` — when reasoning changed
-6. `context/SELF_IMPROVEMENT_LOOP.md` — MANDATORY (see below)
-7. `docs/CREATIVE_DIRECTION_RECORD.md` — MANDATORY if human gave any creative direction this session
-8. `context/TRUTH_AUDIT.md` — when source-of-truth, founder-facing reporting, schema, or prompt/template truth changed
-9. Any project-type or repo-specific files whose truth changed
-10. **Delete `context/.session-lock`** — MANDATORY last step. Removing the lock signals to studio-ops and other cross-repo agents that this project is safe to write to again.
+6. `context/SELF_IMPROVEMENT_LOOP.md` — **mandatory**
+7. `docs/CREATIVE_DIRECTION_RECORD.md` — **mandatory if human gave creative direction**
+8. `context/TRUTH_AUDIT.md` — when source-of-truth, schemas, prompts/templates, or derived surfaces changed
+9. Any repo-specific files whose truth changed
+10. **Delete `context/.session-lock`** — mandatory last step
 
-### Where We Left Off — write to LATEST_HANDOFF.md
-
-At the top of `context/LATEST_HANDOFF.md`, maintain a `## Where We Left Off` block.
-This is read directly into the startup brief next session.
+### Where We Left Off  *(write to top of LATEST_HANDOFF.md)*
 
 ```markdown
 ## Where We Left Off (Session N)
 - Shipped: {N improvements across N groups — group1, group2 ...}
-  {or: "N tasks completed" if no improvement group breakdown applies}
-- Tests: {N passing (N core / N server / N client) · delta: +N this session}
-  {or: "N/A — no test suite"}
+- Tests: {N passing (N core / N server / N client) · delta: +N}  or  N/A
 - Deploy: {deployed to {env} / pending / N/A}
 ```
 
-Rules:
-- **Improvements / groups** — count concrete shipped items (features, fixes, improvements). Group by type (e.g. auth, content, DX, observability). Use whatever groups make sense for the project. If it was a process/protocol session with no shipped code, write "0 code changes — protocol/infra session."
-- **Tests** — total passing count + breakdown by type if the project has a test suite. Delta = this session's total minus last session's total from the prior audit JSON. Write "N/A" for projects without test suites.
-- **Deploy** — "deployed to {env}" if a deploy happened this session or was already live; "pending" if commit exists but deploy not confirmed; "N/A" for pre-deploy projects.
+Count concrete shipped items and group by type (auth, content, DX, observability, etc.). If protocol/infra only: "0 code changes — protocol/infra session." Tests delta = this session total minus prior session total. Deploy: "deployed to {env}" if live, "pending" if committed but unconfirmed, "N/A" if pre-deploy.
 
 ---
 
-## Self-Improvement Loop — closeout (mandatory)
+## Self-Improvement Loop
 
-### Step 1 — Calculate rolling data (do this before scoring)
+### Step 1 · Rolling Data  *(calculate before scoring)*
 
-**Velocity count:**
-Count TASK_BOARD items that moved from Now → Done this session.
-Exclude `[SIL]` meta-tasks. Record as integer: `Velocity: N`
+**Velocity:** Count Now → Done tasks this session. Exclude `[SIL]` meta-tasks. → integer `Velocity: N`
 
-**Debt delta:**
-- `↑` if net new `[DEBT]` items were added to TASK_BOARD this session
-- `↓` if net `[DEBT]` items were resolved this session
-- `→` if debt was unchanged or no `[DEBT]` items exist
+**Debt delta:** `↑` net new `[DEBT]` added · `↓` net resolved · `→` unchanged or none
 
-**Rolling averages (3 / 5 / 10 / 25 / all):**
-Look back at the SIL entries in `context/SELF_IMPROVEMENT_LOOP.md` and compute:
+**Rolling averages** — look back at SIL entries in `context/SELF_IMPROVEMENT_LOOP.md`:
 
-For each window (3, 5, 10, 25, all):
-- **Total avg** = sum of Total scores in window / count — round to 1 decimal
-- If fewer entries than the window size exist, use all available and mark with `[N=n]`
-- Omit windows where N < 3 (not enough data to be meaningful)
-
-For the **3-session window only**, also compute per-category averages:
-- `Avg Dev Health` = (score1 + score2 + score3) / 3 — round to 1 decimal
-- Same calculation for all 5 categories
-- This is the only window with per-category breakdown (token efficiency)
-
-**Sparkline:**
-Collect the Total scores from the last 5 SIL entries (including this session). Map each to a bar:
-
-| Range | Bar |
+| Window | Compute |
 |---|---|
-| 0–9 | ▁ |
-| 10–19 | ▂ |
-| 20–29 | ▃ |
-| 30–34 | ▄ |
-| 35–39 | ▅ |
-| 40–44 | ▆ |
-| 45–47 | ▇ |
-| 48–50 | █ |
+| 3 / 5 / 10 / 25 / all | `sum(Total scores in window) / count` — 1 decimal. Mark `[N=n]` if insufficient entries. Omit windows where N < 3. |
+| 3-session only | Also compute per-category avgs: Dev · Align · Momentum · Engage · Process |
 
-Write oldest → newest: e.g. `▃▅▆▇█`
-If fewer than 5 sessions, use only available data.
+**Sparkline** — map last 5 totals (oldest → newest) using: `▁ <100` · `▂ <200` · `▃ <300` · `▄ <350` · `▅ <400` · `▆ <450` · `▇ <480` · `█ 480–500`
 
 ---
 
-### Step 2 — Overwrite the SIL Rolling Status header
+### Step 2 · Overwrite Rolling Status Header
 
-The top of `context/SELF_IMPROVEMENT_LOOP.md` contains a `## Rolling Status` block between
-`<!-- rolling-status-start -->` and `<!-- rolling-status-end -->` markers.
-**Overwrite** this block (do not append) with fresh values:
+Overwrite the block between `<!-- rolling-status-start -->` and `<!-- rolling-status-end -->` markers in `context/SELF_IMPROVEMENT_LOOP.md`:
 
 ```
 <!-- rolling-status-start -->
 ## Rolling Status (auto-updated each closeout)
 Sparkline (last 5 totals): ▃▅▆▇█
-Avgs — 3: XX.X | 5: XX.X | 10: XX.X | 25: — | all: XX.X  (— = insufficient data)
-  └ 3-session: Dev X.X | Align X.X | Momentum X.X | Engage X.X | Process X.X
+Avgs — 3: XXX.X | 5: XXX.X | 10: XXX.X | 25: — | all: XXX.X
+  └ 3-session: Dev XX.X | Align XX.X | Momentum XX.X | Engage XX.X | Process XX.X
 Velocity trend: ↑↓→  |  Protocol velocity: ↑↓→  |  Debt: ↑↓→
 Momentum runway: ~N.N sessions  |  Intent rate: NN% (last 5)
-Last session: YYYY-MM-DD | Session N | Total: XX/50 | Velocity: N | protocolVelocity: N
+Last session: YYYY-MM-DD | Session N | Total: XXX/500 | Velocity: N | protocolVelocity: N
 ─────────────────────────────────────────────────────────────────────
 <!-- rolling-status-end -->
 ```
 
 ---
 
-### Step 3 — Score this session
+### Step 3 · Score This Session  *(0–100 per category)*
 
-Rate each category 0–10:
+#### Dev Health /100
+| Sub-score | Max | Measures |
+|---|---:|---|
+| CI / Test Status | 30 | Workflows green; tests passing; delta ≥0 |
+| Technical Debt | 20 | Debt trending ↓; known issues being addressed |
+| Architecture Quality | 30 | Clean structure, intentional abstractions. Infra: protocol structure + schema coherence |
+| Data Integrity | 20 | Schemas valid; machine-readable files current; no stale derived surfaces |
 
-| Category | Score | vs Last | Notes |
-|---|---|---|---|
-| Dev Health | | ↑↓→ | code quality, CI, debt |
-| Creative Alignment | | ↑↓→ | adherence to SOUL.md + CDR |
-| Momentum | | ↑↓→ | velocity, milestone progress |
-| Engagement | | ↑↓→ | community / user signals |
-| Process Quality | | ↑↓→ | handoff freshness, Studio OS compliance |
-| **Total** | **/ 50** | | |
+#### Creative Alignment /100
+| Sub-score | Max | Measures |
+|---|---:|---|
+| Soul Fidelity | 30 | Session work matches SOUL.md; creative identity intact |
+| CDR Compliance | 20 | All human creative directions captured in CDR |
+| Direction Clarity | 20 | Vision clear enough to guide future agents without human input |
+| Ecosystem Contribution | 30 | Work benefits multiple projects/portfolio. Studio Ops: template propagation, compliance rollouts |
 
----
+#### Momentum /100
+| Sub-score | Max | Measures |
+|---|---:|---|
+| Velocity | 30 | Meaningful tasks completed; task board moving |
+| Intent Completion | 30 | % of declared session intents achieved |
+| Blocker Resolution | 20 | Net blocker delta (resolved − created) |
+| Direction Progress | 20 | Getting closer to next milestone; strategic direction preserved |
 
-### Step 3.5 — IGNIS note
+#### Engagement /100
 
-After scoring, record one sentence for IGNIS to learn from this session.
+**Infrastructure** (`infrastructure` / `internal-ops`):
+| Sub-score | Max | Measures |
+|---|---:|---|
+| Session Frequency | 25 | How often is the Studio Owner active in this project? |
+| Proposal Acceptance Rate | 25 | % of agent proposals/brainstorm items accepted |
+| Output Consumption | 25 | Are STUDIO_BRAIN / IGNIS_CORE being read and acted on? |
+| Feedback Loop Health | 25 | Brainstorm items reviewed; CDR entry rate; decisions logged |
 
-**IGNIS note:** [What made this session distinctive, what would you do differently,
-what pattern is emerging — one sentence max]
+**Product** (games, apps, live products):
+| Sub-score | Max | Measures |
+|---|---:|---|
+| Stakeholder Velocity | 25 | Growth rate, retention, activation |
+| Community Engagement | 25 | Feedback quality, response rate, content engagement |
+| Feedback Incorporation | 25 | % of user feedback acted on |
+| Feedback Loop Health | 25 | Issue response rate; CDR activity; proposal acceptance |
 
-This is written into the `ignisNote` field of the audit JSON in Step 8.
+#### Process Quality /100
+| Sub-score | Max | Measures |
+|---|---:|---|
+| Handoff Continuity | 20 | LATEST_HANDOFF accurate; intent logged + resolved; cold-start ready |
+| Studio OS Compliance | 15 | Required files present; prompts at canonical version; no enforcer violations |
+| Context Freshness | 20 | CURRENT_STATE, TASK_BOARD, LATEST_HANDOFF updated and accurate this session |
+| Documentation Coherence | 20 | SOUL/BRAIN/PROJECT_BRIEF semantically accurate AND actively consulted — not just present |
+| Intelligence Fidelity | 20 | IGNIS current; truth audit green; founder surfaces accurate; contradictions ≤0 |
+| CDR Accuracy | 5 | All human directions captured; no CDR gaps from prior sessions |
 
----
-
-### Step 3.6 — Momentum Runway (PROPOSAL-006, accepted 2026-03-27)
-
-After scoring, compute the Momentum Runway estimate:
-
-```
-momentumRunway = open_Now_items / silAvg_velocity_last3
-```
-
-- Count open (incomplete) items currently in the `## Now` bucket of TASK_BOARD
-- Use the rolling 3-session velocity average (from Step 1)
-- If velocity average is 0 (architecture phase): write "N/A — architecture phase; pre-load TASK_BOARD recommended before next implementation sprint"
-- If runway ≤ 2 sessions: **flag** — "Low momentum runway. Add items to Now before next session."
-
-**Output:** "Momentum runway: ~N sessions at current velocity" (include in closeout summary)
-
-Write `Momentum runway: ~N.N sessions` into the Rolling Status header (Step 2).
-
-**Intent completion rate:**
-Also compute from audit JSONs: `count(intentOutcome == "Achieved") / total_sessions` over last 5 sessions.
-Write `Intent rate: NN%` into the Rolling Status header.
-Flag if rate falls below 70% over last 5 sessions.
-
----
-
-### Step 4 — Reflect
-
-- **Top win this session:**
-- **Top gap this session:**
-- **Session intent outcome:** [Achieved / Partial / Redirected — one sentence reason]
-
----
-
-### Step 4.5 — Human Action Required
-
-Scan the full session for any items that require human (not agent) action before the next session
-can proceed. This includes: external service setup (hosting, DNS, API keys, secrets), manual
-approvals (affiliate programs, legal, app stores), financial actions, decisions only the Studio
-Owner can make, or any "blocked on human" items discovered this session.
-
-**If items exist:**
-1. Write a `## Human Action Required` section in `context/LATEST_HANDOFF.md` listing each item
-   with enough context to act on it immediately
-2. Add items to `context/TASK_BOARD.md` under a `## Human Action Required` bucket (separate from
-   `## Blocked` — blocked = agent-resolvable; human-required = only the Studio Owner can act)
-
-**If no items exist:** write "No human action required this session." in the closeout output.
-
-**Format for each item:**
-```
-- [ ] **{Item}** — {what is needed, who/where to do it, why it unblocks the project}
-```
-
-This step is **mandatory** — never skip by assuming no human-required items exist. Always confirm
-explicitly either way.
-
----
-
-### Step 4.6 — Truth Audit refresh
-
-If this session changed any of the following, refresh `context/TRUTH_AUDIT.md`:
-- `context/PROJECT_STATUS.json` or registry JSON truth
-- founder-facing derived Markdown (`PROJECT_REGISTRY.md`, dashboards, summary docs)
-- prompts or templates
-- any contradiction called out in the prior truth audit
-
-At minimum, update:
-- `Last reviewed`
-- `Overall status`
-- `Protocol Genome`
-- `Drift Heatmap`
-- `Recommended Actions`
-
-Also update `context/PROJECT_STATUS.json`:
-- `truthAuditStatus`
-- `truthAuditLastRun`
-
----
-
-### Step 5 — Brainstorm
-
-Generate 3–5 innovative solutions, features, or improvements. Push past the obvious. Consider:
-- What would make this 10x more engaging?
-- What's the one thing players/users keep asking for?
-- What technical debt is silently costing velocity?
-- What creative direction has drifted from the SOUL?
-- What competitive move would surprise and delight?
-
-**Brainstorm item format (standardized — Session 9):**
-Each brainstorm item must include:
-1. **One-sentence synopsis** — what the idea is
-2. **Implementation path** — concrete first step (one sentence)
-3. **Execution probability** — High / Medium / Low (based on current phase and available time)
-
-Items rated **Low** execution probability go to the **IGNIS Parking Lot** in `context/IGNIS_PROTOCOL.md` — not to TASK_BOARD. Items rated **High** or **Medium** are eligible for commitment.
-
-**Infrastructure projects (Studio Ops, Studio Hub, etc.):** Dev-category items are Low by default unless execution path is clear within 2 sessions. Process/protocol items can be High/Medium.
-
----
-
-### Step 6 — Commit
-
-Pick 1–2 brainstorm items. Add them to `context/TASK_BOARD.md` labeled `[SIL]`.
-
----
-
-### Step 7 — Append SIL entry (APPEND ONLY — never edit prior entries)
-
-Use this exact format:
-
-```markdown
-## YYYY-MM-DD — Session N | Total: XX/50 | Velocity: N | Debt: →
-Avgs — 3: XX.X | 5: XX.X | 10: XX.X | 25: — | all: XX.X
-  └ 3-session: Dev X.X | Align X.X | Momentum X.X | Engage X.X | Process X.X
+#### Score Table
 
 | Category | Score | vs Last | Notes |
 |---|---|---|---|
@@ -268,7 +141,98 @@ Avgs — 3: XX.X | 5: XX.X | 10: XX.X | 25: — | all: XX.X
 | Momentum | | ↑↓→ | |
 | Engagement | | ↑↓→ | |
 | Process Quality | | ↑↓→ | |
-| **Total** | **/50** | | |
+| **Total** | **/500** | | |
+
+---
+
+### Step 3.5 · IGNIS Note
+
+One sentence — what made this session distinctive, what you'd do differently, what pattern is emerging. Copied verbatim into the audit JSON `ignisNote` field (Step 8).
+
+---
+
+### Step 3.6 · Momentum Runway
+
+```
+momentumRunway = open_Now_items / silAvg_velocity_last3
+```
+
+- Velocity avg = 0 → write "N/A — architecture phase; pre-load TASK_BOARD recommended"
+- Runway ≤ 2 → flag: "Low momentum runway. Add items to Now before next session."
+
+**Intent completion rate:** `count(intentOutcome == "Achieved") / last-5 sessions` → flag if < 70%.
+
+Write both into the Rolling Status header (Step 2).
+
+---
+
+### Step 4 · Reflect
+
+- **Top win this session:**
+- **Top gap this session:**
+- **Intent outcome:** Achieved / Partial / Redirected — brief reason
+
+---
+
+### Step 4.5 · Human Action Required  *(mandatory — never skip)*
+
+Scan the full session for items only the Studio Owner can resolve: external service setup, manual approvals, financial actions, legal, decisions only the human can make.
+
+**If items exist:** write a `## Human Action Required` section in `context/LATEST_HANDOFF.md` and add to `context/TASK_BOARD.md` under `## Human Action Required` (separate from `## Blocked` — blocked = agent-resolvable).
+
+**If none:** confirm "No human action required this session." in closeout output.
+
+```
+- [ ] **{Item}** — {what's needed · where/how to do it · why it unblocks the project}
+```
+
+---
+
+### Step 4.6 · Truth Audit Refresh
+
+If this session changed `PROJECT_STATUS.json`, registry JSON, derived founder-facing Markdown, prompts/templates, or any contradiction from the prior truth audit — update `context/TRUTH_AUDIT.md`:
+
+- `Last reviewed` · `Overall status` · `Protocol Genome` · `Drift Heatmap` · `Recommended Actions`
+
+Also update `context/PROJECT_STATUS.json`: `truthAuditStatus` + `truthAuditLastRun`.
+
+---
+
+### Step 5 · Brainstorm
+
+Generate 3–5 innovative solutions, features, or improvements. Push past the obvious. Consider: what makes this 10× more useful? What technical debt is costing velocity? What's drifting from SOUL?
+
+Each item must include:
+1. **One-sentence synopsis**
+2. **Implementation path** — concrete first step (one sentence)
+3. **Execution probability** — High / Medium / Low
+
+> Low probability → **IGNIS Parking Lot** in `context/IGNIS_PROTOCOL.md` — not TASK_BOARD.
+> Infrastructure projects: Dev-category items are Low by default unless path is clear within 2 sessions.
+
+---
+
+### Step 6 · Commit
+
+Pick 1–2 brainstorm items. Add to `context/TASK_BOARD.md` labeled `[SIL]`.
+
+---
+
+### Step 7 · Append SIL Entry  *(append-only — never edit prior entries)*
+
+```markdown
+## YYYY-MM-DD — Session N | Total: XXX/500 | Velocity: N | Debt: →
+Avgs — 3: XXX.X | 5: XXX.X | 10: XXX.X | 25: — | all: XXX.X
+  └ 3-session: Dev XX.X | Align XX.X | Momentum XX.X | Engage XX.X | Process XX.X
+
+| Category | Score | vs Last | Notes |
+|---|---|---|---|
+| Dev Health | | ↑↓→ | |
+| Creative Alignment | | ↑↓→ | |
+| Momentum | | ↑↓→ | |
+| Engagement | | ↑↓→ | |
+| Process Quality | | ↑↓→ | |
+| **Total** | **/500** | | |
 
 **Top win:** [one sentence]
 **Top gap:** [one sentence]
@@ -284,43 +248,32 @@ Avgs — 3: XX.X | 5: XX.X | 10: XX.X | 25: — | all: XX.X
 
 ---
 
-### Step 8 — Write session audit record
+### Step 8 · Write Audit JSON
 
-Create `audits/YYYY-MM-DD.json`. If today's file already exists (multiple sessions in one day),
-suffix with `-2`, `-3`, etc. (e.g. `audits/2026-03-26-2.json`).
-
-This is the machine-readable complement to the Markdown SIL entry. It enables the Studio Hub
-and Studio Review agent to aggregate scores programmatically without parsing Markdown.
+Create `audits/YYYY-MM-DD.json`. Multiple sessions same day: suffix `-2`, `-3`, etc.
 
 ```json
 {
   "schemaVersion": "1.3",
-  "project": "{slug from context/PROJECT_STATUS.json}",
+  "project": "{slug}",
   "date": "YYYY-MM-DD",
   "session": N,
   "sessionType": "implementation",
-  "label": "{entry label, e.g. 'Bootstrap Baseline', or null}",
-  "calibration": true,
+  "label": null,
+  "calibration": false,
   "scores": {
-    "devHealth": N,
-    "creativeAlignment": N,
-    "momentum": N,
-    "engagement": N,
-    "processQuality": N
+    "devHealth": N, "creativeAlignment": N, "momentum": N,
+    "engagement": N, "processQuality": N
   },
   "total": N,
-  "maxScore": 50,
+  "maxScore": 500,
   "velocity": N,
   "protocolVelocity": null,
   "durationMinutes": null,
   "debt": "→",
   "rollingAvg3": {
-    "devHealth": null,
-    "creativeAlignment": null,
-    "momentum": null,
-    "engagement": null,
-    "processQuality": null,
-    "total": null
+    "devHealth": null, "creativeAlignment": null, "momentum": null,
+    "engagement": null, "processQuality": null, "total": null
   },
   "rollingAvgTotals": { "3": null, "5": null, "10": null, "25": null, "all": null },
   "topWin": "...",
@@ -337,59 +290,39 @@ and Studio Review agent to aggregate scores programmatically without parsing Mar
 }
 ```
 
-Use `null` for any score that could not be assessed (bootstrap/calibration sessions).
-Set `"calibration": false` once the project is past Session 3.
+**Field notes:**
+- `calibration`: `true` for sessions 1–3; `false` thereafter. Use `null` for unassessable scores during calibration.
+- `ignisFlags`: `high-velocity` · `low-velocity` · `creative-drift` · `debt-spike` · `debt-clear` · `intent-achieved` · `intent-redirected` · `compacted-resume` · `cdr-gap-recovered` · `blocker-cleared` · `sil-escalation`
+- `intentOutcome`: `"Achieved"` / `"Partial"` / `"Redirected"` — add matching flag to `ignisFlags`
+- `durationMinutes`: short sprint 30–45 · focused 60–90 · deep architecture 120–180 · marathon 180+
+- `ignisNote`: copy from Step 3.5 verbatim
 
-**ignisFlags** — choose from: `high-velocity`, `low-velocity`, `creative-drift`, `debt-spike`, `debt-clear`, `intent-achieved`, `intent-redirected`, `compacted-resume`, `cdr-gap-recovered`, `blocker-cleared`, `sil-escalation`. Leave `[]` if none apply.
-
-**intentOutcome** — IGNIS Loop A tracks this field (PROPOSAL-011). Use: `"Achieved"` / `"Partial"` / `"Redirected"`. Be accurate — this feeds the `intentCompletionRate` metric. Also add `"intent-achieved"` or `"intent-redirected"` flag to `ignisFlags` accordingly.
-
-**ignisNote** — the sentence written in Step 3.5. Copy it here verbatim.
-
-**durationMinutes** — estimate the session duration in minutes based on context (number of files touched, complexity of work, conversation length). Ranges: short sprint = 30–45 min; focused session = 60–90 min; deep architecture session = 120–180 min; marathon = 180+. Use `null` if unable to estimate. (PROPOSAL-004, accepted 2026-03-27)
-
-Also update `context/PROJECT_STATUS.json` SIL fields to match this session:
-- `silScore` → this session's `total`
-- `silAvg3` → `rollingAvg3.total` (or `null` during calibration)
-- `silVelocity` → `velocity`
-- `silDebt` → `debt`
-- `silLastSession` → `date`
+**Also update `context/PROJECT_STATUS.json`:** `silScore` · `silAvg3` · `silVelocity` · `silDebt` · `silLastSession`
 
 ---
 
-## Creative Direction Record — closeout (mandatory)
+## Creative Direction Record  *(mandatory)*
 
-Review the full session for any human direction given. This step is required at every closeout.
+Review the full session for any human direction. If resuming from a compacted/interrupted session, also review the prior session summary — CDR must cover ALL sessions.
 
-**If this session was picked up from a prior compacted/interrupted session (i.e. the conversation
-started with a summary rather than a fresh `start`), also review the summary for direction from
-that prior session. CDR entries must be written for ALL human direction — not just the current
-session window.**
-
-Append an entry to `docs/CREATIVE_DIRECTION_RECORD.md` for each of the following that occurred:
-- Creative direction of any kind (features, feel, scope, priorities)
-- Feature assignments or explicit goals set by the human
-- Brand, tone, visual, or quality guidance
-- Canon-affecting decisions
-- Any "do this / don't do this" instruction
+Append to `docs/CREATIVE_DIRECTION_RECORD.md` for any: creative direction (features, feel, scope, priorities), brand/tone/quality guidance, canon-affecting decisions, or explicit "do/don't do this" instructions.
 
 **ADDITIVE ONLY — never edit or delete existing entries.**
 
-If no direction was given this session, do not add a blank entry — simply confirm in the closeout
-output that CDR was reviewed and no new entries were needed.
+No direction this session → confirm "CDR reviewed — no new entries" in closeout output.
 
 ---
 
-## Required closeout output
+## Closeout Output
 
-Reply with a concise `Session Closeout` containing:
+Reply with a concise **Session Closeout** containing:
 
-1. **Intent outcome** — Achieved / Partial / Redirected (one sentence)
+1. **Intent outcome** — Achieved / Partial / Redirected + one sentence
 2. **Completed** — what was done
 3. **Files changed**
 4. **Validation status**
-5. **SIL summary** — scores, rolling avg, sparkline, velocity, debt delta, top win, top gap, committed items
+5. **SIL summary** — scores, rolling avg, sparkline, velocity, debt, top win, top gap, committed items
 6. **CDR** — direction recorded or "no new entries"
 7. **Open problems**
 8. **Recommended next action**
-9. **Read first next session** — exact file list in order
+9. **Read first next session** — file list in order
