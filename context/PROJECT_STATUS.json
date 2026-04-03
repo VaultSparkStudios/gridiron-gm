@@ -6,5 +6,9 @@
   "currentFocus": "Keep the public repository deployable and public-safe.",
   "nextMilestone": "Complete public-repo sanitization follow-through.",
   "blockers": [],
-  "lastUpdated": "2026-04-03"
+  "lastUpdated": "2026-04-03",
+  "lifecycle": "building",
+  "audience": "internal",
+  "truthAuditStatus": "green",
+  "truthAuditLastRun": "2026-04-03"
 }
