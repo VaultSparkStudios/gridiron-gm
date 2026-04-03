@@ -4,3 +4,4 @@ dist
 *.local
 Vaulted-PW.txt
 context/.session-lock
+.claude/
