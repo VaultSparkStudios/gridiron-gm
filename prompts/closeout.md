@@ -1,5 +1,5 @@
-<!-- template-version: 2.5 -->
-<!-- synced-from: studio-ops/prompts/closeout.md @ Session 58 (2026-04-12) -->
+<!-- template-version: 2.8 -->
+<!-- synced-from: studio-ops/prompts/closeout.md @ Session 64 (2026-04-13) -->
 # CLOSEOUT
 
 Executed when the user says only `closeout`.
@@ -58,6 +58,12 @@ Count concrete shipped items and group by type (auth, content, DX, observability
 **Velocity:** Count Now → Done tasks this session. Exclude `[SIL]` meta-tasks. → integer `Velocity: N`
 
 **Debt delta:** `↑` net new `[DEBT]` added · `↓` net resolved · `→` unchanged or none
+
+**Engagement data** *(infrastructure projects — run before Step 3 scoring)*:
+```bash
+node scripts/ops.mjs feedback-score --json
+```
+Outputs `proposalAcceptanceSubscore` (0–25) and `feedbackLoopHealthSubscore` (0–25) from `portfolio/FEEDBACK_LOOP_LEDGER.md`. Use these directly in the Engagement scoring table below.
 
 **Rolling averages** — look back at SIL entries in `context/SELF_IMPROVEMENT_LOOP.md`:
 
@@ -118,12 +124,12 @@ Last session: YYYY-MM-DD | Session N | Total: XXX/500 | Velocity: N | protocolVe
 #### Engagement /100
 
 **Infrastructure** (`infrastructure` / `internal-ops`):
-| Sub-score | Max | Measures |
-|---|---:|---|
-| Session Frequency | 25 | How often is the Studio Owner active in this project? |
-| Proposal Acceptance Rate | 25 | % of agent proposals/brainstorm items accepted |
-| Output Consumption | 25 | Are STUDIO_BRAIN / IGNIS_CORE being read and acted on? |
-| Feedback Loop Health | 25 | Brainstorm items reviewed; CDR entry rate; decisions logged |
+| Sub-score | Max | Measures | Auto-source |
+|---|---:|---|---|
+| Session Frequency | 25 | How often is the Studio Owner active in this project? | manual |
+| Proposal Acceptance Rate | 25 | % of agent proposals/brainstorm items accepted | `feedback-score --json` → `proposalAcceptanceSubscore` |
+| Output Consumption | 25 | Are STUDIO_BRAIN / IGNIS_CORE being read and acted on? | manual |
+| Feedback Loop Health | 25 | Brainstorm items reviewed; CDR entry rate; decisions logged | `feedback-score --json` → `feedbackLoopHealthSubscore` |
 
 **Product** (games, apps, live products):
 | Sub-score | Max | Measures |
@@ -331,20 +337,78 @@ Create `audits/YYYY-MM-DD.json`. Multiple sessions same day: suffix `-2`, `-3`, 
 
 ---
 
-### Step 8.5 · IGNIS Score Refresh  *(mandatory when SIL total changed ≥10 pts or protocol files changed)*
+### Step 8.5 · IGNIS Score Refresh
 
-Refresh this project's IGNIS score so `ignisScore` never goes stale after a meaningful session.
-
+**Check staleness first:**
 ```bash
-# From IGNIS repo root (adjust path as needed):
+# From studio-ops (if available):
+node scripts/ops.mjs rescore
+```
+
+**Re-score this project:**
+```bash
 npx tsx "<ignis-local-path>/cli.ts" score "<project-local-path>"
 ```
 
-After running:
-- Update `context/PROJECT_STATUS.json` → `ignisScore`, `ignisGrade`, `ignisLastComputed` if the score changed.
-- If score changed by ≥500 IQ points, note it in the closeout output and in the SIL entry brainstorm.
+**Required when:** `ignisLastComputed` ≥ 7 days ago OR SIL total changed ≥10 pts OR protocol files changed.
 
-**Skip this step if:** IGNIS repo unavailable (CI/remote), or velocity = 0 AND no protocol edits AND SIL total unchanged vs prior session. Do NOT skip when SIL total changed ≥10 pts — IGNIS reads the SIL score. Note "IGNIS score not refreshed — [reason]" in closeout output when skipped.
+After running: update `context/PROJECT_STATUS.json` → `ignisScore`, `ignisGrade`, `ignisLastComputed`.
+Note "IGNIS score not refreshed — [reason]" in closeout output when skipped.
+
+---
+
+### Step 8.6 · Render Startup Brief  *(run every closeout)*
+
+Pre-render the next session's startup brief so the next agent can fast-boot.
+
+```bash
+node scripts/render-startup-brief.mjs
+# or: node scripts/ops.mjs startup-brief
+```
+
+Writes `docs/STARTUP_BRIEF.md` — formatted startup brief for the next session.
+Fast-boot is valid if the file is < 24h old at next session start.
+If stale or if the session is > 24h later, start.md §3 (full file read) takes precedence.
+
+---
+
+### Step 8.7 · State Vector  *(run every closeout)*
+
+Regenerate the dense state snapshot for sub-10-second cold starts.
+
+```bash
+node scripts/ops.mjs state-vector
+```
+
+Writes `context/STATE_VECTOR.json` — single-file project state with source hash.
+
+---
+
+### Step 8.8 · Entropy + Genome  *(run every closeout)*
+
+Update protocol entropy score and append genome snapshot.
+
+```bash
+node scripts/ops.mjs entropy --update
+node scripts/ops.mjs genome-snapshot
+```
+
+- `entropy --update` writes `entropyScore` + `entropyLastComputed` to `context/PROJECT_STATUS.json`.
+- `genome-snapshot` appends current truth-audit genome scores to `context/GENOME_HISTORY.json`.
+
+Also run `node scripts/ops.mjs genome-history` if the genome score changed.
+
+---
+
+### Step 8.9 · Session Plan  *(run every closeout)*
+
+Generate the predictive plan for the next session.
+
+```bash
+node scripts/ops.mjs session-plan
+```
+
+Writes `docs/SESSION_PLAN.md` — predicted SIL range, stake-sorted agenda, risk flags, scope cap.
 
 ---
 
@@ -367,7 +431,7 @@ Reply with a concise **Session Closeout** containing:
 1. **Intent outcome** — Achieved / Partial / Redirected + one sentence
 2. **Completed** — what was done
 3. **Files changed**
-4. **Validation status**
+4. **Validation status** — including: IGNIS freshness (`ignisLastComputed` age; run `node scripts/ops.mjs rescore` if ≥7d), entropy score, genome dims (any drops vs prior snapshot)
 5. **SIL summary** — scores, rolling avg, sparkline, velocity, debt, top win, top gap, committed items
 6. **CDR** — direction recorded or "no new entries"
 7. **Open problems**
