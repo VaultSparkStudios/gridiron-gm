@@ -1,5 +1,5 @@
-<!-- template-version: 2.8 -->
-<!-- synced-from: studio-ops/prompts/closeout.md @ Session 64 (2026-04-13) -->
+<!-- template-version: 2.9 -->
+<!-- synced-from: studio-ops/prompts/closeout.md @ Session 66 (2026-04-13) -->
 # CLOSEOUT
 
 Executed when the user says only `closeout`.
@@ -339,32 +339,42 @@ Create `audits/YYYY-MM-DD.json`. Multiple sessions same day: suffix `-2`, `-3`, 
 
 ### Step 8.5 · IGNIS Score Refresh
 
-**Check staleness first:**
+**Check staleness first (one command):**
 ```bash
-# From studio-ops (if available):
 node scripts/ops.mjs rescore
 ```
+This shows per-project age. If current project is ≥7d stale, re-scoring is **required** — not optional.
 
-**Re-score this project:**
+**Re-score current project:**
 ```bash
+node scripts/ops.mjs rescore --project <slug>
+# Or directly:
 npx tsx "<ignis-local-path>/cli.ts" score "<project-local-path>"
 ```
 
-**Required when:** `ignisLastComputed` ≥ 7 days ago OR SIL total changed ≥10 pts OR protocol files changed.
+**Required when any of these are true:**
+- `ignisLastComputed` ≥ 7 days ago ← most common trigger
+- SIL total changed ≥ 10 pts this session
+- Protocol files (prompts, templates, AGENTS.md) changed
 
 After running: update `context/PROJECT_STATUS.json` → `ignisScore`, `ignisGrade`, `ignisLastComputed`.
-Note "IGNIS score not refreshed — [reason]" in closeout output when skipped.
+If score changed by ≥500 IQ points, note it in the SIL brainstorm.
+
+**Skip only if:** IGNIS repo unavailable (CI/remote) AND `ignisLastComputed` < 7 days ago. Note reason: "IGNIS score not refreshed — [reason]".
 
 ---
 
-### Step 8.6 · Render Startup Brief  *(run every closeout)*
+### Step 8.6 · Doctor Score + Render Startup Brief  *(run every closeout)*
 
-Pre-render the next session's startup brief so the next agent can fast-boot.
+First update the doctor score, then pre-render the startup brief.
 
 ```bash
+node scripts/ops.mjs doctor --update-json
 node scripts/render-startup-brief.mjs
 # or: node scripts/ops.mjs startup-brief
 ```
+
+`doctor --update-json` writes `doctorScore` to `context/PROJECT_STATUS.json` so the next session's startup brief shows the current health trend (Doctor signal in SIGNALS box).
 
 Writes `docs/STARTUP_BRIEF.md` — formatted startup brief for the next session.
 Fast-boot is valid if the file is < 24h old at next session start.
@@ -381,6 +391,7 @@ node scripts/ops.mjs state-vector
 ```
 
 Writes `context/STATE_VECTOR.json` — single-file project state with source hash.
+Any future agent can verify freshness via `vectorHash` before reading.
 
 ---
 
@@ -396,7 +407,7 @@ node scripts/ops.mjs genome-snapshot
 - `entropy --update` writes `entropyScore` + `entropyLastComputed` to `context/PROJECT_STATUS.json`.
 - `genome-snapshot` appends current truth-audit genome scores to `context/GENOME_HISTORY.json`.
 
-Also run `node scripts/ops.mjs genome-history` if the genome score changed.
+Also run `node scripts/ops.mjs genome-history` to re-render `docs/GENOME_HISTORY.md` if the genome score changed.
 
 ---
 
@@ -409,6 +420,49 @@ node scripts/ops.mjs session-plan
 ```
 
 Writes `docs/SESSION_PLAN.md` — predicted SIL range, stake-sorted agenda, risk flags, scope cap.
+The next session start prompt should read this file before loading TASK_BOARD.md.
+
+---
+
+### Step 8.10 · Genius List Refresh  *(run every closeout)*
+
+Generate fresh recommendations for next session — synthesises all state signals into a ranked hit list.
+
+```bash
+node scripts/ops.mjs genius-list
+```
+
+Writes `docs/GENIUS_LIST.md` and is automatically embedded in the startup brief.
+The list is regenerated fresh each session — do not skip.
+
+---
+
+### Step 8.11 · Protocol Changelog  *(run every closeout)*
+
+Auto-append a changelog entry if any prompt or template files changed this session.
+
+```bash
+node scripts/ops.mjs protocol-changelog
+```
+
+No-ops if no protocol files changed. Writes `docs/PROTOCOL_CHANGELOG.md`.
+
+---
+
+### Step 8.12 · Portfolio Freshness Check  *(run when IGNIS or content state changed)*
+
+After major sessions (velocity ≥ 5, protocol changes, or template propagation):
+
+```bash
+# Check IGNIS staleness across all projects — score any ≥ 7d stale:
+node scripts/ops.mjs rescore
+
+# Refresh content pipeline readiness matrix:
+node scripts/ops.mjs content-pipeline
+```
+
+The rescore command shows a staleness table; use `--project <slug>` or `--stale` to trigger scoring.
+Skip if velocity = 0 and no protocol changes. Note "portfolio freshness check skipped — [reason]".
 
 ---
 
@@ -426,14 +480,71 @@ No direction this session → confirm "CDR reviewed — no new entries" in close
 
 ## Closeout Output
 
-Reply with a concise **Session Closeout** containing:
+Reply with the **CLOSEOUT STATUS BOARD** below. Fill every field — do not omit sections.
+Use `✓` for done, `□` for pending/skipped (with reason), `—` for not-applicable.
 
-1. **Intent outcome** — Achieved / Partial / Redirected + one sentence
-2. **Completed** — what was done
-3. **Files changed**
-4. **Validation status** — including: IGNIS freshness (`ignisLastComputed` age; run `node scripts/ops.mjs rescore` if ≥7d), entropy score, genome dims (any drops vs prior snapshot)
-5. **SIL summary** — scores, rolling avg, sparkline, velocity, debt, top win, top gap, committed items
-6. **CDR** — direction recorded or "no new entries"
-7. **Open problems**
-8. **Recommended next action**
-9. **Read first next session** — file list in order
+**Score bars:** 20-char progress bar for each /100 score: `█` per 5 pts.
+**Overall bar:** 24-char bar for /500 total.
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  SESSION CLOSEOUT  ·  Session N  ·  YYYY-MM-DD                  ║
+║  Intent: [ACHIEVED ✓ / PARTIAL ⚠ / REDIRECTED →]               ║
+║  {One sentence: what happened vs declared intent}                ║
+╠══ WHAT SHIPPED ═══════════════════════════════════════════════════╣
+║  N items across N groups                                          ║
+║  • Group 1:  item · item · item                                   ║
+║  • Group 2:  item · item                                          ║
+╠══ SCORES ══════════════════════════════════════════════════════════╣
+║                                                                    ║
+║  Dev Health    NNN  ████████████████████░░░  ↑↓→                 ║
+║  Alignment     NNN  ████████████████████░░░  ↑↓→                 ║
+║  Momentum      NNN  ████████████████░░░░░░░  ↑↓→                 ║
+║  Engagement    NNN  ████████████████████░░░  ↑↓→                 ║
+║  Process Qual  NNN  ████████████████████░░░  ↑↓→                 ║
+║                                                                    ║
+║  TOTAL  NNN/500  ████████████████████████░░░░  ↑↓→ NNN pts       ║
+║  Sparkline: ▇█▆▆█  Avg3: NNN.N  Velocity: N  Debt: ↑↓→          ║
+║                                                                    ║
+║  Top win:  {one sentence}                                          ║
+║  Top gap:  {one sentence}                                          ║
+║  Committed [SIL]:  item · item                                     ║
+╠══ WRITE-BACK STATUS ══════════════════════════════════════════════╣
+║                                                                    ║
+║  [✓/□] CURRENT_STATE.md        [✓/□] TASK_BOARD.md               ║
+║  [✓/□] LATEST_HANDOFF.md       [✓/□] WORK_LOG.md                 ║
+║  [✓/□] DECISIONS.md            [✓/□] SELF_IMPROVEMENT_LOOP.md    ║
+║  [✓/□] CDR reviewed/updated    [✓/□] TRUTH_AUDIT.md              ║
+║  [✓/□] Audit JSON written      [✓/□] PROJECT_STATUS.json         ║
+║  [✓/□] IGNIS refreshed         [✓/□] Startup brief rendered      ║
+║  [✓/□] State vector updated    [✓/□] Entropy + Genome updated    ║
+║  [✓/□] Session plan generated  [✓/□] Genius list generated       ║
+║  [✓/□] Protocol changelog      [✓/□] [SIL:N] counters incremented║
+║  [✓/□] Portfolio rescore check [✓/□] Content pipeline refreshed  ║
+║                                                                    ║
+╠══ GIT STATUS ══════════════════════════════════════════════════════╣
+║                                                                    ║
+║  [✓/□] Staged:     {N files staged}                               ║
+║  [✓/□] Committed:  {commit hash} — {commit message}               ║
+║  [✓/□] Pushed:     main ✓  /  pending  /  N/A                    ║
+║  [✓/□] Session lock: context/.session-lock CLEARED                ║
+║                                                                    ║
+╠══ POST-SESSION SIGNALS ═══════════════════════════════════════════╣
+║  {✓/⚠/⛔}  Tests       {N/N passing · delta: ±N}                 ║
+║  {✓/⚠/⛔}  CDR         {current / gap: N sessions}               ║
+║  {✓/⚠/⛔}  Runway      {~N.N sessions}                           ║
+║  {✓/⚠/⛔}  IGNIS       {score · Nd old}                          ║
+║  {✓/⚠/⛔}  Entropy     {score (healthy/elevated/high)}            ║
+║  {✓/⚠}    Genome       {all stable / drop: dim X→Y}              ║
+║  {✓/⚠/⛔}  Templates   {v2.9 aligned / drift}                    ║
+╠══ NEXT SESSION ════════════════════════════════════════════════════╣
+║  Priority:   {top Now-bucket item}                                 ║
+║  Load first: LATEST_HANDOFF → TASK_BOARD → SIL header → GENIUS   ║
+║  Human action needed:  {items or "none"}                           ║
+╚════════════════════════════════════════════════════════════════════╝
+```
+
+**CDR line:** "CDR reviewed — {new entry added / no new entries this session}"
+
+**Score bar guide:**  `/100` → 20 chars, 1 █ per 5 pts · `/500` → 24 chars, 1 █ per ~21 pts
+Example: score 89 → `█████████████████░░░` (17 filled + 3 empty)

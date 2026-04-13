@@ -1,5 +1,5 @@
-<!-- template-version: 2.8 -->
-<!-- synced-from: studio-ops/prompts/start.md @ Session 64 (2026-04-13) -->
+<!-- template-version: 2.9 -->
+<!-- synced-from: studio-ops/prompts/start.md @ Session 66 (2026-04-13) -->
 # START
 
 Executed when the user says only `start`.
@@ -99,89 +99,108 @@ From the Rolling Status header (no extra reads):
 
 ---
 
-## 6 · Output — Startup Brief
+## 6 · Output — Startup Brief  *(v2.7 visual format)*
+
+Render the startup brief using box-drawing UI. If `docs/STARTUP_BRIEF.md` exists and is < 24h old, read it and output it directly. Otherwise build from loaded context using the template below.
+
+**Score bars:** `/100` categories → 20-char bar, 1 █ per 5 pts · `/500` total → 24-char bar, 1 █ per ~21 pts
+**Trend arrows:** compare last session score vs 3-session avg: ↑ (+2 or more) · ↓ (−2 or more) · → (stable)
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  STARTUP BRIEF — {Project Name}
-  {YYYY-MM-DD} · Session {N} · {BUILDER / FOUNDER MODE}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+╔══════════════════════════════════════════════════════════════════╗
+║  STARTUP BRIEF  ·  {Project Name}                               ║
+║  {YYYY-MM-DD}  ·  Session {N}  ·  BUILDER MODE                  ║
+║  {type}  ·  {lifecycle}/{audience}  ·  {owner}                  ║
+╚══════════════════════════════════════════════════════════════════╝
 
-  IDENTITY     {type} · {lifecycle}/{audience} · {owner}
-  STATE        {current phase and overall health}
-  PRIORITIES   Now: {task} · Next: {task}
-  CONSTRAINTS  {key constraints or limits}
-  PREDICTION   {predicted SIL range} · {trend} · cap {N}  *(SESSION_PLAN.md — omit if > 48h old)*
+╔══ SCORE ══════════════════════════════════════════════════════════╗
+║                                                                    ║
+║  {total}/500   ████████████████████████░░░░   {pct}%              ║
+║  Trend  {sparkline}  {↑↓→}  ·  Avg3: {avg3}  ·  Days since: {N} ║
+║                                                                    ║
+║  Dev Health    {nn}  ████████████████████░░░  {↑↓→}              ║
+║  Alignment     {nn}  ████████████████████░░░  {↑↓→}              ║
+║  Momentum      {nn}  ████████████████░░░░░░░  {↑↓→}              ║
+║  Engagement    {nn}  ████████████████████░░░  {↑↓→}              ║
+║  Process Qual  {nn}  ████████████████████░░░  {↑↓→}              ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  WHERE WE LEFT OFF  (Session {N-1})
-  Shipped    {N improvements across N groups — group1, group2, ...}
-  Tests      {N passing · delta: +N/-N}  or  N/A
-  Deploy     {env · auto / manual / N/A}
+╔══ WHERE WE LEFT OFF  ·  Session {N-1} ════════════════════════════╗
+║  Shipped:  {N items across N groups — group1, group2}              ║
+║  Tests:    {N passing · delta: ±N}  ·  Deploy: {status}           ║
+╚════════════════════════════════════════════════════════════════════╝
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  DASHBOARD
-  SIL    ██████████████████░░ {total}/500  {sparkline}  Avg: {n.n}
-         Dev {nn}{↑↓→} │ Align {nn}{↑↓→} │ Momentum {nn}{↑↓→} │ Engage {nn}{↑↓→} │ Process {nn}{↑↓→}
-  FLOW   Velocity: {N}{↑↓→} │ Debt: {↑↓→} │ Runway: ~{n.n} sessions │ Days since: {N} │ Ctx: {N}d
-  IGNIS  {n}/100K ({TIER}) │ Compliance: {n}/{total}
-  TRUTH  {green|yellow|red|unknown} │ Genome: {n}/25
+╔══ SIGNALS ════════════════════════════════════════════════════════╗
+║  {✓/⚠/⛔}  Tests        {N passing · delta ±N}                   ║
+║  {✓/⚠/⛔}  Velocity     {N ↑↓→}  ·  Debt: {↑↓→}  Runway: {N.N} ║
+║  {✓/⚠/⛔}  Context age  {N}d old                                  ║
+║  {✓/⚠/⛔}  IGNIS        {score} {TIER}  ·  {N}d old              ║
+║  {✓/⚠/⛔}  Truth        {status}  ·  Genome: {n}/25               ║
+║  {✓/⚠}    Genome dims  {all stable / drop: dim X→Y}              ║
+║  {✓/⚠/⛔}  Entropy      {score}  ({healthy/elevated/high})         ║
+║  {✓/⚠}    CDR          {no gap / gap: N sessions}                 ║
+║  {✓/⚠}    Templates    {v2.9 aligned / drift detected}            ║
+║  {✓/⚠/⛔}  Revenue sig. {N}d old  {✓ fresh / ⚠ stale}            ║
+╚════════════════════════════════════════════════════════════════════╝
 
-  SIGNALS
-  {✓|⚠|⛔} Compliance    {status}
-  {✓|⚠|⛔} Tests         {status}
-  {✓|⚠|⛔} CI            {status}
-  {✓|⚠|⛔} Velocity      {status}
-  {✓|⚠|⛔} Runway        {status}
-  {✓|⚠|⛔} IGNIS         {score · Nd old · run rescore if ≥7d}
-  {✓|⚠}   Genome dims   {all stable / drop: dim X→Y}
-  {✓|⚠|⛔} Entropy       {score (healthy/elevated/high)}
-  {✓|⚠}   CDR Gap       {status}
+╔══ PREDICTION  ·  SESSION_PLAN.md ════════════════════════════════╗  ← omit if > 48h
+║  Session {N}:  {range}/500  {trend}  ·  Scope cap: {N} tasks     ║
+╚════════════════════════════════════════════════════════════════════╝
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  NEXT MOVE    {specific recommended action}
-  BLOCKERS     {open blockers or "None"}
-  [SIL] FLAGS  {escalated items or "None"}
+╔══ NOW BUCKET  ({N} items) ════════════════════════════════════════╗
+║  1.  {task title}                                                  ║
+║  2.  {task title}                                                  ║
+╚════════════════════════════════════════════════════════════════════╝
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  IGNIS INSIGHT  ignisScore: {N}/100K ({TIER})
-  Top pattern: {most relevant IGNIS pattern}
-  Brainstorm rate: {brainstorm_conversion_rate}%  Intent rate: {intentCompletionRate}% (last 5)
-  {One synthesised observation from portfolio/IGNIS_CORE.md — velocity trend, engagement gap,
-   creative drift, stall pattern, runway warning, or applicable canon decision.
-   Write "— insufficient data (UNTRACKED)" if no project entry.}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  CANON CHECK    {Canon decision relevant to this session's planned work — or "none applicable"}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+╔══ NEXT  (top 3 of {N}) ════════════════════════════════════════════╗
+║  1.  {task title}                                                   ║
+╚════════════════════════════════════════════════════════════════════╝
+
+╔══ GENIUS HIT LIST  ·  Session {N} ════════════════════════════════╗
+║  Fresh synthesis · all categories · ranked by impact              ║
+║                                                                    ║
+║  🔥 1  [CAT]  {title}                                             ║
+║         {one-line rationale}                                       ║
+║         ↳ {command if applicable}                                  ║
+║                                                                    ║
+║  ⚡ 2  [CAT]  {title}                                             ║
+║  ...                                                               ║
+╚════════════════════════════════════════════════════════════════════╝
 ```
 
-### DASHBOARD sources  *(all from files already loaded — no extra reads)*
+*(Followed by IGNIS INSIGHT and CANON CHECK as plain text below the box)*
+
+### Brief sources  *(all from files already loaded — no extra reads)*
 
 | Field | Source |
 |---|---|
-| SIL bar · Avgs · FLOW · sparkline | `SELF_IMPROVEMENT_LOOP.md` Rolling Status header |
+| Score bar · per-category bars · sparkline · Avgs | `SELF_IMPROVEMENT_LOOP.md` Rolling Status header + last entry scores |
 | Days since | `Last session:` date vs today |
-| IGNIS score | `context/PROJECT_STATUS.json` → `ignisScore` |
-| TRUTH / Genome | `context/TRUTH_AUDIT.md` (or `unknown` if absent) |
-| Compliance count | `context/CURRENT_STATE.md` |
-| Context age (Ctx) | `Last updated:` date in `context/CURRENT_STATE.md` vs today |
-| CDR Gap | Last entry date in `docs/CREATIVE_DIRECTION_RECORD.md` vs `Last updated:` in `context/LATEST_HANDOFF.md` |
-| Prediction row | `docs/SESSION_PLAN.md` → `generated-at` comment; if < 48h: show predicted SIL range + trend + scope cap. Rendered automatically by `render-startup-brief.mjs`. |
+| IGNIS score | `context/PROJECT_STATUS.json` → `ignisScore`, `ignisGrade`, `ignisLastComputed` |
+| Truth / Genome | `context/TRUTH_AUDIT.md` → `context/PROJECT_STATUS.json` |
+| Context age | `Last updated:` in `context/CURRENT_STATE.md` vs today |
+| CDR Gap | Last `YYYY-MM-DD` entry in `docs/CREATIVE_DIRECTION_RECORD.md` vs `Last updated:` in `context/LATEST_HANDOFF.md` |
+| Templates | Compare `template-version:` in `prompts/start.md` vs `START_PROMPT.template.md` |
+| Revenue signals | `Generated:` date in `portfolio/REVENUE_SIGNALS.md` vs today |
+| Prediction | `docs/SESSION_PLAN.md` `generated-at` comment; include only if < 48h old |
+| Genius Hit List | `docs/GENIUS_LIST.md` if present; else call `scripts/generate-genius-list.mjs --brief` |
 
-**SIL bar:** 20 chars · █ per 25 pts · ░ remainder
-
-**SIGNALS thresholds:**
-- Compliance: ✓ 20/20 · ⚠ >15 · ⛔ ≤15
-- Tests: ✓ passing + delta ≥0 · ⚠ delta <0 · ⛔ failing · *omit if N/A*
-- CI: ✓ green · ⚠ unknown · ⛔ failing
-- Velocity: ✓ ≥2 or ↑ · ⚠ 1 stable · ⛔ 0 or ↓
+**Signal thresholds:**
+- Tests: ✓ passing + delta ≥0 · ⚠ delta <0 · ⛔ failing
+- Velocity: ✓ ≥2 · ⚠ 1 · ⛔ 0
 - Runway: ✓ >4 · ⚠ 2–4 · ⛔ ≤2
-- CDR Gap: ✓ last CDR entry date ≥ last LATEST_HANDOFF date · ⚠ CDR predates LATEST_HANDOFF (gap — flag and recover at closeout)
-- Context age: ✓ CURRENT_STATE ≤ 7 days · ⚠ 8–14 days · ⛔ >14 days (shown in FLOW Ctx field)
+- Context age: ✓ ≤7d · ⚠ 8–14d · ⛔ >14d
+- IGNIS: ✓ <7d · ⚠ 7–14d · ⛔ >14d  ← re-score via `node scripts/ops.mjs rescore`
+- Genome dims: ✓ no drops vs prior snapshot · ⚠ any dimension dropped
+- Entropy: ✓ <0.3 (healthy) · ⚠ 0.3–0.6 (elevated) · ⛔ >0.6 (high)
+- CDR Gap: ✓ last CDR date ≥ LATEST_HANDOFF date · ⚠ CDR predates LATEST_HANDOFF
+- Templates: ✓ versions match · ⚠ drift
+- Revenue: ✓ ≤7d · ⚠ 8–14d · ⛔ >14d
 
-**IGNIS INSIGHT:** Read only the project section in `portfolio/IGNIS_CORE.md`. Pull ignisScore, grade, brainstorm_conversion_rate, and one project-specific observation. If synthesis is older than `PROJECT_STATUS.json → ignisLastComputed` or flagged stale by truth audit, label it explicitly as stale. Write `UNTRACKED` if no project entry exists.
+**IGNIS INSIGHT:** Read project section in `portfolio/IGNIS_CORE.md`. One synthesised observation. Label stale if `ignisLastComputed` older than IGNIS_CORE.md. Write `UNTRACKED` if no entry.
 
-**CANON CHECK:** Scan `docs/STUDIO_CANON.md` for decisions relevant to this session's planned work. Surface at most 1–2. Optional — skip if not working on protocol, templates, or initiation.
+**CANON CHECK:** `docs/STUDIO_CANON.md` — at most 1–2 relevant decisions. Omit if no protocol work planned.
 
 ---
 
@@ -196,9 +215,7 @@ Log the declared intent in `context/LATEST_HANDOFF.md` under `Session Intent:`.
 **Scope check** — immediately after logging intent:
 - Count open Now items + work implied by the declared intent
 - Compare to avg velocity in Rolling Status header
+- Compute **sessionScopeCap** = `floor(lastVelocity × 1.5)` where `lastVelocity` = `Velocity: N` from Rolling Status header
 - If declared scope > 2× recent avg velocity → flag: "⚠ Scope may exceed one session (velocity avg: {N}). Consider splitting or tracking as partial intent."
+- If declared scope items > sessionScopeCap → note: "Scope cap: {cap} items. Items beyond cap: {list — lowest priority first}. Recommend deferring to Next or a follow-up session."
 - If avg velocity = 0 → note: "No recent velocity baseline — scope is uncertain; track partial completion explicitly."
-
-**Key rules:**
-- SPARKED projects must have staging before deploying. See `docs/STAGING_PROTOCOL.md`.
-- Every public-facing project needs VaultSpark Studios branding. See CANON-006 in `docs/STUDIO_CANON.md`.
