@@ -1,5 +1,5 @@
-<!-- template-version: 2.9 -->
-<!-- synced-from: studio-ops/prompts/closeout.md @ Session 66 (2026-04-13) -->
+<!-- template-version: 3.0 -->
+<!-- synced-from: studio-ops/prompts/closeout.md @ Session 63 (2026-04-13) -->
 # CLOSEOUT
 
 Executed when the user says only `closeout`.
@@ -341,13 +341,13 @@ Create `audits/YYYY-MM-DD.json`. Multiple sessions same day: suffix `-2`, `-3`, 
 
 **Check staleness first (one command):**
 ```bash
-node scripts/ops.mjs rescore
+node ../vaultspark-studio-ops/scripts/ops.mjs rescore
 ```
 This shows per-project age. If current project is ≥7d stale, re-scoring is **required** — not optional.
 
 **Re-score current project:**
 ```bash
-node scripts/ops.mjs rescore --project <slug>
+node ../vaultspark-studio-ops/scripts/ops.mjs rescore --project <slug>
 # Or directly:
 npx tsx "<ignis-local-path>/cli.ts" score "<project-local-path>"
 ```
@@ -364,101 +364,62 @@ If score changed by ≥500 IQ points, note it in the SIL brainstorm.
 
 ---
 
-### Step 8.6 · Doctor Score + Render Startup Brief  *(run every closeout)*
+### Step 8.6 · Doctor Score + State Vector  *(run every closeout)*
 
-First update the doctor score, then pre-render the startup brief.
+> **Scope note:** The ops scripts live in the `vaultspark-studio-ops/` repo, which is a sibling of every project in the Studio ecosystem. All commands below use that path. `doctor`, `startup-brief`, `session-plan`, `genius-list`, and `protocol-changelog` are **studio-ops-level** — they read/write the studio-ops repo's own files, not this project's. The per-project commands use `--project .` and write to *this* project's `context/` and `docs/` directories.
+
+Run the portfolio health check, then generate this project's state snapshot.
 
 ```bash
-node scripts/ops.mjs doctor --update-json
-node scripts/render-startup-brief.mjs
-# or: node scripts/ops.mjs startup-brief
+# Portfolio health check — writes to studio-ops context/ (not this project)
+node ../vaultspark-studio-ops/scripts/ops.mjs doctor --update-json
+
+# Per-project state snapshot — writes to THIS project's context/STATE_VECTOR.json
+node ../vaultspark-studio-ops/scripts/ops.mjs state-vector --project .
 ```
 
-`doctor --update-json` writes `doctorScore` to `context/PROJECT_STATUS.json` so the next session's startup brief shows the current health trend (Doctor signal in SIGNALS box).
-
-Writes `docs/STARTUP_BRIEF.md` — formatted startup brief for the next session.
-Fast-boot is valid if the file is < 24h old at next session start.
-If stale or if the session is > 24h later, start.md §3 (full file read) takes precedence.
+`state-vector --project .` generates a dense single-file snapshot of this project's state with a source hash. Any future agent can verify freshness via `vectorHash` before reading.
 
 ---
 
-### Step 8.7 · State Vector  *(run every closeout)*
+### Step 8.7 · Entropy + Genome  *(run every closeout)*
 
-Regenerate the dense state snapshot for sub-10-second cold starts.
+Update protocol entropy score and append genome snapshot for this project.
 
 ```bash
-node scripts/ops.mjs state-vector
+node ../vaultspark-studio-ops/scripts/ops.mjs entropy --update --project .
+node ../vaultspark-studio-ops/scripts/ops.mjs genome-snapshot --project .
 ```
 
-Writes `context/STATE_VECTOR.json` — single-file project state with source hash.
-Any future agent can verify freshness via `vectorHash` before reading.
+- `entropy --update --project .` writes `entropyScore` + `entropyLastComputed` to this project's `context/PROJECT_STATUS.json`.
+- `genome-snapshot --project .` appends current truth-audit genome scores to this project's `context/GENOME_HISTORY.json`.
+
+Also run `node ../vaultspark-studio-ops/scripts/ops.mjs genome-history --project .` to re-render `docs/GENOME_HISTORY.md` if the genome score changed.
 
 ---
 
-### Step 8.8 · Entropy + Genome  *(run every closeout)*
+### Step 8.8 · Session Plan + Genius List  *(studio-ops-level — skip for per-project closeouts)*
 
-Update protocol entropy score and append genome snapshot.
-
-```bash
-node scripts/ops.mjs entropy --update
-node scripts/ops.mjs genome-snapshot
-```
-
-- `entropy --update` writes `entropyScore` + `entropyLastComputed` to `context/PROJECT_STATUS.json`.
-- `genome-snapshot` appends current truth-audit genome scores to `context/GENOME_HISTORY.json`.
-
-Also run `node scripts/ops.mjs genome-history` to re-render `docs/GENOME_HISTORY.md` if the genome score changed.
+> These commands write to the **studio-ops repo** (`docs/SESSION_PLAN.md`, `docs/GENIUS_LIST.md`), not to this project. They produce portfolio-level output and are useful only when closing out a studio-ops session itself. Skip during per-project closeouts and note: "session-plan / genius-list skipped — studio-ops-level commands; no per-project output."
 
 ---
 
-### Step 8.9 · Session Plan  *(run every closeout)*
+### Step 8.9 · Protocol Changelog  *(studio-ops-level — skip for per-project closeouts)*
 
-Generate the predictive plan for the next session.
-
-```bash
-node scripts/ops.mjs session-plan
-```
-
-Writes `docs/SESSION_PLAN.md` — predicted SIL range, stake-sorted agenda, risk flags, scope cap.
-The next session start prompt should read this file before loading TASK_BOARD.md.
+> `protocol-changelog` tracks changes to prompt/template files inside the studio-ops repo. It does not track changes in this project's `prompts/` directory. Skip during per-project closeouts and note: "protocol-changelog skipped — studio-ops-level command."
 
 ---
 
-### Step 8.10 · Genius List Refresh  *(run every closeout)*
-
-Generate fresh recommendations for next session — synthesises all state signals into a ranked hit list.
-
-```bash
-node scripts/ops.mjs genius-list
-```
-
-Writes `docs/GENIUS_LIST.md` and is automatically embedded in the startup brief.
-The list is regenerated fresh each session — do not skip.
-
----
-
-### Step 8.11 · Protocol Changelog  *(run every closeout)*
-
-Auto-append a changelog entry if any prompt or template files changed this session.
-
-```bash
-node scripts/ops.mjs protocol-changelog
-```
-
-No-ops if no protocol files changed. Writes `docs/PROTOCOL_CHANGELOG.md`.
-
----
-
-### Step 8.12 · Portfolio Freshness Check  *(run when IGNIS or content state changed)*
+### Step 8.10 · Portfolio Freshness Check  *(run when IGNIS or content state changed)*
 
 After major sessions (velocity ≥ 5, protocol changes, or template propagation):
 
 ```bash
 # Check IGNIS staleness across all projects — score any ≥ 7d stale:
-node scripts/ops.mjs rescore
+node ../vaultspark-studio-ops/scripts/ops.mjs rescore
 
 # Refresh content pipeline readiness matrix:
-node scripts/ops.mjs content-pipeline
+node ../vaultspark-studio-ops/scripts/ops.mjs content-pipeline
 ```
 
 The rescore command shows a staleness table; use `--project <slug>` or `--stale` to trigger scoring.
@@ -516,11 +477,10 @@ Use `✓` for done, `□` for pending/skipped (with reason), `—` for not-appli
 ║  [✓/□] DECISIONS.md            [✓/□] SELF_IMPROVEMENT_LOOP.md    ║
 ║  [✓/□] CDR reviewed/updated    [✓/□] TRUTH_AUDIT.md              ║
 ║  [✓/□] Audit JSON written      [✓/□] PROJECT_STATUS.json         ║
-║  [✓/□] IGNIS refreshed         [✓/□] Startup brief rendered      ║
-║  [✓/□] State vector updated    [✓/□] Entropy + Genome updated    ║
-║  [✓/□] Session plan generated  [✓/□] Genius list generated       ║
-║  [✓/□] Protocol changelog      [✓/□] [SIL:N] counters incremented║
-║  [✓/□] Portfolio rescore check [✓/□] Content pipeline refreshed  ║
+║  [✓/□] IGNIS refreshed         [✓/□] State vector (--project .)  ║
+║  [✓/□] Entropy+Genome (proj.)  [—] Session plan (studio-ops only)║
+║  [—] Genius list (s-ops only)  [—] Protocol changelog (s-ops)    ║
+║  [✓/□] [SIL:N] counters incr.  [✓/□] Portfolio rescore check     ║
 ║                                                                    ║
 ╠══ GIT STATUS ══════════════════════════════════════════════════════╣
 ║                                                                    ║

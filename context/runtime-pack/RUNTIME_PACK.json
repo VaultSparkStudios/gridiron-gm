@@ -1,0 +1,316 @@
+{
+  "generatedAt": "2026-04-15T19:40:42.936Z",
+  "packVersion": "1.0",
+  "project": {
+    "slug": "gridiron-gm",
+    "name": "Gridiron GM",
+    "repo": "VaultSparkStudios/gridiron-gm",
+    "localPath": "C:\\Users\\p4cka\\documents\\development\\Gridiron-GM"
+  },
+  "sourceTemplates": {
+    "agents": "docs/templates/project-system/AGENTS_PROJECT.template.md",
+    "startPrompt": "docs/templates/project-system/START_PROMPT.template.md",
+    "closeoutPrompt": "docs/templates/project-system/CLOSEOUT_PROMPT.template.md",
+    "manifest": "docs/templates/project-system/STUDIO_MANIFEST.template.json",
+    "projectStatus": "docs/templates/project-system/PROJECT_STATUS.template.json",
+    "claudeSettings": "docs/templates/project-system/CLAUDE_SETTINGS.template.json"
+  },
+  "scorecard": {
+    "requiredFilesPresent": 15,
+    "requiredFilesTotal": 15,
+    "missingRequired": [],
+    "hasManifest": false,
+    "hasProjectStatus": true,
+    "studioOsApplied": true,
+    "hubReady": true,
+    "templateVersion": "3.2"
+  },
+  "requiredFiles": [
+    {
+      "file": "AGENTS.md",
+      "exists": true
+    },
+    {
+      "file": "context/PROJECT_BRIEF.md",
+      "exists": true
+    },
+    {
+      "file": "context/SOUL.md",
+      "exists": true
+    },
+    {
+      "file": "context/BRAIN.md",
+      "exists": true
+    },
+    {
+      "file": "context/CURRENT_STATE.md",
+      "exists": true
+    },
+    {
+      "file": "context/TRUTH_AUDIT.md",
+      "exists": true
+    },
+    {
+      "file": "context/TASK_BOARD.md",
+      "exists": true
+    },
+    {
+      "file": "context/LATEST_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "file": "context/DECISIONS.md",
+      "exists": true
+    },
+    {
+      "file": "context/SELF_IMPROVEMENT_LOOP.md",
+      "exists": true
+    },
+    {
+      "file": "context/PROJECT_STATUS.json",
+      "exists": true
+    },
+    {
+      "file": "docs/CREATIVE_DIRECTION_RECORD.md",
+      "exists": true
+    },
+    {
+      "file": "prompts/start.md",
+      "exists": true
+    },
+    {
+      "file": "prompts/closeout.md",
+      "exists": true
+    },
+    {
+      "file": "logs/WORK_LOG.md",
+      "exists": true
+    }
+  ],
+  "runtimeAssets": {
+    "prompts": [
+      "prompts/start.md",
+      "prompts/closeout.md"
+    ],
+    "skills": [
+      "studio-closeout",
+      "studio-genius-refresh",
+      "studio-start"
+    ],
+    "hooks": [
+      "pre-push"
+    ],
+    "mcpConfigTemplate": ".claude/settings.local.json"
+  },
+  "listingMetadata": {
+    "canonicalSummary": "Football general manager simulation game.",
+    "tagline": "Core gameplay loop.",
+    "tags": [
+      "game",
+      "active",
+      "building"
+    ],
+    "categories": [
+      "game",
+      "internal"
+    ],
+    "hubDescription": "Core gameplay loop.",
+    "websiteDescription": "Football general manager simulation game.",
+    "socialDescription": "Football general manager simulation game.",
+    "brandingLabel": "Powered by VaultSpark Studios"
+  },
+  "manifest": {
+    "schemaVersion": "1.0",
+    "generatedFrom": "ops runtime-pack synthesized manifest",
+    "synthesized": true,
+    "identity": {
+      "slug": "gridiron-gm",
+      "name": "Gridiron GM",
+      "repo": "VaultSparkStudios/gridiron-gm",
+      "owner": "VaultSpark Studios",
+      "type": "game",
+      "lifecycle": "building",
+      "audience": "internal",
+      "vaultStatus": "VAULTED"
+    },
+    "studioOs": {
+      "applied": true,
+      "templateVersion": "3.2",
+      "complianceVersion": "1.5",
+      "sessionModeDefault": "builder",
+      "requiredFilesPresent": false
+    },
+    "listingMetadata": {
+      "canonicalSummary": "Football general manager simulation game.",
+      "tagline": "Core gameplay loop.",
+      "tags": [
+        "game",
+        "active",
+        "building"
+      ],
+      "categories": [
+        "game",
+        "internal"
+      ],
+      "hubDescription": "Core gameplay loop.",
+      "websiteDescription": "Football general manager simulation game.",
+      "socialDescription": "Football general manager simulation game.",
+      "brandingLabel": "Powered by VaultSpark Studios"
+    },
+    "surfaces": {
+      "local": [
+        {
+          "label": "workspace",
+          "path": "C:\\Users\\p4cka\\documents\\development\\Gridiron-GM"
+        }
+      ],
+      "staging": [],
+      "production": [],
+      "preview": [],
+      "admin": [],
+      "api": [],
+      "docs": [],
+      "github": [
+        {
+          "label": "repo",
+          "url": "https://github.com/VaultSparkStudios/gridiron-gm"
+        }
+      ],
+      "testing": []
+    },
+    "capabilities": {
+      "auth": false,
+      "payments": false,
+      "analytics": false,
+      "email": false,
+      "ai": false,
+      "publishing": false,
+      "community": false,
+      "storage": false,
+      "cron": false
+    },
+    "integrations": {
+      "studioHub": {
+        "enabled": true,
+        "mode": "private"
+      },
+      "website": {
+        "enabled": false,
+        "mode": "public-safe"
+      },
+      "socialDashboard": {
+        "enabled": false,
+        "mode": "private"
+      },
+      "sparkFunnel": {
+        "enabled": false,
+        "mode": "growth"
+      },
+      "ignis": {
+        "enabled": true,
+        "mode": "portfolio-intelligence"
+      },
+      "founderQueue": {
+        "enabled": true,
+        "mode": "private"
+      }
+    },
+    "secretsCapabilities": [],
+    "hosting": {
+      "hostingProvider": "none",
+      "liveUrl": null,
+      "stagingUrl": null,
+      "privatePreviewUrl": null,
+      "localDevUrl": null,
+      "deployStatus": "not-applicable",
+      "testInstructions": []
+    },
+    "capacity": {
+      "currentPlanTier": "unknown",
+      "freePlanCeilings": [],
+      "fitsCurrentCapacity": true,
+      "preferredRuntime": "none",
+      "fallbackRuntime": "hetzner",
+      "notes": ""
+    },
+    "publicMetadata": {
+      "privateByDefault": true,
+      "publicReady": false,
+      "publicRepoSanitized": false,
+      "brandingRequired": false,
+      "brandingCompliant": null,
+      "footerAttribution": "A VaultSpark Studios Game",
+      "websiteListingRequired": true
+    },
+    "automation": {
+      "safeActions": [
+        "refresh-generated-surfaces"
+      ],
+      "guardedActions": [
+        "propagate-templates"
+      ],
+      "blockedActions": [
+        "change-canon",
+        "flip-repo-public",
+        "alter-licensing"
+      ]
+    },
+    "contracts": {
+      "hub": "context/contracts/hub.json",
+      "websitePublic": "context/contracts/website-public.json",
+      "socialDashboard": "context/contracts/social-dashboard.json",
+      "sparkFunnel": "context/contracts/sparkfunnel.json",
+      "ignis": "context/contracts/ignis.json"
+    }
+  },
+  "integrations": [
+    {
+      "key": "studioHub",
+      "enabled": true,
+      "status": "ready",
+      "requirement": "Hub requires PROJECT_STATUS.json and baseline Studio OS files."
+    },
+    {
+      "key": "website",
+      "enabled": false,
+      "status": "ready",
+      "requirement": "Website listing should read manifest-backed listing metadata and public surfaces."
+    },
+    {
+      "key": "socialDashboard",
+      "enabled": false,
+      "status": "ready",
+      "requirement": "Social Dashboard should consume manifest-backed listing and growth metadata."
+    },
+    {
+      "key": "sparkFunnel",
+      "enabled": false,
+      "status": "ready",
+      "requirement": "SparkFunnel should consume canonical summary, CTA, and funnel metadata."
+    },
+    {
+      "key": "ignis",
+      "enabled": true,
+      "status": "ready",
+      "requirement": "IGNIS should read contract-backed project metrics and capabilities."
+    }
+  ],
+  "efficiencyPlaybook": [
+    "Use scripts/lib/model-router.mjs as the single Claude/Anthropic chokepoint.",
+    "Prefer Haiku-first escalation, long-cache blocks, and semantic cache helpers before direct model calls.",
+    "Reuse generated contracts and compiled fabric outputs instead of scraping multiple Markdown sources.",
+    "Use ops-level commands before inventing repo-local variants when Studio Ops already owns the workflow."
+  ],
+  "capacity": {
+    "currentPlanTier": "unknown",
+    "freePlanCeilings": [],
+    "fitsCurrentCapacity": true,
+    "preferredRuntime": "none",
+    "fallbackRuntime": "hetzner",
+    "notes": ""
+  },
+  "repairActions": [
+    "Create context/STUDIO_MANIFEST.json from synthesized manifest.",
+    "Seed .claude/settings.local.json from the CLAUDE settings template."
+  ]
+}

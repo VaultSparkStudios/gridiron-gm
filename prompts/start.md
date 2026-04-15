@@ -1,5 +1,5 @@
-<!-- template-version: 2.9 -->
-<!-- synced-from: studio-ops/prompts/start.md @ Session 66 (2026-04-13) -->
+<!-- template-version: 3.0 -->
+<!-- synced-from: studio-ops/prompts/start.md @ Session 63 (2026-04-13) -->
 # START
 
 Executed when the user says only `start`.
@@ -191,7 +191,7 @@ Render the startup brief using box-drawing UI. If `docs/STARTUP_BRIEF.md` exists
 - Velocity: ✓ ≥2 · ⚠ 1 · ⛔ 0
 - Runway: ✓ >4 · ⚠ 2–4 · ⛔ ≤2
 - Context age: ✓ ≤7d · ⚠ 8–14d · ⛔ >14d
-- IGNIS: ✓ <7d · ⚠ 7–14d · ⛔ >14d  ← re-score via `node scripts/ops.mjs rescore`
+- IGNIS: ✓ <7d · ⚠ 7–14d · ⛔ >14d  ← re-score via `node ../vaultspark-studio-ops/scripts/ops.mjs rescore`
 - Genome dims: ✓ no drops vs prior snapshot · ⚠ any dimension dropped
 - Entropy: ✓ <0.3 (healthy) · ⚠ 0.3–0.6 (elevated) · ⛔ >0.6 (high)
 - CDR Gap: ✓ last CDR date ≥ LATEST_HANDOFF date · ⚠ CDR predates LATEST_HANDOFF
