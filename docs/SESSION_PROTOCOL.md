@@ -36,7 +36,7 @@ Everything else routes itself. Memorize these three:
 | `/go` or `go` | §2 | Autonomous sprint through the Unified Genius List at quality bar |
 | `/closeout` or `closeout` | §3 | Write-back + score + commit + push |
 
-Natural-language invocation works too. Typing "start" without the slash, or saying "begin session" / "let's start", routes the same.
+Natural-language invocation works too. Typing "start" without the slash, or saying "begin session" / "let's start", routes the same. For Codex specifically, there is no native slash-command subsystem, so slash-prefixed commands must be matched as plain user text with the leading `/` treated as optional.
 
 ---
 
@@ -437,7 +437,7 @@ Context-aware: read `context/PROJECT_STATUS.json → type` to bias matches to th
 
 ### Codex
 
-- No slash-command system. User types "start", "go", "closeout" as natural language. Codex matches against `AGENTS.md` (which references this file) and executes the protocol steps above.
+- No slash-command system. User input such as `/start`, `/go`, `/closeout`, `/studio-review`, or `/security-check` arrives as plain text. Codex must treat the leading `/` as optional, normalize the command phrase, match against `AGENTS.md`/this file, and execute the corresponding section.
 - Personal memory lives at `~/.codex/memories/<slug>/` (or `~/.codexrc` config). Follow the same rules about pattern-level-only memory entries.
 - Codex does not have a `Skill tool` equivalent. When `/go` needs to invoke `/game-loop-review`, Codex re-enters §12 directly rather than delegating.
 
