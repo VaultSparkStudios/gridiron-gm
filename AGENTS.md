@@ -1,5 +1,13 @@
 # Project Agent Guide
 
+## Session Protocol (agent-neutral — applies to Claude Code, Codex, any agent)
+
+The canonical execution protocol for every Studio OS session lives in **`docs/SESSION_PROTOCOL.md`** in this repo (propagated from studio-ops).
+
+It covers the 3-command rhythm (`/start` → `/go` → `/closeout`), full protocol for 15 commands, and agent-specific notes for Claude Code + Codex. Both agents execute the same instructions; per-agent branching is flagged explicitly with `IF agent = claude-code:` / `IF agent = codex:`.
+
+See `docs/SKILL_MAP.md` for the one-page command cheatsheet.
+
 This public repository contains deployable project code and public-safe documentation.
 
 Public-safe rule:
