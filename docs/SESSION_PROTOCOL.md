@@ -1,4 +1,4 @@
-<!-- session-protocol-version: 1.2 -->
+<!-- session-protocol-version: 1.3 -->
 <!-- canonical-source: VaultSparkStudios/vaultspark-studio-ops/docs/SESSION_PROTOCOL.md -->
 <!-- agents: claude-code, codex, any-cli-agent -->
 
@@ -42,61 +42,62 @@ Natural-language invocation works too. Typing "start" without the slash, or sayi
 
 ## §1 — `/start` protocol
 
+**v1.3 — Token-lean, AI-first (S101).** Target: ≤8K tokens consumed by session start. Raw context files are synthesized into the startup brief — they are NOT individually read at startup.
+
 1. **Write session lock.** Create `context/.session-lock` using the format above. Include the `agent` field.
 
-2. **Run session mode detector + blocker preflight + secrets audit.** In order:
-   - `node scripts/detect-session-mode.mjs --explain` (detect BUILDER vs FOUNDER)
+2. **Run preflight scripts.** These emit compact stdout — read their printed output only, do not open their output files:
+   - `node scripts/detect-session-mode.mjs --explain` (BUILDER vs FOUNDER, ~100 tokens)
+   - `node scripts/ops.mjs fast-start --stdout` (headroom + queue + rolling status, ~500 tokens)
+   - `node scripts/compact-handoff.mjs` (Haiku-compress LATEST_HANDOFF to cache — silent if fresh)
    - `node scripts/check-secrets.mjs --audit` (credentials gateway health)
-   - `node scripts/ops.mjs blocker-preflight` (human-blocked item classification)
-   - `node scripts/ops.mjs fast-start --stdout` (token-light headroom + queue check before heavy context)
+   - `node scripts/ops.mjs blocker-preflight` (human-blocked classification — read first 20 lines only)
 
-   If any tool is missing, note it and continue — do not stop.
+   If any tool is missing, note it and continue.
 
-3. **Initiation type check.** Read `context/SELF_IMPROVEMENT_LOOP.md`.
-   - File missing or no dated entries → route to `/initiate` (Type A). Stop.
-   - Exactly one "Bootstrap/Foundation Baseline" entry + template-only core files → route to `/initiate` (Type B). Stop.
-   - Two or more dated entries with real scores → continue.
+3. **Context-meter preflight — BEFORE loading any context files:**
+   ```
+   node scripts/context-meter.mjs --json
+   ```
+   - `CONTINUE` → proceed to step 4.
+   - `CONSIDER_CLOSEOUT` → warn the founder: *"Context already N% used. Recommend fresh terminal."* Proceed only on explicit founder confirmation.
+   - `CLOSEOUT` → **stop immediately.** Do not read any context files. Show cached genius list from `.cache/genius-list.json` if available, then prompt for `/closeout`. This terminal is exhausted.
 
-4. **Load context in canonical order.** Read each file if it exists:
-   1. `AGENTS.md`
-   2. `context/PROJECT_BRIEF.md`
-   3. `context/SOUL.md`
-   4. `context/BRAIN.md`
-   5. `context/CURRENT_STATE.md`
-   6. `context/DECISIONS.md`
-   7. `context/TASK_BOARD.md`
-   8. `context/LATEST_HANDOFF.md`
-   9. `context/SELF_IMPROVEMENT_LOOP.md` — header only (rolling status block)
-   10. `context/TRUTH_AUDIT.md` if present
-   11. `docs/SESSION_PLAN.md` if < 48h old
+4. **Initiation type check.** Check `context/SELF_IMPROVEMENT_LOOP.md` exists and has ≥2 dated session entries (grep for `^### [0-9]` — do NOT read the full file).
+   - Missing or 0–1 entries → route to `/initiate`. Stop.
 
-   **Founder Mode only:** also read `portfolio/STUDIO_BRAIN.md` between 9 and 10.
+5. **Load startup brief — THE ONLY CONTEXT READ AT SESSION START.**
+   ```
+   node scripts/render-startup-brief.mjs   # skip if docs/STARTUP_BRIEF.md < 24h old
+   node scripts/validate-brief-format.mjs docs/STARTUP_BRIEF.md
+   ```
+   - Validator exits 0 → read `docs/STARTUP_BRIEF.md` (~3K tokens) and display it. This single file synthesizes: PROJECT_BRIEF · SOUL · BRAIN · CURRENT_STATE · DECISIONS · TASK_BOARD · LATEST_HANDOFF · SIL rolling header · TRUTH_AUDIT · STUDIO_BRAIN (Founder Mode). **Do NOT additionally read any of those raw files** — load them on-demand only when a specific task requires them.
+   - Validator exits 1 → run `node scripts/ops.mjs onboard --repair --write`, re-render, re-validate.
+   - Brief or renderer missing → run `node scripts/ops.mjs onboard --repair --write` first.
+   - **Improvising a prose brief inline is a protocol violation.** The canonical box-drawing format (project title header · WHERE WE LEFT OFF · SCORE · SIGNALS · HUMAN PRESSURE · GENIUS HIT LIST) is load-bearing for multi-agent continuity — Claude and Codex must hand off without losing format-encoded signal.
 
-5. **SIL escalation check.** From the rolling status header:
-   - Note sparkline trajectory and lowest rolling-average category.
-   - List unactioned `[SIL]` TASK_BOARD items.
-   - Any `[SIL:2⛔]` item must be moved to the top immediately.
+6. **SIL escalation check.** Read from the SCORE block in the brief — no separate file read:
+   - Note sparkline trajectory and lowest-scoring category.
+   - List unactioned `[SIL]` items visible in the GENIUS HIT LIST block.
+   - Any `[SIL:2⛔]` item must be escalated to the top of the sprint plan immediately.
 
-6. **Render startup brief — MUST use the canonical renderer.** Run `node scripts/render-startup-brief.mjs` (writes `docs/STARTUP_BRIEF.md`). Then run `node scripts/validate-brief-format.mjs docs/STARTUP_BRIEF.md`.
-   - If the validator exits 0 → display the brief to the user and continue.
-   - If the validator exits 1 → the brief has drifted. Run `node scripts/ops.mjs onboard --repair --write`, re-render, re-validate. Do not display a non-conformant brief.
-   - If `render-startup-brief.mjs` is missing → run `node scripts/ops.mjs onboard --repair --write` first. The renderer ships with the runtime-pack; if it isn't present, this repo hasn't been onboarded.
-   - **Improvising a prose brief inline is a protocol violation**, not a style choice. The canonical box-drawing format (project title header · WHERE WE LEFT OFF · SCORE · SIGNALS · HUMAN PRESSURE · GENIUS HIT LIST) is load-bearing for multi-agent continuity — Claude and Codex must be able to hand sessions to each other without losing format-encoded signal. Non-canonical sections (e.g. product-specific prose blocks like "Contradiction Sentinel", "Executive Focus") belong in tool-specific surfaces, not in the shared startup brief.
+7. **Log session intent.** If the founder did not state a goal, ask once: "What is the primary goal for this session?" Log into `context/LATEST_HANDOFF.md → Session Intent:`. Scope cap = `floor(lastVelocity × 1.5)` from the brief's SCORE block.
 
-7. **Log session intent.** If the user did not state a goal, ask once: "What is the primary goal for this session?" (one sentence). Log into `context/LATEST_HANDOFF.md → Session Intent:`. Compute scope cap = `floor(lastVelocity × 1.5)` from rolling status.
+8. **Top action.** Surface the #1 item from the brief's GENIUS HIT LIST so work starts without diagnostic lag.
 
-8. **Execution-first action queue.** Surface the top local unblocked item from `context/ACTION_QUEUE.md` so the user can start without diagnostic lag.
-
-9. **Studio Status** (Founder Mode or cross-repo reference): report concurrent sessions from `portfolio/ACTIVE_SESSIONS.json`.
+9. **Studio Status (Founder Mode).** Active sessions + conflicts are already in the brief's signals. Report only if new conflicts emerged since brief render.
 
 ### `/start` rules
 
-- Repo files are source of truth — not prior chat memory.
+- **Raw context files are NOT read at startup.** The startup brief synthesizes them. Load raw files on-demand during work only.
+- **Context-meter check runs before ANY file load.** CLOSEOUT verdict = stop immediately, no exceptions.
+- Repo files are source of truth — not prior chat memory. When brief and repo disagree, trust the repo.
 - `PROJECT_STATUS.json` and registry JSON beat derived Markdown when values conflict.
-- No code edits during startup unless the user immediately requests one.
+- No code edits during startup unless the founder immediately requests one.
 - `context/LATEST_HANDOFF.md` is the active handoff; all other handoff docs are historical.
-- Momentum runway ≤ 2.0: start with TASK_BOARD pre-loading before feature/protocol work.
-- Compacted or interrupted session: check `docs/CREATIVE_DIRECTION_RECORD.md` for direction predating work in LATEST_HANDOFF.
+- Momentum runway ≤ 2.0: the genius hit list already surfaces this — no TASK_BOARD pre-read needed.
+- Compacted or interrupted session: CDR direction is embedded in the brief's signals; check raw CDR only if needed mid-task.
+- **Brief format is canonical and non-negotiable.** Every project uses the same box-drawing sections in the same order. This enables Claude↔Codex hot-swap.
 
 ---
 
