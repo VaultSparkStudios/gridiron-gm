@@ -1,4 +1,4 @@
-<!-- session-protocol-version: 1.0 -->
+<!-- session-protocol-version: 1.2 -->
 <!-- canonical-source: VaultSparkStudios/vaultspark-studio-ops/docs/SESSION_PROTOCOL.md -->
 <!-- agents: claude-code, codex, any-cli-agent -->
 
@@ -48,6 +48,7 @@ Natural-language invocation works too. Typing "start" without the slash, or sayi
    - `node scripts/detect-session-mode.mjs --explain` (detect BUILDER vs FOUNDER)
    - `node scripts/check-secrets.mjs --audit` (credentials gateway health)
    - `node scripts/ops.mjs blocker-preflight` (human-blocked item classification)
+   - `node scripts/ops.mjs fast-start --stdout` (token-light headroom + queue check before heavy context)
 
    If any tool is missing, note it and continue — do not stop.
 
@@ -76,7 +77,11 @@ Natural-language invocation works too. Typing "start" without the slash, or sayi
    - List unactioned `[SIL]` TASK_BOARD items.
    - Any `[SIL:2⛔]` item must be moved to the top immediately.
 
-6. **Render startup brief.** Preferred: `node scripts/render-startup-brief.mjs` (writes `docs/STARTUP_BRIEF.md`). Display the brief to the user. If the renderer fails, build the brief inline from loaded context.
+6. **Render startup brief — MUST use the canonical renderer.** Run `node scripts/render-startup-brief.mjs` (writes `docs/STARTUP_BRIEF.md`). Then run `node scripts/validate-brief-format.mjs docs/STARTUP_BRIEF.md`.
+   - If the validator exits 0 → display the brief to the user and continue.
+   - If the validator exits 1 → the brief has drifted. Run `node scripts/ops.mjs onboard --repair --write`, re-render, re-validate. Do not display a non-conformant brief.
+   - If `render-startup-brief.mjs` is missing → run `node scripts/ops.mjs onboard --repair --write` first. The renderer ships with the runtime-pack; if it isn't present, this repo hasn't been onboarded.
+   - **Improvising a prose brief inline is a protocol violation**, not a style choice. The canonical box-drawing format (project title header · WHERE WE LEFT OFF · SCORE · SIGNALS · HUMAN PRESSURE · GENIUS HIT LIST) is load-bearing for multi-agent continuity — Claude and Codex must be able to hand sessions to each other without losing format-encoded signal. Non-canonical sections (e.g. product-specific prose blocks like "Contradiction Sentinel", "Executive Focus") belong in tool-specific surfaces, not in the shared startup brief.
 
 7. **Log session intent.** If the user did not state a goal, ask once: "What is the primary goal for this session?" (one sentence). Log into `context/LATEST_HANDOFF.md → Session Intent:`. Compute scope cap = `floor(lastVelocity × 1.5)` from rolling status.
 
@@ -105,11 +110,36 @@ Meaning: *"Update memory and task board with all Genius List items/ideas and imp
 - `context/SELF_IMPROVEMENT_LOOP.md` must exist → if not, route to `/initiate` and stop.
 - `context/TASK_BOARD.md` must exist → if not, stop with error.
 
-### 2.1 Refresh the genius list
+### 2.0.5 Context-meter preflight
 
-`node scripts/ops.mjs genius-list`
+Before refreshing or regenerating the genius list, run:
 
-Read `docs/GENIUS_LIST.md`. Confirm:
+```
+node scripts/context-meter.mjs --json
+```
+
+- `CONTINUE` → proceed to §2.1.
+- `CONSIDER_CLOSEOUT` → proceed only if the founder explicitly wants to continue in the same terminal; otherwise stop and recommend a fresh session.
+- `CLOSEOUT` → stop immediately; do not refresh the genius list. Surface the deferred list from `.cache/genius-list.json` / `docs/GENIUS_LIST.md` if available, then prompt for `/closeout`.
+
+This step prevents carry-over terminals from spending the remaining context budget on diagnostics before item #1.
+
+### 2.1 Refresh the genius list — CONDITIONAL
+
+Refreshing is a cost. Only do it when inputs have changed since the last cache write:
+
+```
+node scripts/cache-genius-list.mjs --check
+```
+
+- Exit 0 → cache is FRESH. Read `.cache/genius-list.json` directly. Skip regen.
+- Exit 1 → cache is STALE (TASK_BOARD, SIL, PROJECT_STATUS, STUDIO_BRAIN, GENOME_HISTORY or REGISTRY changed). Regenerate:
+
+```
+node scripts/cache-genius-list.mjs --write
+```
+
+Then read `.cache/genius-list.json` (or `docs/GENIUS_LIST.md`). Confirm:
 - Item count ≥ 10 (list v3 targets 12)
 - `IGNIS source` is `fallback` or `live`
 - Top 3 items have Final scores > 80
@@ -192,11 +222,26 @@ Secrets present → proceed autonomously via `getSecret()` from `scripts/lib/sec
 
 Blocker genuinely unresolvable without the Studio Owner → tag with age in sessions + surface at end-of-sprint summary.
 
-### 2.7 Scope cap enforcement
+### 2.7 Completion target — IMPLEMENT ALL
 
-Soft ceiling = `floor(lastVelocity × 1.5)` from the startup brief. Prioritize compounding items (sanitizer that unblocks 4 items beats one shallow win). Plan to ship 3–5 from a 12-item list. Surface deferred items at end-of-sprint for `/closeout` rollforward.
+`/go` implements **every item** on the refreshed genius list at optimal quality. There is no scope cap unless the context-meter demands one.
+
+Between each item, run:
+
+```
+node scripts/context-meter.mjs --json
+```
+
+Behavior per meter verdict:
+- `CONTINUE` → pick the next item and keep going.
+- `CONSIDER_CLOSEOUT` → finish the **current** item cleanly, then prompt the founder once: *"Context N% used. Continue or `/closeout` + fresh session?"* Default is CONTINUE unless founder redirects.
+- `CLOSEOUT` → stop immediately. Surface deferred items to handoff. Prompt for `/closeout`.
+
+Prioritize compounding items (sanitizer that unblocks 4 items beats one shallow win). Order within the list is IGNIS-ranked — follow it.
 
 ### 2.8 End-of-sprint summary
+
+Produce the summary only when either (a) every genius-list item is shipped or explicitly deferred, or (b) the context-meter returned `CLOSEOUT` / the founder invoked `/closeout`.
 
 Before handing back:
 
@@ -212,23 +257,42 @@ Before handing back:
 
 Then list shipped, deferred with reason, human-batched with why-not-auto.
 
+For deterministic counts, run:
+
+```bash
+node scripts/ops.mjs closeout-summary --json
+```
+
+Use the returned task-board and memory counts in the sprint summary instead of estimating from prose.
+
 **Never auto-invoke `/closeout`.** Always a separate, confirmed action.
 
 ### `/go` rules
 
 - Never skip `/start`. Abort if no session lock.
-- Never invent items. Only execute from the regenerated genius list.
+- Never invent items. Only execute from the refreshed genius list.
 - Never collapse TASK_BOARD. Append-only.
 - Never silently cross-repo write.
-- Never exceed scope cap by > 2× without explicit override.
-- Always regenerate the list first.
+- Never suggest `/closeout` mid-item. Only when the current item is cleanly done AND the context-meter says `CONSIDER_CLOSEOUT` or `CLOSEOUT`.
+- Regenerate the list only when `cache-genius-list.mjs --check` reports stale.
 - Always finish what you start — complete or defer, not both.
+- Implement **all** items unless the context-meter or the founder stops you.
 
 ---
 
 ## §3 — `/closeout` protocol
 
-### 3.0 Intent check
+### 3.0 Closeout-suggestion gate (context-aware)
+
+Agents and skills MUST NOT suggest `/closeout` after each small item. `/closeout` is only auto-suggested when:
+
+1. `node scripts/context-meter.mjs` returns `CONSIDER_CLOSEOUT` (pctUsed ≥ 75%) or `CLOSEOUT` (pctUsed ≥ 95%), **and**
+2. The current genius-list item is cleanly completed (no partial state), **and**
+3. The founder has not explicitly told the agent to keep going.
+
+Explicit founder invocation (`closeout` / `/closeout`) always executes immediately regardless of meter state.
+
+### 3.0.1 Intent check
 
 Compare actual work to `context/LATEST_HANDOFF.md → Session Intent:`.
 - **Achieved** · **Partial** (note scope drift) · **Redirected** (log reason)
@@ -305,7 +369,19 @@ ADDITIVE ONLY — never edit or delete existing entries. If no direction: note "
 
 ### 3.11 Output: closeout status board
 
-Print the box-drawing STATUS BOARD with every field filled. Use `✓` done, `□` pending/skipped, `—` not-applicable.
+Print the canonical STATUS BOARD or deterministic closeout ledger with every field filled. `closeout-autopilot` delegates to:
+
+```bash
+node scripts/ops.mjs closeout-summary --project . --pushed <yes|no|dry-run>
+```
+
+The ledger must include writeback ✓/✗, task-board counts, deferred count, memory entries touched, branch, commit SHA, dirty state, and push state. Use `✓` done, `□` pending/skipped, `—` not-applicable when rendering the box-drawing board.
+
+Validate the candidate output with:
+
+`node scripts/validate-closeout-board-format.mjs --stdin`
+
+If validation fails, repair the output before presenting it. Do not ship a prose-only closeout summary in place of the canonical board.
 
 ---
 

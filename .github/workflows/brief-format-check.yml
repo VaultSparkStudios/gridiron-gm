@@ -1,0 +1,66 @@
+name: brief-format-check
+
+# Studio OS canonical brief-format gate (S87).
+#
+# Fails the run if docs/STARTUP_BRIEF.md has drifted from the canonical format
+# defined by scripts/validate-brief-format.mjs. Designed to be called two ways:
+#
+#   1. Automatically on every push or PR that touches context/, docs/, scripts/,
+#      or the brief itself — catches drift at merge time.
+#   2. On a daily cron — catches drift introduced by out-of-band processes
+#      (manual edits, agents that skipped the canonical renderer).
+#
+# Propagated to every registry repo by scripts/sync-studio-os-remote.mjs.
+# Do not edit the file in a child repo — the next 6h sync pass will overwrite it.
+# All format-rule changes happen in studio-ops and flow outward.
+
+on:
+  push:
+    paths:
+      - 'docs/STARTUP_BRIEF.md'
+      - 'scripts/validate-brief-format.mjs'
+      - 'scripts/render-startup-brief.mjs'
+      - 'context/**'
+  pull_request:
+    paths:
+      - 'docs/STARTUP_BRIEF.md'
+      - 'scripts/validate-brief-format.mjs'
+      - 'scripts/render-startup-brief.mjs'
+      - 'context/**'
+  schedule:
+    # Daily at 13:17 UTC — catches out-of-band drift (agent improvisation, manual edits)
+    - cron: '17 13 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate canonical brief format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check validator is present
+        run: |
+          if [ ! -f scripts/validate-brief-format.mjs ]; then
+            echo "::error title=validate-brief-format.mjs missing::scripts/validate-brief-format.mjs is not present in this repo. Run 'node scripts/ops.mjs onboard --repair --write' or wait for the next sync-studio-os cron (6h)."
+            exit 1
+          fi
+
+      - name: Validate STARTUP_BRIEF.md (if present)
+        run: |
+          if [ ! -f docs/STARTUP_BRIEF.md ]; then
+            echo "::warning title=No brief yet::docs/STARTUP_BRIEF.md not found. Skipping (not a failure — some repos haven't run /start yet)."
+            exit 0
+          fi
+          node scripts/validate-brief-format.mjs docs/STARTUP_BRIEF.md --json | tee /tmp/brief-format.json
+          # Re-run without --json so the readable report lands in the log.
+          node scripts/validate-brief-format.mjs docs/STARTUP_BRIEF.md

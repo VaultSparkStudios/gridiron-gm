@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vaultsparkstudios.com/schemas/agent-dna.schema.json",
+  "title": "AgentDNA",
+  "description": "Canonical identity + personality + guardrail + trust record for every Studio Ops agent. Binds Vorn's agent_identity_system fields where they overlap so Studio Ops agents can optionally surface publicly on Vorn without re-declaring identity.",
+  "type": "object",
+  "required": ["schemaVersion", "identity", "role", "personality", "guardrails", "trust_tier", "runtime", "vorn_public"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "identity": {
+      "type": "object",
+      "required": ["name", "call_sign"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "Display name. Title Case." },
+        "call_sign": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,31}$", "description": "Short kebab-case ID. Used in logs, MCP bearer scoping, Vorn handle suffix." },
+        "avatar_url": { "type": "string", "format": "uri" },
+        "voice_sample": { "type": "string", "description": "One-sentence example of how the agent speaks." },
+        "created_iso": { "type": "string", "format": "date-time" },
+        "birth_session": { "type": "string", "description": "e.g. S89" }
+      }
+    },
+    "role": {
+      "type": "object",
+      "required": ["title", "mission_one_line"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "mission_one_line": { "type": "string", "maxLength": 200 },
+        "scope_statement": { "type": "string", "description": "INTERNAL ONLY. Never surfaces on Vorn public profile." },
+        "category": { "type": "string", "enum": ["ops", "intelligence", "governance", "launch", "creative", "security", "finance"] }
+      }
+    },
+    "personality": {
+      "type": "object",
+      "required": ["tone", "humor_level", "verbosity"],
+      "additionalProperties": false,
+      "properties": {
+        "tone": { "type": "string", "description": "e.g. 'terse-signal-dense', 'warm-numerate', 'curt-oracular'" },
+        "voice_examples": { "type": "array", "items": { "type": "string" }, "maxItems": 6 },
+        "decision_bias": { "type": "array", "items": { "type": "string" }, "description": "e.g. ['prefer-reversible', 'ask-on-cross-repo', 'never-skip-tests']" },
+        "humor_level": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "verbosity": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "never_say": { "type": "array", "items": { "type": "string" } },
+        "always_say": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "guardrails": {
+      "type": "object",
+      "required": ["scope_cap_per_run", "budget_ceiling_usd_per_day"],
+      "additionalProperties": false,
+      "properties": {
+        "no_commit_scopes": { "type": "array", "items": { "type": "string" }, "description": "Paths or repos the agent must never commit to, even if trust_tier allows writes." },
+        "confirmation_required": { "type": "array", "items": { "type": "string" }, "description": "Actions that require explicit founder confirmation regardless of trust_tier." },
+        "scope_cap_per_run": { "type": "integer", "minimum": 1, "description": "Max tool calls per session event." },
+        "budget_ceiling_usd_per_day": { "type": "number", "minimum": 0, "description": "Hard daily cap enforced by Budget Warden. Agent is killed at 150% of this." }
+      }
+    },
+    "trust_tier": {
+      "type": "string",
+      "enum": ["observer", "proposer", "executor", "autopilot"],
+      "description": "observer = read-only tools · proposer = drafts only, no writes · executor = can write within scope · autopilot = full writes including commits. Enforced at MCP layer, NOT at prompt-construction time."
+    },
+    "runtime": {
+      "type": "string",
+      "enum": ["claude-managed", "claude-code-skill", "vorn-native", "local-script", "github-action"]
+    },
+    "cadence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "trigger": { "type": "string", "enum": ["cron", "webhook", "pr-event", "manual", "event-bus"] },
+        "schedule": { "type": "string", "description": "Cron expression if trigger=cron" },
+        "timezone": { "type": "string", "default": "UTC" }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tool names the agent is allowed to call on studio-ops MCP. Enforced at MCP layer via bearer-token scoping."
+    },
+    "vorn_public": { "type": "boolean", "default": false },
+    "vorn_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "handle": { "type": "string", "pattern": "^[a-z0-9_-]{3,32}$" },
+        "subtype": { "type": "string", "enum": ["builder", "assistant", "researcher", "collaborator"] },
+        "autonomy_level": { "type": "string", "enum": ["supervised", "semi-autonomous", "autonomous"] },
+        "profile_url": { "type": "string", "format": "uri" },
+        "bio_public": { "type": "string", "maxLength": 300, "description": "Sanitized bio — no strategy, no scope_statement, no internal refs." }
+      }
+    },
+    "telemetry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cost_to_date_usd": { "type": "number" },
+        "actions_to_date": { "type": "integer" },
+        "last_run_iso": { "type": "string", "format": "date-time" },
+        "success_rate_7d": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "owner": { "type": "string", "default": "VaultSpark Studios" },
+    "status": { "type": "string", "enum": ["draft", "staged", "live", "paused", "retired"], "default": "draft" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "vorn_public": { "const": true } }, "required": ["vorn_public"] },
+      "then": { "required": ["vorn_profile"] }
+    }
+  ]
+}
