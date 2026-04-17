@@ -63,7 +63,7 @@ Natural-language invocation works too. Typing "start" without the slash, or sayi
    - `CONSIDER_CLOSEOUT` → warn the founder: *"Context already N% used. Recommend fresh terminal."* Proceed only on explicit founder confirmation.
    - `CLOSEOUT` → **stop immediately.** Do not read any context files. Show cached genius list from `.cache/genius-list.json` if available, then prompt for `/closeout`. This terminal is exhausted.
 
-4. **Initiation type check.** Check `context/SELF_IMPROVEMENT_LOOP.md` exists and has ≥2 dated session entries (grep for `^### [0-9]` — do NOT read the full file).
+4. **Initiation type check.** Check `context/SELF_IMPROVEMENT_LOOP.md` exists and has ≥2 dated session entries (grep for `^## [0-9]` — do NOT read the full file).
    - Missing or 0–1 entries → route to `/initiate`. Stop.
 
 5. **Load startup brief — THE ONLY CONTEXT READ AT SESSION START.**

@@ -1,6 +1,6 @@
-<!-- template-version: 3.2 -->
-<!-- synced-from: studio-ops/prompts/closeout.md @ Session 76 (2026-04-14) -->
-<!-- v3.2 changes: blocker preflight required before retaining Human Action Required items -->
+<!-- template-version: 3.3 -->
+<!-- synced-from: studio-ops/docs/SESSION_PROTOCOL.md § 3 @ Session 101 (2026-04-17) -->
+<!-- v3.3 changes: closeout autopilot now auto-trims LATEST_HANDOFF to last 2 sessions (compact-handoff --trim); NEXT SESSION loads STARTUP_BRIEF.md only -->
 # CLOSEOUT
 
 Executed when the user says only `closeout`.
@@ -33,7 +33,7 @@ Classify: **Achieved** · **Partial** *(note scope drift)* · **Redirected** *(l
     ```bash
     node scripts/ops.mjs closeout
     ```
-    Runs: doctor --loop → refresh startup brief → stamp PROJECT_STATUS → git status + diff preview → **HUMAN CONFIRMATION** → commit (conventional msg) → push → clear lock + beacon → print STATUS BOARD. Never skip confirmation. `--dry-run` shows the plan without writing.
+    Runs: doctor --loop → refresh startup brief → **auto-trim LATEST_HANDOFF to last 2 sessions** (`compact-handoff --trim`) → stamp PROJECT_STATUS → git status + diff preview → **HUMAN CONFIRMATION** → commit (conventional msg) → push → clear lock + beacon → print STATUS BOARD. Never skip confirmation. `--dry-run` shows the plan without writing.
 
 ### Where We Left Off  *(write to top of LATEST_HANDOFF.md)*
 
@@ -521,8 +521,8 @@ If validation fails, repair the board first. Do not replace the canonical closeo
 ║  {✓/⚠}    Genome       {all stable / drop: dim X→Y}              ║
 ║  {✓/⚠/⛔}  Templates   {v2.9 aligned / drift}                    ║
 ╠══ NEXT SESSION ════════════════════════════════════════════════════╣
-║  Priority:   {top Now-bucket item}                                 ║
-║  Load first: LATEST_HANDOFF → TASK_BOARD → SIL header → GENIUS   ║
+║  Priority:   {top genius-list item}                                ║
+║  Load first: docs/STARTUP_BRIEF.md only (v1.3 — no raw reads)    ║
 ║  Human action needed:  {items or "none"}                           ║
 ╚════════════════════════════════════════════════════════════════════╝
 ```
