@@ -1,6 +1,6 @@
-<!-- template-version: 3.3 -->
-<!-- synced-from: studio-ops/docs/SESSION_PROTOCOL.md § 1 @ Session 101 (2026-04-17) -->
-<!-- v3.3 changes: token-lean start — context-meter first, startup brief ONLY (no raw file reads), LATEST_HANDOFF auto-trim at closeout -->
+<!-- template-version: 3.2 -->
+<!-- synced-from: studio-ops/prompts/start.md @ Session 76 (2026-04-14) -->
+<!-- v3.2 changes: blocker preflight rule, execution-first action queue -->
 # START
 
 Executed when the user says only `start`.
@@ -73,66 +73,57 @@ Check `context/SELF_IMPROVEMENT_LOOP.md`:
 
 ---
 
-## 3 · Context-meter preflight  *(v1.3 — runs BEFORE loading any files)*
+## 3 · Load Context  *(read in order — do not skip or reorder)*
 
-```bash
-node scripts/context-meter.mjs --json
-```
+| # | File | Purpose |
+|---|---|---|
+| 1 | `AGENTS.md` | Role rules, enforcement, session aliases |
+| 2 | `context/PROJECT_BRIEF.md` | What the project is and why it exists |
+| 3 | `context/SOUL.md` | Creative identity and non-negotiables |
+| 4 | `context/BRAIN.md` | Strategic mental model and heuristics |
+| 5 | `context/CURRENT_STATE.md` | Live snapshot of what exists |
+| 6 | `context/DECISIONS.md` | Key decisions with rationale |
+| 7 | `context/TASK_BOARD.md` | Now / Next / Blocked / Later tasks |
+| 8 | `context/LATEST_HANDOFF.md` | Authoritative handoff from last session |
+| 9 | `context/SELF_IMPROVEMENT_LOOP.md` — **header only** | Rolling Status: sparkline, avgs, last scores |
+| 10 | `context/TRUTH_AUDIT.md` *(if present and relevant)* | Source-of-truth hierarchy, contradiction status |
+| 11 | `docs/SESSION_PLAN.md` *(if < 48h old)* | Predicted SIL range, scope cap, risk flags — surface in DASHBOARD |
+| 12 | Task-specific files | Only after all above are read |
 
-- `CONTINUE` → proceed to step 4.
-- `CONSIDER_CLOSEOUT` → warn: *"Context N% used before /start. Recommend fresh terminal."* Proceed only on explicit founder confirmation.
-- `CLOSEOUT` → **stop immediately.** Show cached genius list from `.cache/genius-list.json` if available. Prompt for `/closeout`. This terminal is exhausted — no context files should be loaded.
-
----
-
-## 4 · Initiation type check  *(lightweight)*
-
-Check `context/SELF_IMPROVEMENT_LOOP.md` has ≥2 dated entries — grep only, do NOT read the full file:
-
-| Condition | Action |
-|---|---|
-| File missing or 0–1 dated entries | Follow `prompts/initiate.md` — stop here |
-| 2+ dated entries with real scores | Continue below |
+*Founder Mode: read `portfolio/STUDIO_BRAIN.md` between steps 9 and 10.*
 
 ---
 
-## 5 · Load startup brief — SOLE CONTEXT SOURCE  *(v1.3)*
+## 4 · SIL Escalation Check
 
-**Do NOT read raw context files at session start.** The startup brief synthesizes all of them.
+From the Rolling Status header (no extra reads):
 
-```bash
-node scripts/render-startup-brief.mjs   # skip if docs/STARTUP_BRIEF.md < 24h old
-node scripts/validate-brief-format.mjs docs/STARTUP_BRIEF.md
-```
+- Note sparkline trajectory (↑ ↓ flat) and lowest rolling avg category — flag if any avg < 5.0
+- List unactioned `[SIL]` TASK_BOARD items — read `[SIL:N]` skip counters; **any `[SIL:2⛔]` item must be moved to Now immediately**
+- Surface top unactioned brainstorm idea from the last SIL entry
 
-- Validator exits 0 → read `docs/STARTUP_BRIEF.md` (~3K tokens). This synthesizes: PROJECT_BRIEF · SOUL · BRAIN · CURRENT_STATE · DECISIONS · TASK_BOARD · LATEST_HANDOFF · SIL rolling header · TRUTH_AUDIT · STUDIO_BRAIN (Founder Mode). **Do not read any of those raw files additionally.**
-- Validator exits 1 → run `node scripts/ops.mjs onboard --repair --write`, re-render, re-validate.
-- Renderer or brief missing → run `node scripts/ops.mjs onboard --repair --write` first.
-
-Raw context files are available on-demand during work — they are not loaded at session start.
+*Founder Mode only:* note `Studio avg SIL: [X]/500 · This project: [X]/500 [↑↓→]` in brief.
 
 ---
 
-## 5.5 · SIL escalation check  *(from the brief — no extra reads)*
+## 5 · Startup Rules
 
-- Note sparkline trajectory and lowest SCORE block category.
-- List unactioned `[SIL]` items from the brief's GENIUS HIT LIST block.
-- Any `[SIL:2⛔]` item → escalate to top of sprint plan immediately.
-
----
-
-## 5.6 · Startup rules
-
-- **Raw context files are NOT read at startup.** The startup brief synthesizes them — load raw files on-demand only.
-- **Context-meter runs first.** CLOSEOUT verdict = stop immediately, no exceptions.
-- Repo files > chat memory. `PROJECT_STATUS.json` > derived Markdown.
-- No code edits during startup unless the founder immediately requests one.
-- `context/LATEST_HANDOFF.md` is the active handoff; all other handoff docs are historical.
-- **Execution-first:** top action is in the brief's GENIUS HIT LIST — start there, don't re-diagnose.
+- Repo files are source of truth — not prior chat memory
+- `PROJECT_STATUS.json` and registry JSON beat derived Markdown when values conflict
+- No code edits during startup unless immediately requested
+- `context/LATEST_HANDOFF.md` is the active handoff; all other handoff docs are historical
+- Note assumptions before acting on them
+- **Compacted/interrupted session:** Check if human direction is in `docs/CREATIVE_DIRECTION_RECORD.md`. If the last CDR entry predates work described in `LATEST_HANDOFF.md`, flag the gap and recover at closeout.
+- **⛔ Momentum Runway ≤ 2.0:** Begin with TASK_BOARD pre-loading before any feature or protocol work. Surface as first item in PRIORITIES.
+- **Execution-first workflow:** Generate the action queue before substantial implementation work:
+  ```bash
+  node scripts/ops.mjs action-queue
+  ```
+  Pull the top local work item from there and use the blocker attempts section before creating any new human escalation.
 
 ---
 
-## 6 · Output — Startup Brief  *(v3.3 visual format — canonical renderer MANDATORY)*
+## 6 · Output — Startup Brief  *(v3.2 visual format — canonical renderer MANDATORY)*
 
 **MUST use the canonical renderer.** Do not improvise a prose brief. Steps:
 
