@@ -87,7 +87,7 @@ node scripts/context-meter.mjs --json
 
 ## 4 · Initiation type check  *(lightweight)*
 
-Check `context/SELF_IMPROVEMENT_LOOP.md` has ≥2 dated entries (`^## YYYY-MM-DD`) — grep only, do NOT read the full file:
+Check `context/SELF_IMPROVEMENT_LOOP.md` has ≥2 dated entries — grep only, do NOT read the full file:
 
 | Condition | Action |
 |---|---|
