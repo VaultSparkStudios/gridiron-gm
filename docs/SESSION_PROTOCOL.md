@@ -44,7 +44,10 @@ Natural-language invocation works too. Typing "start" without the slash, or sayi
 
 **v1.3 — Token-lean, AI-first (S101).** Target: ≤8K tokens consumed by session start. Raw context files are synthesized into the startup brief — they are NOT individually read at startup.
 
-1. **Write session lock.** Create `context/.session-lock` using the format above. Include the `agent` field.
+1. **Write session lock.** Use the dedicated script — bash `echo` silently fails for dotfiles on Windows:
+   ```
+   node scripts/ops.mjs write-session-lock --agent claude-code
+   ```
 
 2. **Run preflight scripts.** These emit compact stdout — read their printed output only, do not open their output files:
    - `node scripts/detect-session-mode.mjs --explain` (BUILDER vs FOUNDER, ~100 tokens)
