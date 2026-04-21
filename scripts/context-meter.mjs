@@ -26,7 +26,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
-import { contextWindowForAgent } from './lib/model-router.mjs';
+// Inline context window sizes — keeps this script self-contained for propagation to all project repos.
+// Update here if new models are added to the studio fleet.
+function contextWindowForAgent(agent) {
+  if (agent === 'codex') return 1_000_000;
+  if (agent === 'claude-code') return 200_000;
+  return 200_000; // safe default (sonnet-200k)
+}
 
 const ROOT = process.cwd();
 const args = process.argv.slice(2);
@@ -76,23 +82,26 @@ if (fs.existsSync(lockPath)) {
   if (m) sessionStart = new Date(m[1]).getTime();
   if (a) agent = a[1];
 }
-// Context window size comes from the model-router chokepoint — never hardcode IDs.
 const limit = contextWindowForAgent(agent);
 const model = agent === 'claude-code' ? (process.env.CLAUDE_CONTEXT_LIMIT === '1000000' ? 'opus-1m' : 'sonnet-200k') : agent === 'codex' ? 'codex-1m' : 'default';
 
-// --- Used-tokens estimate
-// v1.3 fix: only charge for files HOT (modified after session start).
-// Mature repo files that existed before this session are NOT counted —
-// they are not in the conversation context window. This prevents the
-// false "90% full" reading on session start caused by large repo state.
+// --- Used-tokens estimate (ADVISORY — heuristic only, not a real token count)
 //
-// Baseline: STARTUP_BRIEF.md only (~3K tokens — the sole file read at start).
-// Hot files: any file under context/ or docs/ modified after sessionStart.
-// Churn: git working-tree changes as proxy for tool-output volume.
+// Philosophy: this meter is a GUIDE, not enforcement. Agents should use
+// CONSIDER_CLOSEOUT as a prompt to wrap up, not a hard stop. Only CLOSEOUT
+// (≥95%) should halt work.
+//
+// Estimation approach:
+//   Baseline  = STARTUP_BRIEF.md (sole file read at session start per v1.3)
+//   Hot files = 15% of each file modified after session start — partial read proxy
+//   Churn     = git diff lines × 80 bytes — tool-output volume proxy
+//
+// 15% weight: a file being written/updated doesn't mean it was fully re-read.
+// Agents typically read targeted sections, not full files on every edit.
 
+const HOT_FILE_WEIGHT = 0.15;
 const STARTUP_BASELINE = bytesOf(path.join(ROOT, 'docs/STARTUP_BRIEF.md'));
 
-// Hot files: modified after session start (agent actually touched them this session)
 function hotFilesBytes() {
   const dirs = ['context', 'docs', 'logs', 'portfolio'];
   let total = 0;
@@ -105,7 +114,7 @@ function hotFilesBytes() {
         try {
           const stat = fs.statSync(fp);
           if (stat.isFile() && stat.mtimeMs > sessionStart) {
-            total += stat.size;
+            total += Math.round(stat.size * HOT_FILE_WEIGHT);
           }
         } catch { /* skip */ }
       }
