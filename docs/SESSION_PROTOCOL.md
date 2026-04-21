@@ -305,7 +305,8 @@ Bypass audit: any commit that used `--no-verify` / `--no-gpg-sign` → log in `c
 
 ### 3.1 Write-back in canonical order
 
-If meaningful work happened:
+**All of these are mandatory every closeout, not optional.** Do not skip to §3.9 without completing this list.
+
 1. `context/CURRENT_STATE.md` — shipped behavior changes
 2. `context/TASK_BOARD.md` — new tasks, `[SIL:N]` counter updates
 3. `context/LATEST_HANDOFF.md` — include **Where We Left Off** block at top
@@ -315,6 +316,7 @@ If meaningful work happened:
 7. `docs/CREATIVE_DIRECTION_RECORD.md` — mandatory if human gave creative direction (ADDITIVE ONLY)
 8. `context/TRUTH_AUDIT.md` — when source-of-truth or derived surfaces changed
 9. Any repo-specific files whose truth changed
+10. **Agent memory** — for Claude Code: write/update any memory files in `~/.claude/projects/<slug>/memory/` that reflect decisions, patterns, or project state changes from this session. For Codex: equivalent agent-memory location. Memory writes are part of write-back, not a separate step.
 
 ### 3.2 Rolling data + scoring
 
