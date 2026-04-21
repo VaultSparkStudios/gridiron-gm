@@ -51,7 +51,6 @@ Natural-language invocation works too. Typing "start" without the slash, or sayi
 
 2. **Run preflight scripts.** These emit compact stdout — read their printed output only, do not open their output files:
    - `node scripts/detect-session-mode.mjs --explain` (BUILDER vs FOUNDER, ~100 tokens)
-   - `node scripts/ops.mjs fast-start --stdout` (headroom + queue + rolling status, ~500 tokens)
    - `node scripts/compact-handoff.mjs` (Haiku-compress LATEST_HANDOFF to cache — silent if fresh)
    - `node scripts/check-secrets.mjs --audit` (credentials gateway health)
    - `node scripts/ops.mjs blocker-preflight` (human-blocked classification — read first 20 lines only)
@@ -242,6 +241,17 @@ Behavior per meter verdict:
 - `CLOSEOUT` → stop immediately. Surface deferred items to handoff. Prompt for `/closeout`.
 
 Prioritize compounding items (sanitizer that unblocks 4 items beats one shallow win). Order within the list is IGNIS-ranked — follow it.
+
+### 2.7.5 Expansion passes — when the list is thin (v1.4)
+
+If ≤2 items remain unblocked, or the founder invokes `/go` consecutively with no primary-list work to do, DO NOT stop. Expand the surface:
+
+1. **Freshness reclass.** Re-run `node scripts/ops.mjs genius-list`. The freshness pass in `scripts/lib/genius-freshness.mjs` re-validates `cross-repo-locked` / `human-blocked` / `staged` cells against live lock state + capability readiness, automatically unblocking items whose blockers have resolved.
+2. **Elevated-probe pass.** For each remaining `human-blocked` item where the rule in `scripts/lib/blocker-rules.mjs` is NOT `signupUiOnly`, attempt the admin/API path before keeping it blocked (per AGENTS.md "elevated-access blocker rule").
+3. **Innovation pack.** `node scripts/ops.mjs innovation-pack` → `docs/INNOVATION_PACK.md`. Second-order ranked list drawn from: brainstorm orphans · inline TODO/FIXME markers · recently-shipped-but-unpolished code · SIL category regressions · incomplete CAPABILITY_MAP entries · cross-repo silence (≥14d no commits). Walk top candidates with the same quality bar as the primary list.
+4. **Compound refinement.** Open the 3 most recently shipped scripts/features. Propose one concrete refinement each (performance · error surface · docstring · tests · polish). Ship the smallest viable one.
+
+Each expansion step stops when it produces shippable work. Anything too large for the current session → add to TASK_BOARD with effort + rationale.
 
 ### 2.8 End-of-sprint summary
 
