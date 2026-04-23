@@ -1,8 +1,11 @@
 <!-- session-protocol-version: 1.3 -->
 <!-- canonical-source: VaultSparkStudios/vaultspark-studio-ops/docs/SESSION_PROTOCOL.md -->
 <!-- agents: claude-code, codex, any-cli-agent -->
+<!-- transitional: moving to Studio Brain kernel (see docs/STUDIO_BRAIN_ARCHITECTURE.md) -->
 
 # Session Protocol — VaultSpark Studio OS
+
+> **TRANSITIONAL NOTICE (2026-04-23, S110):** This document is the canonical session protocol **today**. It will be thinned to a pointer once the Studio Brain kernel (`studio` CLI) ships and agent skills collapse to 15-line kernel wrappers — see `docs/STUDIO_BRAIN_ARCHITECTURE.md` §7 for the target state and §6 for the migration stages. Until Stage 6 lands, follow the procedures in this file as-is. Any agent reading this file now executes the current protocol; any changes to session behavior between now and kernel go-live should land in **this** file to preserve the canonical-source rule. Canon decision: `context/DECISIONS.md` → **S110 — IGNIS elevated into the broader Studio Brain**.
 
 This is the **single canonical source** for every Studio OS session protocol. Both Claude Code and Codex (and any future CLI agent) read this file and execute the same flows. Per-agent shims — `~/.claude/skills/*/SKILL.md` for Claude Code, `AGENTS.md` Session-Protocol section for Codex — are thin pointers into this document.
 
