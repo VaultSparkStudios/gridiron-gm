@@ -1,5 +1,6 @@
 {
   "schemaVersion": "1.3",
+  "slug": "gridiron-gm",
   "name": "Gridiron-GM",
   "status": "active",
   "health": "green",
@@ -10,5 +11,30 @@
   "lifecycle": "building",
   "audience": "internal",
   "truthAuditStatus": "green",
-  "truthAuditLastRun": "2026-04-03"
+  "truthAuditLastRun": "2026-04-03",
+  "ignisScore": 38274,
+  "ignisGrade": "FORGE",
+  "ignisLastComputed": "2026-04-26",
+  "silRubricVersion": "3.0",
+  "silMax": 1000,
+  "silScoreLegacy500": null,
+  "silScore": 744,
+  "silCategoriesV3": {
+    "devHealth": 70,
+    "creativeAlignment": 70,
+    "momentum": 70,
+    "engagement": 70,
+    "processQuality": 70,
+    "crossRepoCoherence": 93,
+    "securityPosture": 88,
+    "ecosystemIntegration": 50,
+    "capitalEfficiency": 78,
+    "automationCoverage": 85
+  },
+  "silScoreV3MigratedAt": "2026-04-21",
+  "modelTier": "T1_sonnet",
+  "modelTierDefault": "sonnet",
+  "modelTierCtxLimit": 200000,
+  "modelPlanMode": false,
+  "modelPlanModeSlash": null
 }
