@@ -39,7 +39,7 @@ Full decision: `vaultspark-studio-ops/docs/STUDIO_CANON.md` → CANON-008
 
 <!-- Universal AGENTS.md sections — propagate to every Studio repo via scripts/run-template-propagation.mjs -->
 <!-- Owner: Studio Ops · Source: docs/templates/project-system/AGENTS_universal_sections.md -->
-<!-- Last revised: 2026-04-30 (Session 70 — adds Capabilities Index + Secrets + Sitemap pointers) -->
+<!-- Last revised: 2026-05-20 (Session 134 — adds broad approval + non-malicious verification protocol) -->
 
 ## Skill & Capability Discovery (CANON-012)
 
@@ -137,7 +137,7 @@ Safe scripted migrations are agent work, not founder work. The founder-twin auto
 
 ## Founder-Twin auto-approval (S113 — cross-agent)
 
-Both Claude Code and Codex consult one shared auto-approval model. Same brain, same history, same audit trail — patterns learned by one agent benefit every agent.
+Both Claude Code, Codex, ChatGPT-style CLI agents, subagents, and managed agents consult one shared auto-approval model. Same brain, same history, same audit trail — patterns learned by one agent benefit every agent. Founder-Twin is not optional ceremony; it is the Studio's approval memory and safety filter.
 
 **Codex usage** (no native PreToolUse hook — call explicitly before risky commands):
 
@@ -149,6 +149,28 @@ node ../vaultspark-studio-ops/scripts/twin-ask.mjs Bash "<command>"
 **Claude Code:** wired automatically via `~/.claude/settings.json` → `hooks.PreToolUse`.
 
 Disable per-session: `export TWIN_DISABLED=1`. Full spec: `vaultspark-studio-ops/docs/TWIN_PROTOCOL.md`.
+
+---
+
+## Broad Approval + Non-Malicious Verification (CANON-024, MANDATORY)
+
+Founder direction: agents should not ask for repeated piecemeal approvals when one bounded command-family approval can safely cover the work. Agents must request broader approvals when escalation is necessary, and must verify more aggressively that proposed actions are non-malicious before running them.
+
+**Approval-scope rule.**
+- Prefer one persistent approval for a safe command family over repeated one-off prompts.
+- Codex: when requesting escalation, include a reasonable `prefix_rule` for the command family whenever the command is repeatable and bounded (for example `["git", "push"]`, `["npm", "test"]`, `["node", "scripts/run-doctor.mjs"]`).
+- Claude Code / hook-driven agents: let Founder-Twin auto-approve learned safe patterns, and record asks/denies so future agents inherit the learning.
+- Never request broad approval for destructive commands, arbitrary interpreters, `curl | sh`, heredocs, commands with secret material, force-pushes, package publishes, production DB destructive SQL, billing/payment execution, or legal/public-promise changes. Ask narrowly for those.
+
+**Non-malicious action preflight.** Before any side-effecting, networked, privileged, cross-repo, production, dependency, payment, or secret-touching action, verify:
+1. **Intent:** the action directly serves the current user/studio objective.
+2. **Scope:** target repo/path/host/account is explicit; recursive writes/deletes resolve inside the intended directory.
+3. **Trust:** dependencies/downloads pass Obelisk Package Trust (CANON-023); external endpoints and remotes are expected.
+4. **Secrets:** credentials are resolved only through the secrets gateway; no raw secrets are printed, pasted, or logged.
+5. **Blast radius:** expected writes/mutations are named; rollback or recovery path is known for risky changes.
+6. **Twin verdict:** run Founder-Twin (`twin-ask` for Codex/ChatGPT agents, PreToolUse hook for Claude) unless the tool is purely read-only and already safe-listed.
+
+If Founder-Twin returns `deny`, stop. If it returns `ask`, request one bounded approval for the action class, not a stream of individual repeats. If the twin is unavailable, log the gap in the session handoff and fall back to the narrowest safe founder confirmation.
 
 ---
 
@@ -225,6 +247,97 @@ node scripts/ark.mjs ship --type agent-handoff --to vorn \
 - Receipts are auto-emitted on drain — don't ship them manually.
 - Producer allowlist enforced in `portfolio/ark/MANIFEST.json`. Most types are open; `canon-update` + `phantom-blocker-fix` are studio-ops only.
 - Full design: `vaultspark-studio-ops/docs/STUDIO_ARK.md`.
+
+---
+
+## Obelisk (CANON-021) — Studio-wide trust + capability protocol
+
+**Canonical name:** `Obelisk`. Never use `VaultKey`, `VaultPass`, `Vaultify`, `iVault`, `myVault`, or bare `Vault`.
+
+**What Obelisk is.** A Studio-wide trust layer above existing standards (TLS, WebAuthn, TOTP, OAuth). Passkey-first identity + TOTP fallback + device trust + signed intent receipts + short-lived capability grants + MCP firewall + prompt firewall + secret/OAuth broker + Sigstore-style supply-chain signing + post-quantum readiness via standards.
+
+**What Obelisk is NOT.** Not a password manager. Not a TLS replacement. Not custom cryptography. Never market as "unhackable" or "quantum-proof" — approved language is "post-quantum migration-ready."
+
+**Per-project requirement.** Every project must declare its Obelisk posture in `context/OBELISK_ADOPTION.md`. Posture values: `not-applicable` · `pending` · `phase-0-declared` · `phase-1-pilot` · `phase-2-mcp` · `phase-3-ops-integrated` · `phase-4-public-app-migrated`.
+
+**Mandatory rules for agents.**
+- Never bring raw secrets into agent prompts — use capability grants via `scripts/lib/secrets.mjs::getSecret(cap)` (CANON-012 wrap)
+- Never register an unsigned MCP server for privileged actions
+- Never make a production mutation without an intent receipt
+- Cross-repo Obelisk rollout MUST flow through Studio Ark (CANON-018) — never directly edit sibling repos
+- For founder/internal tools: passkey-first after Hub Phase 1; password-primary auth is deprecated
+
+**Capability surface (declared in studio-ops `secrets/CAPABILITY_MAP.json`).**
+- `obelisk.identity.verify` — WebAuthn relying-party credentials
+- `obelisk.grant.issue` — TOTP seed storage
+- `obelisk.receipt.write` — intent-receipt signing key
+- `obelisk.mcp.register` — MCP registry signature key
+
+**References.**
+- Full spec (Hub source-of-truth): `vaultspark-studio-hub/docs/OBELISK_PROTOCOL_PLAN.md`
+- Studio-ops execution mirror + appendix: `vaultspark-studio-ops/docs/OBELISK_PROTOCOL_PLAN.md`
+- Canon entry: `docs/STUDIO_CANON.md` → CANON-021
+- Inventory script: `node scripts/check-obelisk-posture.mjs` (run from any repo)
+
+---
+
+## Obelisk Package Trust (CANON-023) — verify before install/download
+
+Before adding a dependency, choosing between package options, downloading an archive/binary/model file, or following an agent-suggested install command, run the package trust gate first:
+
+```bash
+node ../vaultspark-studio-ops/scripts/package-trust.mjs --package <name>@<version>
+```
+
+From Studio Ops:
+
+```bash
+node scripts/ops.mjs package-trust --package <name>@<version>
+```
+
+**Mandatory rules for agents.**
+- Do not run `npm install`, `pnpm add`, `yarn add`, `pip install`, `cargo install`, `curl | sh`, `Invoke-WebRequest`, or browser downloads until the package/artifact has an `APPROVE` or explicitly resolved `REVIEW` decision.
+- Treat `BLOCK` as a hard stop. Pick another option.
+- Treat raw GitHub zips, shortened URLs, executable installers, shell scripts, model weights, browser extensions, and archives as quarantined until checksum/signature/source are verified.
+- Run `node ../vaultspark-studio-ops/scripts/scan-npm-supply-chain.mjs --json` after lockfile changes and before push/closeout.
+- Existing valid provenance is not enough by itself; compromised publisher workflows can still produce signed malicious packages.
+
+**References.**
+- Protocol: `vaultspark-studio-ops/docs/OBELISK_PACKAGE_TRUST_PROTOCOL.md`
+- Gate: `node ../vaultspark-studio-ops/scripts/package-trust.mjs`
+- IOC scanner: `node ../vaultspark-studio-ops/scripts/scan-npm-supply-chain.mjs`
+
+---
+
+## Agent Co-Authoring Protocol (CANON-022)
+
+When two or more agents work on a shared concern (canon, protocol, schema, ecosystem-wide change), responsibilities split into four roles:
+
+- **Designer** — owns the source-of-truth document + architecture decisions (e.g. Hub for Obelisk · founder for SOUL · IGNIS for scoring rubric)
+- **Mechanizer** — owns canon elevation · capability declarations · doctor probes · templates (studio-ops for every canon)
+- **Propagator** — owns cross-repo rollout via CANON-016 + CANON-018 (studio-ops exclusively)
+- **Implementer** — owns code that uses the protocol primitives (each project per its medium)
+
+**Coordination primitives (Ark cargo).**
+- **`working-on`** (TTL 6h) — advertises "I'm actively editing this surface; coordinate before conflicting." Other agents drain + defer.
+- **`content-acked`** (TTL 168h) — explicit acknowledgment that received content was READ + APPLIED, not just drained. Closes the diagnose→apply loop that `cargo-receipt` leaves open.
+- **`registry-change`** (TTL 168h) — broadcasts PROJECT_REGISTRY mutations (new-repo, status-flip, medium-change, field-update, repo-archived) so all agents stay in sync without polling.
+- **`security-protocol-update`** (no TTL) — Obelisk security/auth/capability protocol decision broadcast. Studio-ops + Hub only as producers.
+
+**Mandatory rules for agents.**
+- Mechanizer NEVER modifies Designer's source-of-truth file directly; ship Ark suggestion cargo instead
+- Designer NEVER writes propagation logic — ship cargo and trust the Propagator
+- For any cross-agent shared surface, subscribe to `working-on` + `content-acked` cargo for that surface
+- Every adoption file declares `coAuthoringRole: designer|mechanizer|propagator|implementer`
+- Doctor probe `cross-repo-sync-health` warns on Ark RTT > 24h between active sibling agents
+
+**Worked example.** Obelisk Phase 0 (S119): Hub designed + broadcast (Designer) → studio-ops elevated CANON-021 + 6 capabilities + doctor probe + inventory script + brief tile (Mechanizer) → studio-ops broadcast canon-update to 27 repos via CANON-016 (Propagator) → future `VaultSparkStudios/obelisk` repo will own implementation (Implementer).
+
+**References.**
+- Canon entry: `vaultspark-studio-ops/docs/STUDIO_CANON.md` → CANON-022
+- Cargo manifest: `vaultspark-studio-ops/portfolio/ark/MANIFEST.json`
+- Doctor probe: `cross-repo-sync-health` (in `scripts/run-doctor.mjs`)
+- Registry watcher: `node scripts/watch-registry-changes.mjs`
 
 ---
 
