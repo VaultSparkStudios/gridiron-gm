@@ -5,7 +5,7 @@
     "slug": "gridiron-gm",
     "name": "Gridiron GM",
     "repo": "VaultSparkStudios/gridiron-gm",
-    "localPath": "C:\\Users\\p4cka\\documents\\development\\Gridiron-GM"
+    "localPath": "<dev-root>\\Gridiron-GM"
   },
   "sourceTemplates": {
     "agents": "docs/templates/project-system/AGENTS_PROJECT.template.md",
@@ -161,7 +161,7 @@
       "local": [
         {
           "label": "workspace",
-          "path": "C:\\Users\\p4cka\\documents\\development\\Gridiron-GM"
+          "path": "<dev-root>\\Gridiron-GM"
         }
       ],
       "staging": [],

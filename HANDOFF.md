@@ -318,7 +318,7 @@ The postbuild script that does the `404.html` copy.
 
 ### Source of truth for template files:
 All template source files exist at:
-`C:\Users\p4cka\documents\development\VaultSpark Football GM\docs\` and `\docs\templates\`
+`<dev-root>\VaultSpark Football GM\docs\` and `\docs\templates\`
 
 Read those to copy into this repo — do NOT reference the `vaultspark-football-gm` slug values, use `gridiron-gm` everywhere.
 
@@ -376,12 +376,12 @@ After any code change, verify:
 ## 12. FILE LOCATIONS (LOCAL)
 
 ```
-C:\Users\p4cka\documents\development\gridiron-gm\          ← THIS REPO (working directory)
+<dev-root>\gridiron-gm\          ← THIS REPO (working directory)
   src/App.jsx                                               ← Live source (v3.2)
   gridiron-gm-v3.1-stable.jsx                              ← v3.1 backup
   HANDOFF.md                                               ← This file
 
-C:\Users\p4cka\documents\development\VaultSpark Football GM\  ← OLD local copy, different slug
+<dev-root>\VaultSpark Football GM\  ← OLD local copy, different slug
   docs/                                                     ← Source for template files to copy
   docs/templates/                                           ← Template files to copy into gridiron-gm/docs/
 ```

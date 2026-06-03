@@ -6,7 +6,7 @@ Deployment-focused operational handoff for Gridiron GM.
 
 - GitHub: `VaultSparkStudios/Gridiron-GM`
 - Branch: `main`
-- Local: `C:\Users\p4cka\documents\development\gridiron-gm\`
+- Local: `<dev-root>\gridiron-gm\`
 
 ## Public frontend
 
