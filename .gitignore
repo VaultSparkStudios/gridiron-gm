@@ -5,3 +5,6 @@ dist
 Vaulted-PW.txt
 context/.session-lock
 .claude/
+
+# Private surfaces — never commit (sanitization 2026-06-03)
+docs/CREATIVE_DIRECTION_RECORD.md
