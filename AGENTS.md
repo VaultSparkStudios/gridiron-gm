@@ -341,4 +341,88 @@ When two or more agents work on a shared concern (canon, protocol, schema, ecosy
 
 ---
 
+## Free-Tier Cost Discipline (CANON-029 · CDR-S138.3, MANDATORY pre-revenue)
+
+Every Studio project's free tier MUST be **per-user cost-neutral to the studio at 1000+ users**. Features that consume per-user variable studio cost (LLM API calls without BYOK, image/audio/video gen, transcription, transactional email beyond hard ceiling, vector DB writes, per-user paid compute, per-user paid monitoring, metered third-party APIs) MUST be gated to paid tiers OR served via no-cost-to-studio patterns.
+
+**Approved free-tier patterns:**
+- **BYOK (Bring Your Own Key)** — user supplies provider API key; we orchestrate. Default for LLM features on free plans. Reference: Velaxis.
+- **Local-only compute** — browser-side, localStorage / IndexedDB.
+- **Cached / static** — pre-computed at build, served from CDN / edge KV.
+- **Trial-ceiling** — N free uses lifetime, hard 429 with upgrade prompt (NOT degraded experience).
+- **Stay-in-free-band** — Cloudflare Workers free 100K/day, Supabase free 500MB, Hetzner CX22 $5/mo flat.
+
+**Forbidden on free tier (always paid):** studio-paid LLM API · image/audio/video gen · transcription · transactional email beyond hard ceiling · vector DB writes beyond free band · per-user paid compute · per-user paid monitoring · per-call metered third-party APIs.
+
+**Implementation gate (MANDATORY every project):**
+- `context/PROJECT_STATUS.json` declares `freeTierCostStatus`: `cost-neutral | BYOK | trial-ceiling | paid-only | exempt-internal | AUDIT-PENDING` (default).
+- `app-release-gate` blocks SPARKED flip if `AUDIT-PENDING`.
+- Free-tier feature flags enforce gate **server-side** (never trust client).
+- Audit doc: `docs/FREE_TIER_AUDIT_<date>.md` (template: `vaultspark-studio-ops/docs/FREE_TIER_AUDIT_2026-05-22_PORTFOLIO.md`).
+
+**Approved exceptions (narrow, log in DECISIONS.md):** time-boxed acquisition burn with named $-cap + kill date · `audience: internal` projects · copyleft fork obligations.
+
+**Reference good patterns:** Seamline `lib/tiers.ts` (per-feature cost comments + server-side enforcement) · Velaxis (BYOK + no backend) · Vorn `llm-gateway.ts` (sophisticated embedding/semantic/prompt caching for paid tier).
+
+**Rationale.** Zero revenue + only costs. 1000 free users × $0.05/user/day LLM × 5 SPARKED projects = $7.5K/mo burn before $1 of revenue. Pre-revenue, no general override.
+
+Full canon: `vaultspark-studio-ops/docs/STUDIO_CANON.md` → CANON-029.
+
+---
+
+## Unified Skill Brief (CANON-031 candidate · S141)
+
+Every founder-facing skill — `/start`, `/audit`, `/implement`, `/closeout`, `/go` — produces its output through ONE shared library. Same 95-col frame, same voice rules, same schema. Different `kind` flips score labels; nothing else moves.
+
+**Library:** `vaultspark-studio-ops/scripts/lib/skill-brief.mjs`
+**Spec:** `vaultspark-studio-ops/docs/SKILL_BRIEF_SPEC.md`
+**Closeout-specific:** `vaultspark-studio-ops/docs/CLOSEOUT_BRIEF_SPEC.md`
+**Visual mock:** `vaultspark-studio-ops/docs/CLOSEOUT_BRIEF_MOCK.md`
+
+**Five canonical brief kinds:**
+
+| Kind | Skill | Left score | Right score |
+|---|---|---|---|
+| `orientation` | /start | Context Readiness | Cross-Repo Urgency |
+| `audit` | /audit | Combined Priority | Innovation Density |
+| `plan` | /implement | Effort Shippability | Execution Confidence |
+| `closeout` | /closeout | Project Impact | Ecosystem Impact |
+| `sprint` | /go | Round Velocity | Round Quality |
+
+**Per-item required fields:** `id`, `slug`, `title`, `axis`, `leftScore` (1–10), `rightScore` (1–10), `insight` (2–3 sentences, voice-driven, no buzzwords), `evidence`.
+
+**Voice rules for `insight`** (apply universally):
+- 2–3 sentences max
+- Lead with what changed in plain English; optional second/third = why it matters or what compounds
+- Warm-confident voice, slight wit OK when honest
+- Forbidden words: leveraged · best-in-class · stakeholder · synergies · robust · seamless
+- Forbidden openers: "This implementation/feature/change..."
+- No process narration · no emoji inside `insight`
+
+**Cross-agent invocation:**
+- Claude Code: skill bodies import `scripts/lib/skill-brief.mjs` directly
+- Codex: `node -e "import('./scripts/lib/skill-brief.mjs').then(m => console.log(m.render(JSON.parse(process.argv[1]))))" '<json>'`
+- ChatGPT custom GPTs: studio-ops MCP tool `skill_brief_render({ brief })`
+- Managed agents: outcome rubric requires brief JSON; harness invokes renderer
+
+If your project doesn't yet produce briefs at session boundaries, the next `/closeout` will queue propagation. No agent invents its own format.
+
+---
+
+## SIL v5.0 (CANON-030 candidate · S141)
+
+Studio Improvement Loop scoring expands from 1000 max (v3) → **2000 max + ×1.15 halo = 2300** (v5). Three tiers:
+
+- **Base** (10 categories × 100 = 1000, always-on) — functional/aligned/healthy
+- **Depth** (5 categories × 100 = 500, unlock at base ≥ 700) — good citizen of the studio
+- **Mastery** (5 categories × 100 = 500, unlock at base+depth ≥ 1200) — doing things only this studio can
+
+Mastery categories: Studio Tooling Adoption · Proprietary Surface + IP Posture · Operational Excellence · Stakeholder Value Loop · Anti-Fragility.
+
+Decay: −2%/week per stale category. Halo: +0.5%/gene · +1%/sidecar · +0.3%/importer · +2%/canon (max ×1.15).
+
+Full proposal: `vaultspark-studio-ops/docs/SIL_V5_PROPOSAL.md`. Dual-render v3+v5 begins after canon approval. Library to build: `scripts/lib/sil-v5.mjs`.
+
+---
+
 <!-- studio-os:universal-sections-end -->
