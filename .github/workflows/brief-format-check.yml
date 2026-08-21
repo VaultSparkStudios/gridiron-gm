@@ -5,31 +5,20 @@ name: brief-format-check
 # Fails the run if docs/STARTUP_BRIEF.md has drifted from the canonical format
 # defined by scripts/validate-brief-format.mjs. Designed to be called two ways:
 #
-#   1. Automatically on every push or PR that touches context/, docs/, scripts/,
-#      or the brief itself — catches drift at merge time.
-#   2. On a daily cron — catches drift introduced by out-of-band processes
-#      (manual edits, agents that skipped the canonical renderer).
+#   1. On pull requests that touch the brief or its validator/renderer.
+#   2. Manually when an out-of-band process may have changed a brief.
 #
 # Propagated to every registry repo by scripts/sync-studio-os-remote.mjs.
 # Do not edit the file in a child repo — the next 6h sync pass will overwrite it.
 # All format-rule changes happen in studio-ops and flow outward.
 
 on:
-  push:
-    paths:
-      - 'docs/STARTUP_BRIEF.md'
-      - 'scripts/validate-brief-format.mjs'
-      - 'scripts/render-startup-brief.mjs'
-      - 'context/**'
   pull_request:
     paths:
       - 'docs/STARTUP_BRIEF.md'
       - 'scripts/validate-brief-format.mjs'
       - 'scripts/render-startup-brief.mjs'
       - 'context/**'
-  schedule:
-    # Daily at 13:17 UTC — catches out-of-band drift (agent improvisation, manual edits)
-    - cron: '17 13 * * *'
   workflow_dispatch:
 
 permissions:

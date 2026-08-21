@@ -35,6 +35,12 @@ Classify: **Achieved** · **Partial** *(note scope drift)* · **Redirected** *(l
     ```
     Runs: doctor --loop → refresh startup brief → **auto-trim LATEST_HANDOFF to last 2 sessions** (`compact-handoff --trim`) → stamp PROJECT_STATUS → git status + diff preview → **HUMAN CONFIRMATION** → commit (conventional msg) → push → clear lock + beacon → print STATUS BOARD. Never skip confirmation. `--dry-run` shows the plan without writing.
 
+12. **Deploy Currency (CANON-036 — production must not silently lag `main`).** After push, if this session landed user-visible changes and the project has a production deploy path, do **not** end with production behind:
+    - **`autoDeploy: "ci-on-push"`** → push already triggered CD; confirm the deploy ran and record it. Nothing else to do.
+    - **`autoDeploy: "closeout"`** → **run the deploy yourself** (`deployCommand`, e.g. `npm run deploy` / `wrangler deploy`) once the gates pass: CI green · staging verified (CANON-007) · no secret in the diff · normal (non-force) deploy · Founder-Twin approves the deploy command (CANON-024). A scripted deploy is agent work, not a human blocker (CANON-019).
+    - **Gate unmet / no deploy path / `autoDeploy: "none"` (internal)** → if production legitimately lags, record `[BLOCKER] production N commits behind — deploy deferred: <reason>` in `TASK_BOARD` + `LATEST_HANDOFF`. Never skip the deploy *silently*.
+    - Set `Deploy:` in Where-We-Left-Off accordingly (`deployed to {env}` / `pending — deferred: <reason>` / `N/A`).
+
 ### Where We Left Off  *(write to top of LATEST_HANDOFF.md)*
 
 ```markdown

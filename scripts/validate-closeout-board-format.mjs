@@ -20,12 +20,13 @@ const STDIN_MODE = args.includes('--stdin');
 const positional = args.filter((a) => !a.startsWith('--'));
 const targetPath = positional[0] || path.join(ROOT, 'docs', 'CLOSEOUT_STATUS_BOARD.md');
 
-const REQUIRED_BLOCKS = [
+export const REQUIRED_BLOCKS = [
   { label: 'SESSION CLOSEOUT header', pattern: /SESSION CLOSEOUT/ },
   { label: 'WHAT SHIPPED block', pattern: /WHAT SHIPPED/ },
   { label: 'SCORES block', pattern: /SCORES/ },
   { label: 'WRITE-BACK STATUS block', pattern: /WRITE-BACK STATUS/ },
   { label: 'GIT STATUS block', pattern: /GIT STATUS/ },
+  { label: 'DEPLOYMENT block (staging + live, S183)', pattern: /DEPLOYMENT/ },
   { label: 'POST-SESSION SIGNALS block', pattern: /POST-SESSION SIGNALS/ },
   { label: 'NEXT SESSION block', pattern: /NEXT SESSION/ },
 ];

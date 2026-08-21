@@ -22,92 +22,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { AGENT_DNA_STRATEGY_KEYWORDS as STRATEGY_KEYWORDS } from './lib/shared-policies.mjs';
+import { validateJsonSchema } from './lib/json-schema-lite.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, '..');
 const DNA_DIR = path.join(REPO_ROOT, 'agents', 'dna');
 const SCHEMA_PATH = path.join(REPO_ROOT, 'docs', 'templates', 'project-system', 'agent-dna.schema.json');
 
-const STRATEGY_KEYWORDS = ['guardrail', 'trust_tier', 'scope_statement', 'budget_ceiling', 'studio-internal', 'confidential'];
-
 function loadJson(p) {
   return JSON.parse(fs.readFileSync(p, 'utf8'));
-}
-
-// Minimal JSON-Schema checker — handles the subset we use in agent-dna.schema.json.
-// Avoids pulling ajv for a repo-local 150-line schema. Good enough + zero deps.
-function validateSchema(value, schema, pathPrefix = '') {
-  const errs = [];
-  if (schema.const !== undefined && value !== schema.const) {
-    errs.push(`${pathPrefix || '/'} must equal ${JSON.stringify(schema.const)}`);
-  }
-  if (schema.enum && !schema.enum.includes(value)) {
-    errs.push(`${pathPrefix || '/'} must be one of ${JSON.stringify(schema.enum)}, got ${JSON.stringify(value)}`);
-  }
-  if (schema.type) {
-    const types = Array.isArray(schema.type) ? schema.type : [schema.type];
-    const actual = Array.isArray(value) ? 'array' : value === null ? 'null' : typeof value;
-    if (!types.includes(actual) && !(types.includes('integer') && actual === 'number' && Number.isInteger(value))) {
-      errs.push(`${pathPrefix || '/'} must be ${types.join('|')}, got ${actual}`);
-      return errs;
-    }
-  }
-  if (schema.pattern && typeof value === 'string' && !new RegExp(schema.pattern).test(value)) {
-    errs.push(`${pathPrefix || '/'} must match /${schema.pattern}/`);
-  }
-  if (schema.format === 'uri' && typeof value === 'string' && !/^https?:\/\//.test(value)) {
-    errs.push(`${pathPrefix || '/'} must be http(s) URI`);
-  }
-  if (schema.minLength !== undefined && typeof value === 'string' && value.length < schema.minLength) {
-    errs.push(`${pathPrefix || '/'} shorter than minLength ${schema.minLength}`);
-  }
-  if (schema.maxLength !== undefined && typeof value === 'string' && value.length > schema.maxLength) {
-    errs.push(`${pathPrefix || '/'} longer than maxLength ${schema.maxLength}`);
-  }
-  if (schema.minimum !== undefined && typeof value === 'number' && value < schema.minimum) {
-    errs.push(`${pathPrefix || '/'} below minimum ${schema.minimum}`);
-  }
-  if (schema.maximum !== undefined && typeof value === 'number' && value > schema.maximum) {
-    errs.push(`${pathPrefix || '/'} above maximum ${schema.maximum}`);
-  }
-  if (schema.maxItems !== undefined && Array.isArray(value) && value.length > schema.maxItems) {
-    errs.push(`${pathPrefix || '/'} exceeds maxItems ${schema.maxItems}`);
-  }
-  if (schema.type === 'object' || (schema.properties && typeof value === 'object' && !Array.isArray(value))) {
-    if (schema.required) {
-      for (const k of schema.required) {
-        if (!(k in (value || {}))) errs.push(`${pathPrefix}/${k} required`);
-      }
-    }
-    if (schema.properties) {
-      for (const [k, subSchema] of Object.entries(schema.properties)) {
-        if (value && k in value) {
-          errs.push(...validateSchema(value[k], subSchema, `${pathPrefix}/${k}`));
-        }
-      }
-    }
-    if (schema.additionalProperties === false && schema.properties && value) {
-      for (const k of Object.keys(value)) {
-        if (!(k in schema.properties)) errs.push(`${pathPrefix}/${k} additional property not allowed`);
-      }
-    }
-  }
-  if (schema.type === 'array' && Array.isArray(value) && schema.items) {
-    value.forEach((item, i) => {
-      errs.push(...validateSchema(item, schema.items, `${pathPrefix}[${i}]`));
-    });
-  }
-  if (schema.allOf) {
-    for (const sub of schema.allOf) {
-      if (sub.if && sub.then) {
-        const ifErrs = validateSchema(value, sub.if, pathPrefix);
-        if (ifErrs.length === 0) {
-          errs.push(...validateSchema(value, sub.then, pathPrefix));
-        }
-      }
-    }
-  }
-  return errs;
 }
 
 function enforceCrossRules(dnaList) {
@@ -165,7 +89,7 @@ function main() {
     const rel = path.relative(REPO_ROOT, file);
     try {
       const dna = loadJson(file);
-      const errs = validateSchema(dna, schema);
+      const errs = validateJsonSchema(dna, schema);
       results.push({ file: rel, ok: errs.length === 0, errors: errs });
       dnaList.push({ file: rel, dna });
     } catch (e) {

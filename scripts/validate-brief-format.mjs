@@ -137,7 +137,17 @@ export function validateStartupBrief(body) {
     missingRecommended: [],
     forbiddenHits: [],
     bodyShape: null,
+    staleBrief: null,
   };
+
+  // S142 audit item 2 — brief integrity self-assertion. The renderer stamps
+  // `<!-- brief-coherent: true|false -->` after a three-way check (SIL log vs
+  // PROJECT_STATUS vs rendered headline). false → the brief is showing stale or
+  // unparseable state and /start must NOT proceed on it.
+  const coherentMatch = body.match(/<!--\s*brief-coherent:\s*(true|false)\s*-->/i);
+  if (coherentMatch && coherentMatch[1].toLowerCase() === 'false') {
+    findings.staleBrief = 'brief-coherent: false — renderer detected stale/unparseable SIL state (see ⛔ STALE BRIEF banner). Re-render before /start.';
+  }
 
   for (const block of REQUIRED_BLOCKS) {
     if (!block.pattern.test(body)) {
@@ -162,9 +172,95 @@ export function validateStartupBrief(body) {
   return {
     ok: findings.missingRequired.length === 0
       && findings.forbiddenHits.length === 0
-      && findings.bodyShape === null,
+      && findings.bodyShape === null
+      && findings.staleBrief === null,
     ...findings,
   };
+}
+
+// ── S154 audit #4 ([SIL:2 S150 #2]) — per-tile byte budgets ─────────────────
+// Bloat must fail at the SOURCE tile, not only at total brief size. Budgets
+// sized from healthy S153 measurements + headroom. Tiles not listed get the
+// default. Shared by render-startup-brief.mjs (trim at write time) and this
+// validator (report) so producer and gate cannot drift (S153 lesson).
+export const TILE_BUDGETS = {
+  'GENIUS HIT LIST': 3200,   // measured 2.5KB healthy — the #1 bloat magnet
+  'SCORE': 2500,             // measured 2.26KB
+  'SIGNALS': 1800,           // measured 1.53KB
+  'ORCHESTRATOR': 1100,
+  'PORTFOLIO TASK BOARDS': 900,
+  'IGNIS INSIGHT': 1100,
+  'FOUNDER UNLOCKS': 700,
+  'ROUTER SUGGESTS': 600,
+  'SIL CATEGORY GAPS': 900,
+  DEFAULT: 1400,
+};
+
+export function tileBudgetFor(title) {
+  // GENIUS box renders its title on line 2 → briefBlockSizes sees UNTITLED.
+  if (title === 'UNTITLED') return TILE_BUDGETS['GENIUS HIT LIST'];
+  const key = Object.keys(TILE_BUDGETS).find(k => k !== 'DEFAULT' && title.toUpperCase().startsWith(k));
+  return key ? TILE_BUDGETS[key] : TILE_BUDGETS.DEFAULT;
+}
+
+/**
+ * Check every box-drawing tile against its budget.
+ * Returns { overBudget: [{title, bytes, budget, pct}], worst }.
+ */
+export function checkTileBudgets(body) {
+  const overBudget = [];
+  for (const b of briefBlockSizes(body)) {
+    const budget = tileBudgetFor(b.title);
+    if (b.bytes > budget) {
+      overBudget.push({ title: b.title, bytes: b.bytes, budget, pct: Math.round((b.bytes / budget) * 100) });
+    }
+  }
+  overBudget.sort((a, b) => b.pct - a.pct);
+  return { overBudget, worst: overBudget[0] || null };
+}
+
+/**
+ * Trim overflowing tiles at the source: keeps the tile's header + as many
+ * content lines as fit, then inserts an explicit '· trimmed (tile budget)'
+ * marker before the closing line. Never trims silently (CANON-031).
+ */
+export function enforceTileBudgets(body) {
+  const trimmed = [];
+  const out = body.replace(/(╔[^\n]*\n)([\s\S]*?)(╚[^\n]*╝)/g, (whole, head, mid, tail) => {
+    const title = whole.match(/^╔[═\s]*([^═╗]+?)(?:\s*═|╗)/m)?.[1]?.trim() || 'UNTITLED';
+    const budget = tileBudgetFor(title);
+    if (Buffer.byteLength(whole, 'utf8') <= budget) return whole;
+    const lines = mid.split('\n');
+    const overhead = Buffer.byteLength(head + tail, 'utf8') + 80; // marker allowance
+    let used = 0;
+    const kept = [];
+    for (const line of lines) {
+      const lb = Buffer.byteLength(line + '\n', 'utf8');
+      if (used + lb > budget - overhead) break;
+      kept.push(line);
+      used += lb;
+    }
+    const dropped = lines.length - kept.length;
+    if (dropped <= 0) return whole;
+    trimmed.push({ title, dropped, budget });
+    return head + kept.join('\n') + `\n║  · ${dropped} line(s) trimmed (tile budget ${(budget / 1024).toFixed(1)}KB)\n` + tail;
+  });
+  return { body: out, trimmed };
+}
+
+export function briefBlockSizes(body) {
+  const blocks = [];
+  const re = /(╔[^\n]*\n[\s\S]*?╚[^\n]*╝)/g;
+  for (const match of body.matchAll(re)) {
+    const block = match[1];
+    const title = block.match(/^╔[═\s]*([^═╗]+?)(?:\s*═|╗)/m)?.[1]?.trim() || 'UNTITLED';
+    blocks.push({
+      title,
+      bytes: Buffer.byteLength(block, 'utf8'),
+      lines: block.split(/\r?\n/).length,
+    });
+  }
+  return blocks.sort((a, b) => b.bytes - a.bytes);
 }
 
 async function readTarget() {
@@ -196,7 +292,64 @@ if (IS_DIRECT_RUN) {
   }
 
   const result = validateStartupBrief(body);
-  const fail = !result.ok;
+  let fail = !result.ok;
+
+  // S124 #8 — Token-budget enforcer. Brief is the only canonical /start
+  // surface — bloat = re-introducing the 100KB pre-v4 tax. Persist size to
+  // .cache/brief-size.json for doctor probe.
+  // S153 re-baseline: the 13/15KB budget predated the augment layer (S118
+  // R-H5/R-H12) and the S121–S142 tile additions (PROPAGATION · ARK · ARK
+  // PRIORITY · CASCADE · ANALYTICA · OBELISK · SIL GAPS · ROUTER — ~5.7KB of
+  // deliberate, individually-shipped surface). A fresh render+augment measured
+  // 20.9KB and hard-failed every /start deterministically. 24KB ≈ 5.2K tokens
+  // — still inside the v1.3 token-lean target (≤8K at session start).
+  // Trim-first rule stands: no-data boxes are skipped (augment S153).
+  const sizeBytes = Buffer.byteLength(body, 'utf8');
+  const topBlocks = briefBlockSizes(body).slice(0, 5);
+  const BUDGET_WARN = 18_432; // 18KB
+  const BUDGET_FAIL = 24_576; // 24KB
+  const budgetStatus = sizeBytes > BUDGET_FAIL ? 'fail' : sizeBytes > BUDGET_WARN ? 'warn' : 'pass';
+  try {
+    const fs2 = await import('node:fs');
+    const path2 = await import('node:path');
+    const cacheDir = path2.join(path2.dirname(targetPath || '.'), '..', '.cache');
+    fs2.mkdirSync(cacheDir, { recursive: true });
+    fs2.writeFileSync(path2.join(cacheDir, 'brief-size.json'), JSON.stringify({
+      generatedAt: new Date().toISOString(),
+      sizeBytes,
+      budgetWarn: BUDGET_WARN,
+      budgetFail: BUDGET_FAIL,
+      status: budgetStatus,
+      topBlocks,
+      overBudgetTiles: checkTileBudgets(body).overBudget, // S154 #4
+    }, null, 2));
+  } catch {}
+  if (budgetStatus === 'fail') fail = true;
+  // S154 #4 — per-tile attribution: name the offending tile, don't just say "too big".
+  // S248 [audit #10] — tile-budget hard contract: the per-tile check existed since
+  // S154 but was advisory-only, so a tile could run over budget every render with
+  // nothing gating the bloat (SIGNALS sat at 102% for sessions). Contract: >110%
+  // of a tile's budget FAILS validation; 100–110% stays a warning. The sanctioned
+  // escape hatch is enforceTileBudgets' explicit '· trimmed (tile budget)' marker
+  // — trim the tile at the renderer, never widen the contract silently.
+  const TILE_HARD_FAIL_PCT = 110;
+  const tileCheck = checkTileBudgets(body);
+  if (!JSON_MODE && tileCheck.overBudget.length) {
+    for (const t of tileCheck.overBudget.slice(0, 4)) {
+      const hard = t.pct > TILE_HARD_FAIL_PCT;
+      console.log(`  ${hard ? '⛔' : '⚠'}  tile over budget: ${t.title} ${t.bytes}B > ${t.budget}B (${t.pct}%)${hard ? ' — HARD FAIL (>110%) · trim the tile at the renderer' : ''}`);
+    }
+  }
+  if (tileCheck.overBudget.some((t) => t.pct > TILE_HARD_FAIL_PCT)) fail = true;
+  if (!JSON_MODE && budgetStatus !== 'pass') {
+    console.log(`  ${budgetStatus === 'fail' ? '⛔' : '⚠'}  brief size ${sizeBytes}B ${budgetStatus === 'fail' ? `> ${BUDGET_FAIL}B (HARD FAIL — trim tiles)` : `> ${BUDGET_WARN}B (warn — approaching budget)`}`);
+    if (topBlocks.length) {
+      console.log('  top brief blocks by size:');
+      for (const block of topBlocks.slice(0, 3)) {
+        console.log(`    - ${block.title}: ${block.bytes}B · ${block.lines} lines`);
+      }
+    }
+  }
 
   if (JSON_MODE) {
     process.stdout.write(JSON.stringify({
@@ -206,11 +359,22 @@ if (IS_DIRECT_RUN) {
       missingRecommended: result.missingRecommended,
       forbiddenHits: result.forbiddenHits,
       bodyShape: result.bodyShape,
+      staleBrief: result.staleBrief,
+      budget: {
+        sizeBytes,
+        warnBytes: BUDGET_WARN,
+        failBytes: BUDGET_FAIL,
+        status: budgetStatus,
+        topBlocks,
+      },
     }, null, 2) + '\n');
   } else {
     const header = `validate-brief-format · ${STDIN_MODE ? '<stdin>' : path.relative(process.cwd(), targetPath)}`;
     console.log(header);
     console.log('─'.repeat(Math.min(72, header.length + 8)));
+    if (result.staleBrief) {
+      console.log(`  ⛔  STALE BRIEF: ${result.staleBrief}`);
+    }
     if (result.bodyShape) {
       console.log(`  ⛔  ${result.bodyShape}`);
     }
