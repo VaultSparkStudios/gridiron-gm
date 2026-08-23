@@ -68,12 +68,27 @@
     },
     "cadence": {
       "type": "object",
+      "required": ["trigger"],
       "additionalProperties": false,
       "properties": {
         "trigger": { "type": "string", "enum": ["cron", "webhook", "pr-event", "manual", "event-bus"] },
         "schedule": { "type": "string", "description": "Cron expression if trigger=cron" },
-        "timezone": { "type": "string", "default": "UTC" }
-      }
+        "timezone": { "type": "string", "default": "UTC" },
+        "event": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$", "description": "Typed Studio event name when trigger=event-bus; the event name is separate from the transport." },
+        "dispatcher": { "type": "string", "pattern": "^scripts/[a-z0-9][a-z0-9-]*\\.mjs$", "description": "Repository-relative dispatcher entrypoint that consumes the event." },
+        "maintenance_job": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$", "description": "Maintenance registry job that invokes the dispatcher, when scheduled execution is used." },
+        "rationale": { "type": "string", "maxLength": 500, "description": "Why this cadence is active and any execution boundary that must remain explicit." }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "trigger": { "const": "cron" } }, "required": ["trigger"] },
+          "then": { "type": "object", "required": ["schedule"] }
+        },
+        {
+          "if": { "properties": { "trigger": { "const": "event-bus" } }, "required": ["trigger"] },
+          "then": { "type": "object", "required": ["event", "dispatcher"] }
+        }
+      ]
     },
     "tools": {
       "type": "array",
@@ -103,7 +118,7 @@
       }
     },
     "owner": { "type": "string", "default": "VaultSpark Studios" },
-    "status": { "type": "string", "enum": ["draft", "staged", "live", "paused", "retired"], "default": "draft" }
+    "status": { "type": "string", "enum": ["draft", "staged", "live", "paused", "retired"], "default": "draft", "description": "Agent lifecycle state. Deployed/active agents use the canonical live value." }
   },
   "allOf": [
     {
