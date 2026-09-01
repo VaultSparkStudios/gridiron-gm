@@ -71,6 +71,7 @@ Natural-language invocation works too. Typing "start" without the slash, or sayi
 
 **v1.3 — Token-lean, AI-first (S101).** Target: ≤8K tokens consumed by session start. Raw context files are synthesized into the startup brief — they are NOT individually read at startup.
 
+0. **Sync `main` (direct-to-main repos).** Run `node scripts/start-sync.mjs` (Studio Ops) / `node ../vaultspark-studio-ops/scripts/start-sync.mjs` (siblings with the propagated copy). It classifies working-tree residue with the closeout's own receipt allowlist: **clean** → `git pull --rebase`; **receipt-only** (append-only ledgers the last closeout's push/deploy wrote after its final commit) → `git pull --rebase --autostash`, so the receipts ride this session's first commit; **substantive** → it stops and names the files — a prior session's WIP is never auto-stashed. A bare `git pull --rebase` refuses receipt residue ("You have unstaged changes") and that refusal was being resolved by hand every session (S305).
 1. **Run start-recovery preflight, then write session lock.** Before overwriting any existing lock, run `node scripts/start-recovery-preflight.mjs --json` when present. If it reports `possible-cutoff-*`, read the recovery-integrity verdict and use the arc recovery branch before mutating files. Then use the dedicated standalone script — bash `echo` silently fails for dotfiles on Windows, and ops.mjs may not be present in all project repos:
    ```
    node scripts/write-session-lock.mjs --agent <claude-code|codex|other> --trigger <founder-mission|recovery|scheduled-routine|ad-hoc>
@@ -851,7 +852,9 @@ One-command operational security sweep:
 
 ### §11 — `/app-release-gate` (pre-release checklist)
 
-1. CI health check — last 5 workflow runs all green.
+1. **CI health check — one of two evidence lanes must be green.**
+   - **Hosted lane:** the last 5 workflow runs are all green; or
+   - **Budget-independent lane:** every non-green hosted run is a verified zero-step GitHub Actions budget rejection **and** `node scripts/check-release-proof.mjs --sha HEAD` passes a signed, network-isolated, exact-SHA receipt from the policy-declared independent runner. A local test run, unsigned JSON, stale receipt, different SHA, non-isolated persistent runner, or merely skipped workflow is never a substitute. This alternate lane exists so the founder's hard $5/month Actions ceiling cannot make safe releases impossible; it does not weaken test, staging, rollback, secrets, or founder-approval gates.
 2. Staging smoke test — `curl -f ${stagingUrl}/_health`.
 3. Secrets completeness — capability map for this project all READY.
 4. Branding compliance — CANON-006 check.
