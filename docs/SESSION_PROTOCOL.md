@@ -939,3 +939,40 @@ Read `AGENTS.md` at repo root → read this file → execute. No agent-specific 
 - **Version bump** (`<!-- session-protocol-version: -->` at top) when a change is breaking or a new command lands.
 
 *Canonical source: `vaultspark-studio-ops/docs/SESSION_PROTOCOL.md`. Propagated to all registry repos.*
+
+<!-- BEGIN GENERATED: audit-premise-vocabulary (gen-premise-vocabulary.mjs) -->
+
+#### Audit premise vocabulary — the ONLY legal adapters and operators
+
+A premise is a typed object, not a sentence. An adapter name that does not appear
+below resolves to nothing, and the premise stays `unverified` forever — which reads
+as verification and is not. Every premise needs `claim`, `adapter`, `target`,
+`operator` and `expected`.
+
+| adapter | measures | needs |
+|---|---|---|
+| `doctor-probe` | presence, outcome | `target` |
+| `doctor-probe-absent` | presence | `target` |
+| `doctor-blocking` | outcome, count | `target` |
+| `workflow-schedules` | count | `target` |
+| `tests` | outcome, count | `target` |
+| `file-exists` | presence | `target` |
+| `deploy-receipt` | presence, outcome | `target` |
+| `task-lifecycle` | state | `target` |
+| `file-content` | content | `target`, `pattern` |
+| `grep` | content | `target`, `pattern` |
+| `grep-count` | content, count | `target`, `pattern` |
+
+**Operators:** `eq` · `neq` · `lt` · `lte` · `gt` · `gte` · `contains`
+
+**Refused on purpose — a refusal is not a gap:**
+- `exit-code` — runs a command to read its exit status — a sidecar must never make the verifier execute arbitrary commands (CANON-024).
+- `cli-json` — shells out and parses the output — same CANON-024 refusal as exit-code, and CLI output is not a stable contract.
+- `command-json` — is cli-json under another name — shelling out and parsing stdout is refused under CANON-024, and renaming the adapter does not change what it does.
+- `cli-output` — is cli-json under another name — see cli-json.
+
+Presence is the adapter's job, never an operator: write `operator: "eq"` with
+`expected: true`, not `operator: "present"`. Verify before shipping the plan:
+`node scripts/check-audit-premises.mjs --audit docs/AUDIT_<date>.json`.
+
+<!-- END GENERATED: audit-premise-vocabulary -->
