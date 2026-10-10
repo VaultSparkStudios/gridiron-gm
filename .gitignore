@@ -8,3 +8,7 @@ context/.session-lock
 
 # Private surfaces — never commit (sanitization 2026-06-03)
 docs/CREATIVE_DIRECTION_RECORD.md
+dist-mobile
+smoke-failure.png
+smoke-failure.png
+health-failure.png

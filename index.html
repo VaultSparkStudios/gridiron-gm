@@ -3,21 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gridiron GM</title>
-    <meta name="description" content="Gridiron GM — the ultimate browser football general manager game. Draft prospects, sign free agents, make trades, manage your salary cap, then take your team to the field in real-time. Free to play, no download required." />
+    <title>Football GM</title>
+    <meta name="description" content="Football GM — the ultimate browser football general manager game. Draft prospects, sign free agents, make trades, manage your salary cap, then take your team to the field in real-time. Free to play, no download required." />
     <meta name="keywords" content="football GM game, NFL manager game, browser football game, franchise mode, football simulator, GM simulation, draft game, salary cap game" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Gridiron GM","description":"Browser-based NFL franchise manager game","genre":"Sports","gamePlatform":"Web Browser","url":"https://vaultsparkstudios.com","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
-    <meta property="og:title" content="Gridiron GM" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Football GM","description":"Browser-based NFL franchise manager game","genre":"Sports","gamePlatform":"Web Browser","url":"https://evandamours.github.io/27_Gridiron_GM","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+    <meta property="og:title" content="Football GM" />
     <meta property="og:description" content="Manage AND play your NFL franchise — draft, sign, trade, then take the field." />
-    <meta property="og:image" content="https://vaultsparkstudios.com/gridiron-gm/images/cover.png" />
+    <meta property="og:image" content="https://evandamours.github.io/27_Gridiron_GM/images/cover.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://vaultsparkstudios.com/gridiron-gm/" />
+    <meta property="og:url" content="https://evandamours.github.io/27_Gridiron_GM/" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Gridiron GM" />
+    <meta name="twitter:title" content="Football GM" />
     <meta name="twitter:description" content="Manage AND play your NFL franchise." />
-    <meta name="twitter:image" content="https://vaultsparkstudios.com/gridiron-gm/images/cover.png" />
+    <meta name="twitter:image" content="https://evandamours.github.io/27_Gridiron_GM/images/cover.png" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#0a0f1a" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -27,50 +27,10 @@
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { background: #0f172a; overflow-y: auto; }
       #root { width: 100vw; min-height: 100vh; }
-      #gm-gate{position:fixed;inset:0;background:#0a0f1a;z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;}
-      #gm-gate.hidden{display:none;}
-      #gm-gate-inner{text-align:center;padding:32px 24px;max-width:360px;width:100%;}
-      #gm-gate h1{font-size:22px;font-weight:900;color:#e2e8f0;letter-spacing:2px;margin-bottom:4px;}
-      #gm-gate p{font-size:13px;color:#475569;margin-bottom:24px;}
-      #gm-gate input{width:100%;background:#0f172a;border:1px solid #1e293b;border-radius:6px;padding:10px 14px;font-size:15px;color:#e2e8f0;text-align:center;letter-spacing:3px;outline:none;margin-bottom:12px;}
-      #gm-gate input:focus{border-color:#3b82f6;}
-      #gm-gate button{width:100%;background:#1d4ed8;color:#fff;border:none;border-radius:6px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:1px;}
-      #gm-gate button:hover{background:#2563eb;}
-      #gm-gate .err{font-size:12px;color:#ef4444;margin-top:8px;min-height:16px;}
-      #gm-gate .badge{display:inline-block;background:#1e293b;color:#475569;font-size:11px;border-radius:4px;padding:3px 10px;margin-bottom:20px;letter-spacing:1px;}
     </style>
   </head>
   <body>
-    <div id="gm-gate">
-      <div id="gm-gate-inner">
-        <div class="badge">VAULTSPARK STUDIOS</div>
-        <h1>GRIDIRON GM</h1>
-        <p>Early access — enter the preview code to continue.</p>
-        <input id="gm-pw" type="password" placeholder="••••••••" autocomplete="off" />
-        <button onclick="gmUnlock()">ENTER</button>
-        <div class="err" id="gm-err"></div>
-      </div>
-    </div>
     <div id="root"></div>
-    <script>
-      (function(){
-        if(sessionStorage.getItem('gm_preview')==='1'){
-          document.getElementById('gm-gate').classList.add('hidden');
-        }
-      })();
-      function gmUnlock(){
-        var pw=document.getElementById('gm-pw').value.trim().toLowerCase();
-        if(pw==='vsgm2026'){
-          sessionStorage.setItem('gm_preview','1');
-          document.getElementById('gm-gate').classList.add('hidden');
-        } else {
-          document.getElementById('gm-err').textContent='Incorrect code. Try again.';
-          document.getElementById('gm-pw').value='';
-          document.getElementById('gm-pw').focus();
-        }
-      }
-      document.getElementById('gm-pw').addEventListener('keydown',function(e){if(e.key==='Enter')gmUnlock();});
-    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

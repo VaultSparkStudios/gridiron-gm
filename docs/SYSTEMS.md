@@ -23,14 +23,19 @@
 ### NFL Draft
 - Purpose: 7-round, 224-pick draft with timer, AI auto-picks, Jimmy Johnson trade values
 - Inputs: Draft class (240 prospects), 32 teams, pick order
-- Outputs: Prospects assigned to teams, picks consumed
-- Dependencies: `genDC()`, `initPicks()`, `aiBestPick()`, `PICK_VAL[]`, `getTeamNeed()`
+- Outputs: Prospects assigned to teams, picks consumed, an analyst grade on every pick (where he went vs. his consensus rank) and on every team's class
+- Dependencies: `genDC()`, `initPicks()`, `aiBestPick()` (blends each team's own noisy read with the consensus board, leaning toward needs), `PICK_VAL[]`, `getTeamNeed()`, `src/scouting.js`
 
 ### Scouting
-- Purpose: Reveal hidden player true ratings incrementally using scout points
-- Inputs: Scout level (0/1/2) per player, scout points budget
-- Outputs: `scoutedOvr`/`scoutedPot` values; at level 2, truOvr/truPot fully revealed
-- Dependencies: `scoutPlayer()`, scout objects per team
+- Purpose: Decide how much you know about each draft prospect. Engine in `src/scouting.js`, screens in `src/ScoutingUI.jsx`, saved as `scouting` in every save.
+- Staff: a major scout and a minor scout, each covering a different position group (QB, RB, receivers/TE, OL, DL, LB, DB). Staff changes only in the preseason and free agency; a new crop of scouts looks for work after each draft.
+- Budget: scouting points, separate from SP. 8 at the start of each season, 1 per regular-season week, 4 more at the Combine; leftovers expire at the next season. A report costs 1, a full workup 2 more.
+- Reads: the major scout has a general idea (letter grade) of everyone in his group, and his full workup gives exact ratings plus the development trait; the minor scout's reads are rougher; the front office covers other groups with rough estimates only.
+- Reports: tool grades for each position skill at his projected ceiling, strengths, a concern, and an NFL comparable from current rosters.
+- Consensus Big Board: preseason rankings when a class is generated, final rankings after the Combine. The board is always in consensus order; scouting never reorders it. "Your list" is your own ranking, and the draft clock auto-picks from it.
+- Combine: the top 180 of the preseason board are invited (everyone gets a pro day). Results are graded against the same position; a few prospects make news; risers/fallers move the final rankings. You get interview slots that read work ethic, which tracks development speed.
+- Development traits (Superstar, Star, Normal, Late bloomer) shape young players' off-season growth.
+- Old saves: `loadScouting()` builds a staff from the old scout, ranks every class and keeps old reports.
 
 ### Trading
 - Purpose: Player + pick trades with fairness evaluation
