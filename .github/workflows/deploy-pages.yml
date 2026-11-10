@@ -2,10 +2,11 @@ name: Deploy Pages
 
 on:
   workflow_dispatch:
+  # (this branch no longer deploys: the live site is built from main, by main's own deploy-pages.yml.
+  # A push here used to publish this old build over the live game.)
   push:
     branches:
       - main
-      - claude/scouting-overhaul
     paths:
       - ".github/workflows/deploy-pages.yml"
       - "package.json"
