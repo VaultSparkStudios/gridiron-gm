@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/scouting-overhaul]
   pull_request:
     branches: [main]
 
@@ -21,5 +21,32 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests
+        run: npm test
+
       - name: Build
         run: npm run build
+
+  smoke:
+    # A full season and off-season played in a real browser, as two different clubs.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        team: [Giants, Chiefs]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install Chromium
+        run: npx playwright-core install --with-deps chromium
+      - run: npm run build
+      - name: Smoke test
+        run: SMOKE_TEAM=${{ matrix.team }} npm run smoke

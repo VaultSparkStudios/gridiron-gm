@@ -1,0 +1,27 @@
+name: Deep checks
+
+# The long checks: three seasons of the league played in a browser (health), and the leak audit
+# (players or picks that vanish or appear twice). Too slow for every push; weekly and on demand.
+on:
+  schedule:
+    - cron: "17 9 * * 1"
+  workflow_dispatch:
+
+jobs:
+  deep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install Chromium
+        run: npx playwright-core install --with-deps chromium
+      - run: npm run build
+      - name: Leak audit
+        run: npm run leaks
+      - name: Three-season health check
+        run: SEASONS=3 npm run health

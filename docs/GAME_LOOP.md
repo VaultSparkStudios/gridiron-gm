@@ -23,7 +23,8 @@ PLAYOFFS
   ↓ (champion crowned)
 
 COMBINE
-  → All draft prospects get combine/pro day results
+  → Top 180 prospects test at the Combine (graded vs. their position), everyone gets a pro day
+  → Final consensus rankings, draft news, risers and fallers; interview slots and bonus scouting points
   ↓ "→ Combine"
 
 DRAFT
@@ -58,4 +59,4 @@ PRESEASON (year + 1)
 - **Passer rating** — real NFL formula (8.33 scale) used for QB stat display
 - **Approximate Value (AV)** — position-calibrated career value metric, influences trade value
 - **Salary/contract** — every player has a salary ($M) and years remaining; drives FA and cap decisions
-- **Scouting** — players have hidden `trueOvr`/`truePot`; spending scout points reveals them incrementally
+- **Scouting** — prospects have hidden `trueOvr`/`truePot`; a major and a minor scout (different position groups) spend a weekly scouting-point budget on reports and workups. Only the major scout's full workup is exact. The Big Board stays in consensus order

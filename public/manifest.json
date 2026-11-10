@@ -1,37 +1,41 @@
 {
-  "name": "Gridiron GM",
-  "short_name": "GridironGM",
-  "description": "Build your dynasty — draft, trade, coach, and win championships.",
-  "start_url": "/gridiron-gm/",
-  "scope": "/gridiron-gm/",
+  "name": "Football GM",
+  "short_name": "Football GM",
+  "description": "Build your dynasty \u2014 draft, trade, coach, and win championships.",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0a0f1a",
   "theme_color": "#0a0f1a",
-  "orientation": "portrait-primary",
-  "categories": ["games", "sports"],
+  "orientation": "any",
+  "categories": [
+    "games",
+    "sports"
+  ],
   "icons": [
     {
-      "src": "/gridiron-gm/images/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/gridiron-gm/images/icon-192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml"
-    },
-    {
-      "src": "/gridiron-gm/images/icon-512.svg",
-      "sizes": "512x512",
+      "src": "images/icon.svg",
+      "sizes": "any",
       "type": "image/svg+xml"
     }
   ],
   "shortcuts": [
     {
       "name": "New Game",
-      "url": "/gridiron-gm/",
+      "url": "./",
       "description": "Start a new franchise"
     }
-  ]
+  ],
+  "id": "./"
 }
